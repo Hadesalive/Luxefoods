@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useAuth } from "@/contexts/AuthContext"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
@@ -11,6 +11,7 @@ import { motion } from "framer-motion"
 import { Lock, Mail, Eye, EyeOff, Loader2 } from "lucide-react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
+import { checkAdminAccess, isMobile, getMobileAdminInstructions } from "@/lib/admin-access"
 
 export default function LoginPage() {
   const { login, isLoading } = useAuth()
@@ -22,6 +23,16 @@ export default function LoginPage() {
     email: "",
     password: "",
   })
+
+  // Check for discreet admin access
+  useEffect(() => {
+    if (checkAdminAccess()) {
+      setSuccess("Admin access granted! You can now log in.")
+    }
+  }, [])
+
+  // Show mobile instructions if on mobile
+  const [showMobileInstructions, setShowMobileInstructions] = useState(false)
 
 
 
@@ -162,13 +173,26 @@ export default function LoginPage() {
               </Button>
             </form>
 
-            <div className="text-center">
+            <div className="text-center space-y-4">
               <Link
                 href="/"
                 className="text-sm text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 transition-colors"
               >
                 ← Back to Home
               </Link>
+              
+              {/* Mobile Admin Instructions */}
+              <div className="mt-6 p-4 bg-gray-50 dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700">
+                <h4 className="text-sm font-medium text-gray-900 dark:text-gray-100 mb-2">
+                  📱 Mobile Admin Access
+                </h4>
+                <div className="text-xs text-gray-600 dark:text-gray-400 space-y-1">
+                  <p>• Triple tap bottom right corner</p>
+                  <p>• Long press (3s) on any logo</p>
+                  <p>• Add ?access=kb_admin_2024 to URL</p>
+                  <p>• Tap 🔧 icon in footer</p>
+                </div>
+              </div>
             </div>
           </CardContent>
         </Card>

@@ -207,6 +207,14 @@ export default function Footer() {
                   Terms of Service
                 </Link>
                 <div className="text-amber-200/70 dark:text-amber-100/70 italic">"Enjoy HomeStyle cooking" ✨</div>
+                {/* Discreet Admin Link - Only visible on hover (desktop) or tap (mobile) */}
+                <Link
+                  href="/login"
+                  className="text-amber-200/30 dark:text-amber-100/30 hover:text-amber-200 dark:hover:text-amber-100 transition-colors text-xs opacity-0 hover:opacity-100 md:opacity-0 md:hover:opacity-100 opacity-20 md:opacity-0 duration-300"
+                  title="Admin Access"
+                >
+                  🔧
+                </Link>
               </div>
             </div>
           </div>

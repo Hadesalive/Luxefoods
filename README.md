@@ -112,6 +112,44 @@ Open [http://localhost:3000](http://localhost:3000) to view the website.
 
 ## 🔐 Authentication
 
+### Admin Access Methods
+The admin panel can be accessed through multiple discreet methods:
+
+#### 1. **Footer Link** (Most Visible)
+- Look for the 🔧 icon in the footer (bottom right)
+- Only appears on hover for discretion
+
+#### 2. **Keyboard Shortcut** (Hidden)
+- Press `Ctrl + Shift + A` from anywhere on the site
+- Instantly redirects to admin login
+
+#### 3. **URL Parameter** (Most Discreet)
+- Add `?access=kb_admin_2024` to any page URL
+- Example: `https://thekingsbakerysl.com?access=kb_admin_2024`
+- Grants admin access for the session
+
+### 📱 Mobile Admin Access Methods
+
+#### 1. **Triple Tap Gesture** (Most Discreet)
+- Triple tap the bottom right corner of the screen
+- Must be done within 2 seconds
+- Works on any page
+
+#### 2. **Long Press on Logo** (Easy to Remember)
+- Long press (3 seconds) on any logo image
+- Works on the main logo in header or footer
+- Visual feedback when activated
+
+#### 3. **Footer Link** (Slightly Visible)
+- Tap the 🔧 icon in the footer
+- More visible on mobile than desktop
+- Still discreet but accessible
+
+#### 4. **URL Parameter** (Same as Desktop)
+- Add `?access=kb_admin_2024` to any page URL
+- Works identically on mobile and desktop
+
+
 ### Local Storage Authentication
 - Sessions last for 6 months
 - No server-side authentication required

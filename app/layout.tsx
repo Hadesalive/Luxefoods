@@ -164,6 +164,86 @@ export default function RootLayout({
               {children}
               <Toaster />
               <ScrollToTop />
+              {/* Admin Access Scripts */}
+              <script
+                dangerouslySetInnerHTML={{
+                  __html: `
+                    // Desktop: Keyboard shortcut (Ctrl+Shift+A)
+                    document.addEventListener('keydown', function(e) {
+                      if (e.ctrlKey && e.shiftKey && e.key === 'A') {
+                        e.preventDefault();
+                        window.location.href = '/login';
+                      }
+                    });
+
+                    // Mobile: Triple tap on bottom right corner
+                    let tapCount = 0;
+                    let tapTimer = null;
+                    let lastTapTime = 0;
+                    
+                    document.addEventListener('touchstart', function(e) {
+                      const now = Date.now();
+                      const timeDiff = now - lastTapTime;
+                      
+                      // Check if tap is in bottom right corner (last 100px)
+                      const touch = e.touches[0];
+                      const isBottomRight = touch.clientX > window.innerWidth - 100 && 
+                                          touch.clientY > window.innerHeight - 100;
+                      
+                      if (isBottomRight && timeDiff < 500) {
+                        tapCount++;
+                        lastTapTime = now;
+                        
+                        if (tapCount === 3) {
+                          e.preventDefault();
+                          window.location.href = '/login';
+                          tapCount = 0;
+                        }
+                        
+                        // Reset counter after 2 seconds
+                        clearTimeout(tapTimer);
+                        tapTimer = setTimeout(() => {
+                          tapCount = 0;
+                        }, 2000);
+                      } else if (timeDiff > 500) {
+                        tapCount = 1;
+                        lastTapTime = now;
+                      }
+                    });
+
+                    // Mobile: Long press on logo (3 seconds)
+                    let longPressTimer = null;
+                    let isLongPress = false;
+                    
+                    document.addEventListener('touchstart', function(e) {
+                      const target = e.target;
+                      const logo = target.closest('img[alt*="logo"], img[alt*="Logo"]');
+                      
+                      if (logo) {
+                        longPressTimer = setTimeout(() => {
+                          isLongPress = true;
+                          window.location.href = '/login';
+                        }, 3000);
+                      }
+                    });
+                    
+                    document.addEventListener('touchend', function() {
+                      if (longPressTimer) {
+                        clearTimeout(longPressTimer);
+                        longPressTimer = null;
+                      }
+                      isLongPress = false;
+                    });
+                    
+                    document.addEventListener('touchmove', function() {
+                      if (longPressTimer) {
+                        clearTimeout(longPressTimer);
+                        longPressTimer = null;
+                      }
+                    });
+                  `,
+                }}
+              />
             </CartProvider>
           </AuthProvider>
         </ThemeProvider>
