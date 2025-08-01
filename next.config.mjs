@@ -2,7 +2,6 @@
 const nextConfig = {
   // Optimize for free tier usage
   experimental: {
-    optimizeCss: true,
     optimizePackageImports: ['lucide-react', 'framer-motion'],
   },
   

@@ -20,7 +20,7 @@ export const metadata: Metadata = {
     title: "Contact Kings Bakery - Call 077 254220 | Freetown, Sierra Leone",
     description:
       "Get in touch with Kings Bakery in Freetown, Sierra Leone. Fast delivery in Lumley and surrounding areas. Call now or visit us at 40F Sheriff Drive, Regent Road.",
-            url: "https://thekingsbakerysl.com/contact",
+    url: "https://thekingsbakerysl.com/contact",
   },
 }
 
