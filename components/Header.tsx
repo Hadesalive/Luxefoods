@@ -23,7 +23,7 @@ export default function Header() {
               <Image src="/images/logo.jpg" alt="Kings Bakery Logo" fill className="object-contain" />
             </div>
             <div className="hidden sm:block">
-              <span className="text-base lg:text-xl font-bold">Kings Bakery</span>
+              <span className="text-base lg:text-xl font-bold">The Kings Bakery</span>
               <div className="text-xs lg:text-sm text-yellow-300 dark:text-yellow-400 italic">
                 "Fresh Baked Goods & Delicious Treats"
               </div>

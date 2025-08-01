@@ -1,10 +1,9 @@
-import type React from "react"
-import type { Metadata } from "next"
+import { Metadata } from "next"
 import { AdminProvider } from "@/contexts/AdminContext"
 import { MenuProvider } from "@/contexts/MenuContext"
 import { CartProvider } from "@/contexts/CartContext"
 import { AdminHeader } from "@/components/admin/AdminHeader"
-import { AuthGuard } from "@/components/auth/AuthGuard"
+import AuthGuard from "@/components/auth/AuthGuard"
 
 export const metadata: Metadata = {
   title: "Admin Dashboard | Kings Bakery",
@@ -27,7 +26,9 @@ export default function AdminLayout({
           <AuthGuard>
             <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-indigo-50 dark:from-gray-950 dark:via-gray-900 dark:to-indigo-950">
               <AdminHeader />
-              <main className="p-4 lg:p-6 pt-20 lg:pt-24">{children}</main>
+              <main className="container mx-auto px-4 py-8">
+                {children}
+              </main>
             </div>
           </AuthGuard>
         </CartProvider>

@@ -1,0 +1,23 @@
+{
+  "name": "Kings Bakery - Restaurant & Bakery",
+  "short_name": "Kings Bakery",
+  "description": "Fresh bread, pastries, local dishes, and international cuisine in Freetown, Sierra Leone",
+  "icons": [
+    {
+      "src": "/android-chrome-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/android-chrome-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "theme_color": "#f59e0b",
+  "background_color": "#ffffff",
+  "display": "standalone",
+  "start_url": "/",
+  "scope": "/",
+  "orientation": "portrait-primary"
+}

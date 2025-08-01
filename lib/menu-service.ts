@@ -72,13 +72,15 @@ export interface MenuItemWithCategory extends MenuItem {
   options: MenuItemOption[]
 }
 
-// Menu service for database operations
+// Optimized Menu service for Supabase free tier
 export class MenuService {
-  // Cache for menu data
+  // Enhanced caching with localStorage fallback
   private static menuCache: MenuItemWithCategory[] | null = null
   private static categoriesCache: Category[] | null = null
   private static cacheExpiry = 0
-  private static CACHE_DURATION = 5 * 60 * 1000 // 5 minutes
+  private static CACHE_DURATION = 15 * 60 * 1000 // 15 minutes (increased from 5)
+  private static CACHE_KEY = 'kings-bakery-menu-cache'
+  private static CATEGORIES_CACHE_KEY = 'kings-bakery-categories-cache'
 
   // Get authenticated Supabase client
   private static getAuthenticatedClient() {
@@ -90,54 +92,93 @@ export class MenuService {
     })
   }
 
-  // Get all categories
+  // Enhanced cache management with localStorage
+  private static getFromLocalStorage(key: string) {
+    if (typeof window === 'undefined') return null
+    try {
+      const item = localStorage.getItem(key)
+      if (!item) return null
+      const { data, expiry } = JSON.parse(item)
+      if (Date.now() > expiry) {
+        localStorage.removeItem(key)
+        return null
+      }
+      return data
+    } catch {
+      return null
+    }
+  }
+
+  private static setToLocalStorage(key: string, data: any) {
+    if (typeof window === 'undefined') return
+    try {
+      const cacheData = {
+        data,
+        expiry: Date.now() + this.CACHE_DURATION
+      }
+      localStorage.setItem(key, JSON.stringify(cacheData))
+    } catch {
+      // Ignore localStorage errors
+    }
+  }
+
+  // Optimized: Get all categories with better caching
   static async getCategories(useCache = true): Promise<Category[]> {
+    // Check memory cache first
     if (useCache && this.categoriesCache && Date.now() < this.cacheExpiry) {
       return this.categoriesCache
     }
 
+    // Check localStorage cache
+    if (useCache) {
+      const cached = this.getFromLocalStorage(this.CATEGORIES_CACHE_KEY)
+      if (cached) {
+        this.categoriesCache = cached
+        this.cacheExpiry = Date.now() + this.CACHE_DURATION
+        return cached
+      }
+    }
+
+    // Fetch from database with optimized query
     const { data, error } = await supabase
       .from("categories")
       .select("*")
       .eq("is_active", true)
       .order("sort_order", { ascending: true })
+      .order("name", { ascending: true })
 
-    if (error) throw error
-
-    this.categoriesCache = data
-    this.cacheExpiry = Date.now() + this.CACHE_DURATION
-
-    return data
-  }
-
-  // Get all menu items with categories and sizes
-  static async getMenuItems(useCache = true): Promise<MenuItemWithCategory[]> {
-    if (useCache && this.menuCache && Date.now() < this.cacheExpiry) {
-      return this.menuCache
+    if (error) {
+      console.error("Error fetching categories:", error)
+      throw error
     }
 
-    const { data, error } = await supabase
-      .from("menu_items")
-      .select(`
-        *,
-        category:categories(*),
-        sizes:menu_item_sizes(*),
-        options:menu_item_options(*)
-      `)
-      .eq("is_available", true)
-      .order("sort_order", { ascending: true })
-
-    if (error) throw error
-
-    this.menuCache = data
+    // Update caches
+    this.categoriesCache = data || []
     this.cacheExpiry = Date.now() + this.CACHE_DURATION
+    this.setToLocalStorage(this.CATEGORIES_CACHE_KEY, data || [])
 
-    return data
+    return data || []
   }
 
-  // Get menu items by category
-  static async getMenuItemsByCategory(categorySlug: string): Promise<MenuItemWithCategory[]> {
-    const { data, error } = await supabase
+  // Optimized: Get menu items with single query and better caching
+  static async getMenuItems(useCache = true, limit?: number): Promise<MenuItemWithCategory[]> {
+    // Check memory cache first
+    if (useCache && this.menuCache && Date.now() < this.cacheExpiry) {
+      return limit ? this.menuCache.slice(0, limit) : this.menuCache
+    }
+
+    // Check localStorage cache
+    if (useCache) {
+      const cached = this.getFromLocalStorage(this.CACHE_KEY)
+      if (cached) {
+        this.menuCache = cached
+        this.cacheExpiry = Date.now() + this.CACHE_DURATION
+        return limit ? cached.slice(0, limit) : cached
+      }
+    }
+
+    // Optimized single query with joins
+    let query = supabase
       .from("menu_items")
       .select(`
         *,
@@ -146,15 +187,99 @@ export class MenuService {
         options:menu_item_options(*)
       `)
       .eq("is_available", true)
-      .eq("categories.slug", categorySlug)
       .order("sort_order", { ascending: true })
+      .order("name", { ascending: true })
 
-    if (error) throw error
-    return data
+    if (limit) {
+      query = query.limit(limit)
+    }
+
+    const { data, error } = await query
+
+    if (error) {
+      console.error("Error fetching menu items:", error)
+      throw error
+    }
+
+    // Transform data to match interface
+    const transformedData = (data || []).map((item: any) => ({
+      ...item,
+      category: item.category,
+      sizes: item.sizes || [],
+      options: item.options || []
+    }))
+
+    // Update caches
+    this.menuCache = transformedData
+    this.cacheExpiry = Date.now() + this.CACHE_DURATION
+    this.setToLocalStorage(this.CACHE_KEY, transformedData)
+
+    return transformedData
   }
 
-  // Get popular menu items
-  static async getPopularMenuItems(): Promise<MenuItemWithCategory[]> {
+  // Optimized: Get menu items by category with pagination
+  static async getMenuItemsByCategory(
+    categorySlug: string, 
+    page = 1, 
+    pageSize = 12
+  ): Promise<{ items: MenuItemWithCategory[], total: number, hasMore: boolean }> {
+    const offset = (page - 1) * pageSize
+
+    // Get category first
+    const { data: category } = await supabase
+      .from("categories")
+      .select("id")
+      .eq("slug", categorySlug)
+      .eq("is_active", true)
+      .single()
+
+    if (!category) {
+      return { items: [], total: 0, hasMore: false }
+    }
+
+    // Get total count
+    const { count } = await supabase
+      .from("menu_items")
+      .select("*", { count: "exact", head: true })
+      .eq("category_id", category.id)
+      .eq("is_available", true)
+
+    // Get paginated items
+    const { data, error } = await supabase
+      .from("menu_items")
+      .select(`
+        *,
+        category:categories(*),
+        sizes:menu_item_sizes(*),
+        options:menu_item_options(*)
+      `)
+      .eq("category_id", category.id)
+      .eq("is_available", true)
+      .order("sort_order", { ascending: true })
+      .order("name", { ascending: true })
+      .range(offset, offset + pageSize - 1)
+
+    if (error) {
+      console.error("Error fetching menu items by category:", error)
+      throw error
+    }
+
+    const transformedData = (data || []).map((item: any) => ({
+      ...item,
+      category: item.category,
+      sizes: item.sizes || [],
+      options: item.options || []
+    }))
+
+    return {
+      items: transformedData,
+      total: count || 0,
+      hasMore: (count || 0) > offset + pageSize
+    }
+  }
+
+  // Optimized: Get popular menu items (limited to reduce bandwidth)
+  static async getPopularMenuItems(limit = 8): Promise<MenuItemWithCategory[]> {
     const { data, error } = await supabase
       .from("menu_items")
       .select(`
@@ -166,15 +291,35 @@ export class MenuService {
       .eq("is_available", true)
       .eq("is_popular", true)
       .order("sort_order", { ascending: true })
+      .limit(limit)
 
-    if (error) throw error
-    return data
+    if (error) {
+      console.error("Error fetching popular menu items:", error)
+      throw error
+    }
+
+    return (data || []).map((item: any) => ({
+      ...item,
+      category: item.category,
+      sizes: item.sizes || [],
+      options: item.options || []
+    }))
   }
 
-  // Admin operations
-  static async createCategory(categoryData: Omit<Category, "id" | "created_at" | "updated_at">): Promise<Category> {
-    this.clearCache()
+  // Clear all caches
+  static clearCache() {
+    this.menuCache = null
+    this.categoriesCache = null
+    this.cacheExpiry = 0
     
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem(this.CACHE_KEY)
+      localStorage.removeItem(this.CATEGORIES_CACHE_KEY)
+    }
+  }
+
+  // Admin methods (only for authenticated users)
+  static async createCategory(categoryData: Omit<Category, "id" | "created_at" | "updated_at">): Promise<Category> {
     const client = await this.getAuthenticatedClient()
     const { data, error } = await client
       .from("categories")
@@ -183,12 +328,11 @@ export class MenuService {
       .single()
 
     if (error) throw error
+    this.clearCache()
     return data
   }
 
   static async updateCategory(id: string, updates: Partial<Category>): Promise<Category> {
-    this.clearCache()
-    
     const client = await this.getAuthenticatedClient()
     const { data, error } = await client
       .from("categories")
@@ -198,12 +342,11 @@ export class MenuService {
       .single()
 
     if (error) throw error
+    this.clearCache()
     return data
   }
 
   static async deleteCategory(id: string): Promise<void> {
-    this.clearCache()
-    
     const client = await this.getAuthenticatedClient()
     const { error } = await client
       .from("categories")
@@ -211,13 +354,10 @@ export class MenuService {
       .eq("id", id)
 
     if (error) throw error
+    this.clearCache()
   }
 
   static async createMenuItem(menuItemData: Omit<MenuItem, "id" | "created_at" | "updated_at">): Promise<MenuItem> {
-    this.clearCache()
-    
-    console.log("MenuService: Creating menu item with data:", menuItemData)
-    
     const client = await this.getAuthenticatedClient()
     const { data, error } = await client
       .from("menu_items")
@@ -225,18 +365,12 @@ export class MenuService {
       .select()
       .single()
 
-    if (error) {
-      console.error("MenuService: Error creating menu item:", error)
-      throw error
-    }
-    
-    console.log("MenuService: Successfully created menu item:", data)
+    if (error) throw error
+    this.clearCache()
     return data
   }
 
   static async updateMenuItem(id: string, updates: Partial<MenuItem>): Promise<MenuItem> {
-    this.clearCache()
-    
     const client = await this.getAuthenticatedClient()
     const { data, error } = await client
       .from("menu_items")
@@ -246,12 +380,11 @@ export class MenuService {
       .single()
 
     if (error) throw error
+    this.clearCache()
     return data
   }
 
   static async deleteMenuItem(id: string): Promise<void> {
-    this.clearCache()
-    
     const client = await this.getAuthenticatedClient()
     const { error } = await client
       .from("menu_items")
@@ -259,12 +392,11 @@ export class MenuService {
       .eq("id", id)
 
     if (error) throw error
+    this.clearCache()
   }
 
-  // Menu item sizes operations
+  // Size and option methods (admin only)
   static async createMenuItemSize(sizeData: Omit<MenuItemSize, "id" | "created_at">): Promise<MenuItemSize> {
-    this.clearCache()
-    
     const client = await this.getAuthenticatedClient()
     const { data, error } = await client
       .from("menu_item_sizes")
@@ -273,12 +405,11 @@ export class MenuService {
       .single()
 
     if (error) throw error
+    this.clearCache()
     return data
   }
 
   static async updateMenuItemSize(id: string, updates: Partial<MenuItemSize>): Promise<MenuItemSize> {
-    this.clearCache()
-    
     const client = await this.getAuthenticatedClient()
     const { data, error } = await client
       .from("menu_item_sizes")
@@ -288,12 +419,11 @@ export class MenuService {
       .single()
 
     if (error) throw error
+    this.clearCache()
     return data
   }
 
   static async deleteMenuItemSize(id: string): Promise<void> {
-    this.clearCache()
-    
     const client = await this.getAuthenticatedClient()
     const { error } = await client
       .from("menu_item_sizes")
@@ -301,12 +431,10 @@ export class MenuService {
       .eq("id", id)
 
     if (error) throw error
+    this.clearCache()
   }
 
-  // Menu item options operations
   static async createMenuItemOption(optionData: Omit<MenuItemOption, "id" | "created_at">): Promise<MenuItemOption> {
-    this.clearCache()
-    
     const client = await this.getAuthenticatedClient()
     const { data, error } = await client
       .from("menu_item_options")
@@ -315,12 +443,11 @@ export class MenuService {
       .single()
 
     if (error) throw error
+    this.clearCache()
     return data
   }
 
   static async updateMenuItemOption(id: string, updates: Partial<MenuItemOption>): Promise<MenuItemOption> {
-    this.clearCache()
-    
     const client = await this.getAuthenticatedClient()
     const { data, error } = await client
       .from("menu_item_options")
@@ -330,12 +457,11 @@ export class MenuService {
       .single()
 
     if (error) throw error
+    this.clearCache()
     return data
   }
 
   static async deleteMenuItemOption(id: string): Promise<void> {
-    this.clearCache()
-    
     const client = await this.getAuthenticatedClient()
     const { error } = await client
       .from("menu_item_options")
@@ -343,12 +469,6 @@ export class MenuService {
       .eq("id", id)
 
     if (error) throw error
-  }
-
-  // Clear cache when data is modified
-  private static clearCache() {
-    this.menuCache = null
-    this.categoriesCache = null
-    this.cacheExpiry = 0
+    this.clearCache()
   }
 } 

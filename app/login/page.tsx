@@ -34,10 +34,10 @@ export default function LoginPage() {
       await login(formData)
       setSuccess("Login successful! Redirecting...")
       
-      // Use router.push instead of window.location for better reliability
+      // Redirect immediately after successful login
       setTimeout(() => {
         router.push("/admin")
-      }, 1500)
+      }, 1000)
     } catch (error: any) {
       setError(error.message || "Login failed. Please try again.")
     }

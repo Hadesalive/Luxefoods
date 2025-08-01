@@ -11,8 +11,8 @@ export default function Hero() {
       {/* Background Image */}
       <div className="absolute inset-0">
         <Image 
-          src="https://images.unsplash.com/photo-1509440159596-0249088772ff?w=1920&h=1080&fit=crop" 
-          alt="Delicious Fresh Baked Goods" 
+          src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=1920&h=1080&fit=crop" 
+          alt="Delicious Restaurant Food" 
           fill 
           className="object-cover" 
           priority 
@@ -38,7 +38,7 @@ export default function Hero() {
                 transition={{ duration: 0.8, delay: 0.2 }}
                 className="text-amber-200/90 dark:text-amber-100/90 text-xl sm:text-2xl lg:text-3xl font-medium"
               >
-                🍞 Fresh Baked Excellence
+                🍽️ Local & International Cuisine
               </motion.h2>
 
               {/* Restaurant Name */}
@@ -63,7 +63,7 @@ export default function Hero() {
                 transition={{ duration: 0.8, delay: 0.6 }}
                 className="text-lg sm:text-xl lg:text-2xl text-amber-100/80 dark:text-amber-50/80 italic font-medium max-w-2xl mx-auto"
               >
-                "✨ Fresh Baked Goods & Delicious Treats ✨"
+                "✨ Local & International Dishes Made Fresh Daily ✨"
               </motion.p>
 
               {/* Address */}

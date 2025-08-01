@@ -22,7 +22,7 @@ import {
 import { motion } from "framer-motion"
 import Link from "next/link"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
-import { ImageUpload } from "@/components/ui/image-upload"
+
 
 export default function CategoriesPage() {
   const { categories, addCategory, updateCategory, deleteCategory, isLoading } = useMenu()
@@ -168,12 +168,7 @@ export default function CategoriesPage() {
                   rows={3}
                 />
               </div>
-              <ImageUpload
-                value={formData.image_url}
-                onChange={(url) => setFormData({ ...formData, image_url: url })}
-                label="Category Image"
-                placeholder="https://example.com/image.jpg or upload a file"
-              />
+
               <div>
                 <Label htmlFor="sort_order">Sort Order</Label>
                 <Input

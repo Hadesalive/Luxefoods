@@ -2,10 +2,9 @@
 
 import React, { createContext, useContext, useEffect, useState } from 'react'
 import { AuthService, AuthUser, LoginCredentials } from '@/lib/auth'
-import { User } from '@supabase/supabase-js'
 
 interface AuthContextType {
-  user: User | null
+  user: AuthUser | null
   isLoading: boolean
   login: (credentials: LoginCredentials) => Promise<void>
   logout: () => Promise<void>
@@ -15,7 +14,7 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [user, setUser] = useState<User | null>(null)
+  const [user, setUser] = useState<AuthUser | null>(null)
   const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
@@ -36,6 +35,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     // Listen for auth state changes
     const { data: { subscription } } = AuthService.onAuthStateChange(
       async (event, session) => {
+        console.log('Auth state changed:', event, session)
         setUser(session?.user ?? null)
         setIsLoading(false)
       }
@@ -47,9 +47,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const login = async (credentials: LoginCredentials) => {
     setIsLoading(true)
     try {
+      console.log('AuthContext - Attempting login...')
       const { user } = await AuthService.login(credentials)
+      console.log('AuthContext - Login successful, user:', user?.email)
       setUser(user)
     } catch (error) {
+      console.error('AuthContext - Login error:', error)
       throw error
     } finally {
       setIsLoading(false)

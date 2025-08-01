@@ -4,36 +4,45 @@ import { useState, useEffect } from "react"
 import { Tabs, TabsContent } from "@/components/ui/tabs"
 import Image from "next/image"
 import { Button } from "@/components/ui/button"
-import { ShoppingCart, Star, Plus, Minus, Check } from "lucide-react"
+import { ShoppingCart, Star, Plus, Minus, Check, Heart, Sparkles } from "lucide-react"
 import { useCart } from "@/contexts/CartContext"
-import { motion } from "framer-motion"
+import { motion, AnimatePresence } from "framer-motion"
 import { MenuService, type MenuItemWithCategory, type Category } from "@/lib/menu-service"
 
 export default function MenuSection() {
   const { addItem } = useCart()
-  const [activeTab, setActiveTab] = useState("pizza")
+  const [activeTab, setActiveTab] = useState("")
   const [selectedSizes, setSelectedSizes] = useState<{ [key: string]: string }>({})
   const [selectedOptions, setSelectedOptions] = useState<{ [key: string]: string[] }>({})
   const [quantities, setQuantities] = useState<{ [key: string]: number }>({})
   const [menuItems, setMenuItems] = useState<MenuItemWithCategory[]>([])
   const [categories, setCategories] = useState<Category[]>([])
   const [isLoading, setIsLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+  const [addedItems, setAddedItems] = useState<{ [key: string]: boolean }>({})
+  const [favorites, setFavorites] = useState<{ [key: string]: boolean }>({})
 
   useEffect(() => {
     const loadMenuData = async () => {
       try {
         setIsLoading(true)
+        setError(null)
+        
+        // Use the optimized service with caching
         const [menuData, categoriesData] = await Promise.all([
-          MenuService.getMenuItems(),
-          MenuService.getCategories(),
+          MenuService.getMenuItems(true, 20), // Limit to 20 items for homepage
+          MenuService.getCategories(true),
         ])
+        
         setMenuItems(menuData)
         setCategories(categoriesData)
+        
         if (categoriesData.length > 0) {
           setActiveTab(categoriesData[0].slug)
         }
       } catch (error) {
         console.error("Error loading menu data:", error)
+        setError("Failed to load menu. Please try again.")
       } finally {
         setIsLoading(false)
       }
@@ -53,8 +62,17 @@ export default function MenuSection() {
   }
 
   const itemVariant = {
-    hidden: { opacity: 0, y: 20 },
-    show: { opacity: 1, y: 0 },
+    hidden: { opacity: 0, y: 20, scale: 0.95 },
+    show: { 
+      opacity: 1, 
+      y: 0, 
+      scale: 1,
+      transition: {
+        type: "spring" as const,
+        stiffness: 100,
+        damping: 15
+      }
+    },
   }
 
   const handleSizeSelect = (itemKey: string, size: string) => {
@@ -78,6 +96,13 @@ export default function MenuSection() {
     }))
   }
 
+  const toggleFavorite = (itemId: string) => {
+    setFavorites(prev => ({
+      ...prev,
+      [itemId]: !prev[itemId]
+    }))
+  }
+
   const getItemPrice = (item: MenuItemWithCategory, selectedSize?: string, selectedOptions?: string[]) => {
     let basePrice = item.price
 
@@ -93,7 +118,7 @@ export default function MenuSection() {
     if (selectedOptions && item.options && item.options.length > 0) {
       selectedOptions.forEach(optionName => {
         const option = item.options.find(opt => opt.option_name === optionName)
-        if (option) {
+        if (option && option.price_adjustment) {
           basePrice += option.price_adjustment
         }
       })
@@ -103,26 +128,69 @@ export default function MenuSection() {
   }
 
   const getItemSizes = (item: MenuItemWithCategory) => {
-    if (item.sizes && item.sizes.length > 0) {
-      return item.sizes.map(s => s.size_name)
-    }
-    return []
+    return item.sizes?.map(size => size.size_name) || []
   }
 
   const getItemOptions = (item: MenuItemWithCategory) => {
-    if (item.options && item.options.length > 0) {
-      return item.options.filter(opt => opt.is_available)
-    }
-    return []
+    return item.options?.map(option => option.option_name) || []
+  }
+
+  const handleAddToCart = (item: MenuItemWithCategory) => {
+    const itemKey = `${item.id}-${selectedSizes[item.id] || 'default'}`
+    const quantity = quantities[itemKey] || 1
+    const selectedSize = selectedSizes[item.id]
+    const selectedOptionsList = selectedOptions[item.id] || []
+    const price = getItemPrice(item, selectedSize, selectedOptionsList)
+
+    addItem({
+      id: item.id,
+      name: item.name,
+      price: price,
+      type: item.category?.slug || "menu-item",
+      size: selectedSize,
+      options: selectedOptionsList,
+      quantity: quantity
+    })
+
+    // Show success feedback
+    setAddedItems(prev => ({ ...prev, [item.id]: true }))
+    
+    // Hide success feedback after 2 seconds
+    setTimeout(() => {
+      setAddedItems(prev => ({ ...prev, [item.id]: false }))
+    }, 2000)
+  }
+
+  const getItemsByCategory = (categorySlug: string) => {
+    return menuItems.filter(item => item.category?.slug === categorySlug)
   }
 
   if (isLoading) {
     return (
-      <section className="py-16 lg:py-24 bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-gray-800">
+      <section className="py-16 bg-gradient-to-br from-orange-50 via-white to-red-50 dark:from-gray-900 dark:via-gray-800 dark:to-orange-900">
         <div className="container mx-auto px-4">
           <div className="text-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-black dark:border-white mx-auto"></div>
-            <p className="mt-4 text-gray-600 dark:text-gray-400">Loading menu...</p>
+            <motion.div
+              animate={{ rotate: 360 }}
+              transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+              className="w-16 h-16 border-4 border-orange-200 border-t-orange-600 rounded-full mx-auto"
+            />
+            <p className="mt-4 text-gray-600 dark:text-gray-400">Loading delicious menu...</p>
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  if (error) {
+    return (
+      <section className="py-16 bg-gradient-to-br from-orange-50 via-white to-red-50 dark:from-gray-900 dark:via-gray-800 dark:to-orange-900">
+        <div className="container mx-auto px-4">
+          <div className="text-center">
+            <p className="text-red-600 dark:text-red-400 mb-4">{error}</p>
+            <Button onClick={() => window.location.reload()}>
+              Try Again
+            </Button>
           </div>
         </div>
       </section>
@@ -130,242 +198,280 @@ export default function MenuSection() {
   }
 
   return (
-    <section
-      id="menu"
-      className="py-16 lg:py-24 bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-gray-800 transition-colors duration-300"
-    >
+    <section className="py-16 bg-gradient-to-br from-orange-50 via-white to-red-50 dark:from-gray-900 dark:via-gray-800 dark:to-orange-900">
       <div className="container mx-auto px-4">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.8 }}
-          className="text-center mb-12 lg:mb-16"
+          className="text-center mb-12"
         >
-          <h2 className="text-3xl sm:text-4xl lg:text-6xl font-bold mb-4 lg:mb-6 text-black dark:text-white">
-            🍽️ FOOD MENU 🍽️
+          <h2 className="text-4xl lg:text-5xl font-bold text-gray-900 dark:text-white mb-4">
+            Our Menu
           </h2>
-          <div className="w-16 lg:w-24 h-1 bg-red-600 dark:bg-red-500 mx-auto mb-4"></div>
-          <p className="text-gray-600 dark:text-gray-400 text-base lg:text-lg max-w-2xl mx-auto">
-            ✨ Discover our delicious homestyle cooking with authentic flavors ✨
+          <p className="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
+            Discover our delicious selection of fresh bread, pastries, and local dishes
           </p>
         </motion.div>
 
-        <Tabs defaultValue={activeTab} value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <div className="flex flex-wrap justify-center gap-3 mb-8 lg:mb-12 px-4">
-            {categories.map((category) => (
-              <Button
-                key={category.id}
-                className={`text-base lg:text-lg px-6 lg:px-8 py-3 lg:py-4 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 ${
-                  activeTab === category.slug
-                    ? "bg-black hover:bg-gray-800 dark:bg-gray-800 dark:hover:bg-gray-700 text-white"
-                    : "bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 text-black dark:text-white border-2 border-black dark:border-gray-700"
-                }`}
-                onClick={() => setActiveTab(category.slug)}
-              >
-                {category.name}
-              </Button>
-            ))}
-          </div>
+        {categories.length > 0 && (
+          <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              viewport={{ once: true }}
+              className="flex flex-wrap justify-center gap-2 mb-8"
+            >
+              {categories.map((category, index) => (
+                <motion.div
+                  key={category.id}
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  whileInView={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.3, delay: index * 0.1 }}
+                  viewport={{ once: true }}
+                >
+                  <Button
+                    variant={activeTab === category.slug ? "default" : "outline"}
+                    onClick={() => setActiveTab(category.slug)}
+                    className="rounded-full px-6 py-2 hover:scale-105 transition-transform duration-200"
+                  >
+                    {category.name}
+                  </Button>
+                </motion.div>
+              ))}
+            </motion.div>
 
-          {categories.map((category) => {
-            const categoryItems = menuItems.filter((item) => item.category?.slug === category.slug)
-            
-            return (
-              <TabsContent key={category.id} value={category.slug}>
+            {categories.map((category) => (
+              <TabsContent key={category.id} value={category.slug} className="mt-0">
                 <motion.div
                   variants={container}
                   initial="hidden"
                   whileInView="show"
                   viewport={{ once: true }}
-                  className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8"
+                  className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
                 >
-                  {categoryItems.map((item, index) => {
-                    const itemKey = `item-${item.id}`
-                    const itemSizes = getItemSizes(item)
-                    const selectedSize = selectedSizes[itemKey] || (itemSizes.length > 0 ? itemSizes[0] : "")
-                    const itemSelectedOptions = selectedOptions[itemKey] || []
+                  {getItemsByCategory(category.slug).map((item) => {
+                    const itemKey = `${item.id}-${selectedSizes[item.id] || 'default'}`
                     const quantity = quantities[itemKey] || 1
-                    const price = getItemPrice(item, selectedSize, itemSelectedOptions)
+                    const sizes = getItemSizes(item)
+                    const options = getItemOptions(item)
+                    const hasVariants = sizes.length > 0 || options.length > 0
+                    const isFavorite = favorites[item.id]
+                    const isAdded = addedItems[item.id]
 
-                                         return (
-                       <motion.div
-                         key={item.id}
-                         variants={itemVariant}
-                         className="bg-white dark:bg-gray-800 rounded-3xl shadow-xl overflow-hidden group hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 border dark:border-gray-700"
-                       >
-                        <div className="relative h-64 overflow-hidden">
+                    return (
+                      <motion.div
+                        key={item.id}
+                        variants={itemVariant}
+                        whileHover={{ 
+                          y: -8,
+                          transition: { duration: 0.2 }
+                        }}
+                        className="group relative bg-white dark:bg-gray-800 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden border border-gray-100 dark:border-gray-700"
+                      >
+                        {/* Success overlay */}
+                        <AnimatePresence>
+                          {isAdded && (
+                            <motion.div
+                              initial={{ opacity: 0, scale: 0.8 }}
+                              animate={{ opacity: 1, scale: 1 }}
+                              exit={{ opacity: 0, scale: 0.8 }}
+                              className="absolute inset-0 bg-green-500/90 flex items-center justify-center z-20 rounded-2xl"
+                            >
+                              <motion.div
+                                initial={{ scale: 0 }}
+                                animate={{ scale: 1 }}
+                                transition={{ delay: 0.1, type: "spring" }}
+                                className="text-white text-center"
+                              >
+                                <Check className="h-12 w-12 mx-auto mb-2" />
+                                <p className="font-bold text-lg">Added to Cart!</p>
+                                <p className="text-sm opacity-90">Delicious choice! 🎉</p>
+                              </motion.div>
+                            </motion.div>
+                          )}
+                        </AnimatePresence>
+
+                        <div className="relative h-48 bg-gray-100 dark:bg-gray-700 overflow-hidden">
                           <Image
-                            src={item.image_url || "/placeholder.svg"}
+                            src={item.image_url || "/placeholder.jpg"}
                             alt={item.name}
                             fill
-                            className="object-cover group-hover:scale-110 transition-transform duration-700"
+                            className="object-cover group-hover:scale-110 transition-transform duration-500"
+                            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                            priority={false}
                           />
+                          
+                          {/* Popular badge */}
                           {item.is_popular && (
-                            <div className="absolute top-4 left-4 bg-yellow-400 dark:bg-yellow-500 text-black dark:text-white px-3 py-1 rounded-full text-sm font-bold flex items-center gap-1">
-                              <Star className="h-3 w-3 fill-black dark:fill-white" />
+                            <motion.div
+                              initial={{ opacity: 0, x: -20 }}
+                              animate={{ opacity: 1, x: 0 }}
+                              className="absolute top-3 left-3 bg-gradient-to-r from-yellow-400 to-orange-500 text-black px-3 py-1 rounded-full text-xs font-bold flex items-center gap-1 shadow-lg"
+                            >
+                              <Sparkles className="h-3 w-3" />
                               Popular
-                            </div>
+                            </motion.div>
                           )}
 
-                          {/* Interactive Size Selection Overlay for items with sizes */}
-                          {itemSizes.length > 0 && (
-                            <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                              <div className="bg-white/95 dark:bg-gray-800/95 backdrop-blur-sm rounded-2xl p-4 transform scale-90 group-hover:scale-100 transition-transform duration-300">
-                                <p className="text-center text-sm font-semibold text-gray-800 dark:text-gray-200 mb-3">
-                                  Select Size
-                                </p>
-                                <div className="flex gap-2">
-                                  {itemSizes.map((size) => (
-                                    <button
-                                      key={size}
-                                      onClick={() => handleSizeSelect(itemKey, size)}
-                                      className={`w-12 h-12 rounded-full font-bold text-sm transition-all duration-200 ${
-                                        selectedSize === size
-                                          ? "bg-black dark:bg-gray-800 text-white scale-110"
-                                          : "bg-gray-200 dark:bg-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-500"
-                                      }`}
-                                    >
-                                      {size}
-                                    </button>
-                                  ))}
-                                </div>
-                              </div>
-                            </div>
-                          )}
+                          {/* Favorite button */}
+                          <motion.button
+                            whileHover={{ scale: 1.1 }}
+                            whileTap={{ scale: 0.9 }}
+                            onClick={() => toggleFavorite(item.id)}
+                            className="absolute top-3 right-3 p-2 bg-white/90 dark:bg-gray-800/90 rounded-full shadow-lg hover:bg-white dark:hover:bg-gray-800 transition-colors duration-200"
+                          >
+                            <Heart 
+                              className={`h-5 w-5 transition-all duration-200 ${
+                                isFavorite 
+                                  ? 'text-red-500 fill-red-500' 
+                                  : 'text-gray-600 dark:text-gray-400'
+                              }`}
+                            />
+                          </motion.button>
 
-                          {/* Interactive Custom Options Overlay for items with options */}
-                          {getItemOptions(item).length > 0 && (
-                            <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                              <div className="bg-white/95 dark:bg-gray-800/95 backdrop-blur-sm rounded-2xl p-4 transform scale-90 group-hover:scale-100 transition-transform duration-300 max-w-xs">
-                                <p className="text-center text-sm font-semibold text-gray-800 dark:text-gray-200 mb-3">
-                                  Custom Options
-                                </p>
-                                <div className="space-y-2">
-                                  {getItemOptions(item).map((option) => (
-                                    <button
-                                      key={option.id}
-                                      onClick={() => handleOptionToggle(itemKey, option.option_name)}
-                                      className={`w-full p-2 rounded-lg text-sm transition-all duration-200 flex items-center justify-between ${
-                                        itemSelectedOptions.includes(option.option_name)
-                                          ? "bg-black dark:bg-gray-800 text-white"
-                                          : "bg-gray-200 dark:bg-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-500"
-                                      }`}
-                                    >
-                                      <span>{option.option_name}</span>
-                                      {itemSelectedOptions.includes(option.option_name) && (
-                                        <Check className="h-4 w-4" />
-                                      )}
-                                      {option.price_adjustment > 0 && (
-                                        <span className="text-xs">+NLe {option.price_adjustment}</span>
-                                      )}
-                                    </button>
-                                  ))}
-                                </div>
-                              </div>
-                            </div>
-                          )}
+                          {/* Price badge */}
+                          <div className="absolute bottom-3 right-3 bg-orange-600 text-white px-3 py-1 rounded-full text-sm font-bold shadow-lg">
+                            NLe {getItemPrice(item, selectedSizes[item.id], selectedOptions[item.id])}
+                          </div>
                         </div>
 
                         <div className="p-6">
-                          <h3 className="text-xl font-bold text-black dark:text-white mb-2">{item.name}</h3>
+                          <div className="mb-3">
+                            <h3 className="text-xl font-bold text-gray-900 dark:text-white group-hover:text-orange-600 dark:group-hover:text-orange-400 transition-colors duration-200">
+                              {item.name}
+                            </h3>
+                          </div>
+
                           {item.description && (
-                            <p className="text-gray-600 dark:text-gray-400 mb-4">{item.description}</p>
+                            <p className="text-gray-600 dark:text-gray-300 mb-4 line-clamp-2 text-sm">
+                              {item.description}
+                            </p>
                           )}
-                          <div className="flex items-center justify-between mb-4">
-                            <div className="text-2xl font-bold text-red-600 dark:text-red-500">NLe {price}</div>
-                            <div className="flex flex-wrap gap-2">
-                              {itemSizes.length > 0 && (
-                                <div className="text-sm text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-700 px-3 py-1 rounded-full">
-                                  Size: {selectedSize}
+
+                          {hasVariants && (
+                            <div className="space-y-3 mb-4">
+                              {sizes.length > 0 && (
+                                <div>
+                                  <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 flex items-center gap-1">
+                                    <span className="w-2 h-2 bg-orange-500 rounded-full"></span>
+                                    Choose Size:
+                                  </p>
+                                  <div className="flex gap-2">
+                                    {sizes.map((size) => (
+                                      <motion.button
+                                        key={size}
+                                        whileHover={{ scale: 1.05 }}
+                                        whileTap={{ scale: 0.95 }}
+                                        onClick={() => handleSizeSelect(item.id, size)}
+                                        className={`px-3 py-1 rounded-full text-xs font-medium transition-all duration-200 ${
+                                          selectedSizes[item.id] === size
+                                            ? 'bg-orange-600 text-white shadow-md'
+                                            : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-orange-100 dark:hover:bg-orange-900/20'
+                                        }`}
+                                      >
+                                        {size}
+                                      </motion.button>
+                                    ))}
+                                  </div>
                                 </div>
                               )}
-                              {itemSelectedOptions.length > 0 && (
-                                <div className="text-sm text-gray-500 dark:text-gray-400 bg-blue-100 dark:bg-blue-900 px-3 py-1 rounded-full">
-                                  {itemSelectedOptions.length} option{itemSelectedOptions.length > 1 ? 's' : ''}
+
+                              {options.length > 0 && (
+                                <div>
+                                  <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 flex items-center gap-1">
+                                    <span className="w-2 h-2 bg-orange-500 rounded-full"></span>
+                                    Add Extras:
+                                  </p>
+                                  <div className="flex flex-wrap gap-2">
+                                    {options.map((option) => (
+                                      <motion.button
+                                        key={option}
+                                        whileHover={{ scale: 1.05 }}
+                                        whileTap={{ scale: 0.95 }}
+                                        onClick={() => handleOptionToggle(item.id, option)}
+                                        className={`px-3 py-1 rounded-full text-xs font-medium transition-all duration-200 ${
+                                          selectedOptions[item.id]?.includes(option)
+                                            ? 'bg-green-600 text-white shadow-md'
+                                            : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-green-100 dark:hover:bg-green-900/20'
+                                        }`}
+                                      >
+                                        {option}
+                                      </motion.button>
+                                    ))}
+                                  </div>
                                 </div>
                               )}
                             </div>
-                          </div>
-
-                          {/* Show selected custom options */}
-                          {itemSelectedOptions.length > 0 && (
-                            <div className="mb-4">
-                              <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Selected Options:</p>
-                              <div className="flex flex-wrap gap-2">
-                                {itemSelectedOptions.map((optionName) => {
-                                  const option = getItemOptions(item).find(opt => opt.option_name === optionName)
-                                  return (
-                                    <div key={optionName} className="text-xs bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 px-2 py-1 rounded-full flex items-center gap-1">
-                                      <Check className="h-3 w-3" />
-                                      {optionName}
-                                      {option && option.price_adjustment > 0 && (
-                                        <span className="text-blue-600 dark:text-blue-400">(+NLe {option.price_adjustment})</span>
-                                      )}
-                                    </div>
-                                  )
-                                })}
-                              </div>
-                            </div>
                           )}
 
-                          <div className="flex items-center justify-between mb-4">
-                            <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Quantity:</span>
-                            <div className="flex items-center gap-3">
-                              <button
+                          <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-2 bg-gray-50 dark:bg-gray-700 rounded-lg p-1">
+                              <motion.button
+                                whileHover={{ scale: 1.1 }}
+                                whileTap={{ scale: 0.9 }}
                                 onClick={() => handleQuantityChange(itemKey, -1)}
-                                className="w-8 h-8 rounded-full bg-gray-200 dark:bg-gray-600 flex items-center justify-center hover:bg-gray-300 dark:hover:bg-gray-500 transition-colors"
+                                disabled={quantity <= 1}
+                                className="p-1 rounded-md hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors disabled:opacity-50"
                               >
-                                <Minus className="h-4 w-4 text-gray-700 dark:text-gray-300" />
-                              </button>
-                              <span className="font-bold text-lg w-8 text-center text-gray-900 dark:text-gray-100">
-                                {quantity}
-                              </span>
-                              <button
+                                <Minus className="h-4 w-4" />
+                              </motion.button>
+                              <span className="w-8 text-center font-bold text-lg">{quantity}</span>
+                              <motion.button
+                                whileHover={{ scale: 1.1 }}
+                                whileTap={{ scale: 0.9 }}
                                 onClick={() => handleQuantityChange(itemKey, 1)}
-                                className="w-8 h-8 rounded-full bg-gray-200 dark:bg-gray-600 flex items-center justify-center hover:bg-gray-300 dark:hover:bg-gray-500 transition-colors"
+                                className="p-1 rounded-md hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
                               >
-                                <Plus className="h-4 w-4 text-gray-700 dark:text-gray-300" />
-                              </button>
+                                <Plus className="h-4 w-4" />
+                              </motion.button>
                             </div>
+
+                            <motion.button
+                              whileHover={{ scale: 1.05 }}
+                              whileTap={{ scale: 0.95 }}
+                              onClick={() => handleAddToCart(item)}
+                              className="bg-gradient-to-r from-orange-600 to-red-600 hover:from-orange-700 hover:to-red-700 text-white px-6 py-2 rounded-full font-medium shadow-lg hover:shadow-xl transition-all duration-200 flex items-center gap-2"
+                            >
+                              <ShoppingCart className="h-4 w-4" />
+                              Add to Cart
+                            </motion.button>
                           </div>
-
-                          <Button
-                            onClick={() => {
-                              for (let i = 0; i < quantity; i++) {
-                                // Build the item name with size and options
-                                let itemName = item.name
-                                if (itemSizes.length > 0) {
-                                  itemName += ` (${selectedSize})`
-                                }
-                                if (itemSelectedOptions.length > 0) {
-                                  itemName += ` - ${itemSelectedOptions.join(', ')}`
-                                }
-
-                                addItem({
-                                  id: `${itemKey}-${Date.now()}-${i}`,
-                                  name: itemName,
-                                  price: price,
-                                  type: item.category?.slug || "menu-item",
-                                  size: itemSizes.length > 0 ? selectedSize : undefined,
-                                  options: itemSelectedOptions.length > 0 ? itemSelectedOptions : undefined,
-                                })
-                              }
-                            }}
-                            className="w-full bg-black hover:bg-gray-800 dark:bg-gray-800 dark:hover:bg-gray-700 text-white rounded-2xl py-3 transition-all duration-300 font-semibold"
-                          >
-                            <ShoppingCart className="h-5 w-5 mr-2" />
-                            Add to Cart - NLe {price * quantity}
-                          </Button>
                         </div>
                       </motion.div>
                     )
                   })}
                 </motion.div>
+
+                {getItemsByCategory(category.slug).length === 0 && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="text-center py-12"
+                  >
+                    <p className="text-gray-500 dark:text-gray-400">
+                      No items available in this category.
+                    </p>
+                  </motion.div>
+                )}
               </TabsContent>
-            )
-          })}
-        </Tabs>
+            ))}
+          </Tabs>
+        )}
+
+        {categories.length === 0 && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="text-center py-12"
+          >
+            <p className="text-gray-500 dark:text-gray-400">
+              No menu categories available.
+            </p>
+          </motion.div>
+        )}
       </div>
     </section>
   )

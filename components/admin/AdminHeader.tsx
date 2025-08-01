@@ -28,7 +28,6 @@ const navigation = [
   { name: "Dashboard", href: "/admin", icon: LayoutDashboard },
   { name: "Categories", href: "/admin/categories", icon: Menu },
   { name: "Menu Items", href: "/admin/menu", icon: Utensils },
-  { name: "Orders", href: "/admin/orders", icon: MessageSquare },
 ]
 
 export function AdminHeader() {
