@@ -17,7 +17,7 @@ interface MenuContextType extends MenuState {
   updateCategory: (id: string, updates: Partial<Category>) => Promise<void>
   deleteCategory: (id: string) => Promise<void>
   addMenuItem: (menuItem: Omit<MenuItemWithCategory, "id" | "created_at" | "updated_at" | "category" | "sizes" | "options">, sizes?: any[], options?: any[]) => Promise<void>
-  updateMenuItem: (id: string, updates: Partial<MenuItemWithCategory>) => Promise<void>
+  updateMenuItem: (id: string, updates: Partial<MenuItemWithCategory>, sizes?: any[], options?: any[]) => Promise<void>
   deleteMenuItem: (id: string) => Promise<void>
 }
 
@@ -208,11 +208,72 @@ export function MenuProvider({ children }: { children: ReactNode }) {
     }
   }
 
-  const updateMenuItem = async (id: string, updates: Partial<MenuItemWithCategory>) => {
+  const updateMenuItem = async (id: string, updates: Partial<MenuItemWithCategory>, sizes?: any[], options?: any[]) => {
     try {
       dispatch({ type: "SET_ERROR", payload: null })
+      
+      // Update the menu item first
       await MenuService.updateMenuItem(id, updates)
-      dispatch({ type: "UPDATE_MENU_ITEM", payload: { id, updates } })
+      
+      // Handle sizes if provided
+      if (sizes !== undefined) {
+        // Delete existing sizes
+        const existingSizes = await MenuService.getMenuItems(false)
+        const currentItem = existingSizes.find(item => item.id === id)
+        if (currentItem?.sizes) {
+          for (const size of currentItem.sizes) {
+            await MenuService.deleteMenuItemSize(size.id)
+          }
+        }
+        
+        // Create new sizes
+        if (sizes.length > 0) {
+          for (const size of sizes) {
+            if (size.size_name.trim()) {
+              await MenuService.createMenuItemSize({
+                menu_item_id: id,
+                size_name: size.size_name,
+                price: size.price,
+                is_default: size.is_default
+              })
+            }
+          }
+        }
+      }
+      
+      // Handle options if provided
+      if (options !== undefined) {
+        // Delete existing options
+        const existingItems = await MenuService.getMenuItems(false)
+        const currentItem = existingItems.find(item => item.id === id)
+        if (currentItem?.options) {
+          for (const option of currentItem.options) {
+            await MenuService.deleteMenuItemOption(option.id)
+          }
+        }
+        
+        // Create new options
+        if (options.length > 0) {
+          for (const option of options) {
+            if (option.name.trim()) {
+              await MenuService.createMenuItemOption({
+                menu_item_id: id,
+                option_name: option.name,
+                price_adjustment: option.price_adjustment,
+                is_available: true,
+                sort_order: option.sort_order || 0
+              })
+            }
+          }
+        }
+      }
+      
+      // Fetch the complete updated menu item
+      const menuItems = await MenuService.getMenuItems(false)
+      const updatedMenuItem = menuItems.find(item => item.id === id)
+      if (updatedMenuItem) {
+        dispatch({ type: "UPDATE_MENU_ITEM", payload: { id, updates: updatedMenuItem } })
+      }
     } catch (error) {
       console.error("Error updating menu item:", error)
       dispatch({ type: "SET_ERROR", payload: "Failed to update menu item" })

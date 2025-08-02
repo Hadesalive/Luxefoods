@@ -31,7 +31,13 @@ export default function ProductPage() {
 
   const handleAddToCart = () => {
     for (let i = 0; i < quantity; i++) {
-      addItem(product)
+      addItem({
+        id: product.id,
+        name: product.name,
+        price: product.price,
+        type: product.category, // Use category as type
+        quantity: 1
+      })
     }
   }
 

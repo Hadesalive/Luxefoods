@@ -36,7 +36,7 @@ export default function CategoriesPage() {
     slug: "",
     description: "",
     image_url: "",
-    sort_order: 0,
+    sort_order: "",
     is_active: true,
   })
 
@@ -53,18 +53,22 @@ export default function CategoriesPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     try {
+      const formDataToSubmit = {
+        ...formData,
+        sort_order: parseInt(formData.sort_order) || 0,
+      }
       if (editingCategory) {
-        await updateCategory(editingCategory.id, formData)
+        await updateCategory(editingCategory.id, formDataToSubmit)
         setEditingCategory(null)
       } else {
-        await addCategory(formData)
+        await addCategory(formDataToSubmit)
       }
       setFormData({
         name: "",
         slug: "",
         description: "",
         image_url: "",
-        sort_order: 0,
+        sort_order: "",
         is_active: true,
       })
       setIsAddDialogOpen(false)
@@ -80,7 +84,7 @@ export default function CategoriesPage() {
       slug: category.slug,
       description: category.description || "",
       image_url: category.image_url || "",
-      sort_order: category.sort_order,
+      sort_order: category.sort_order.toString(),
       is_active: category.is_active,
     })
     setIsAddDialogOpen(true)
@@ -131,52 +135,56 @@ export default function CategoriesPage() {
               Add Category
             </Button>
           </DialogTrigger>
-          <DialogContent className="sm:max-w-md">
-            <DialogHeader>
-              <DialogTitle>
+          <DialogContent className="w-[98vw] max-w-md max-h-[95vh] overflow-y-auto p-3 sm:p-4 md:p-6 mx-2">
+            <DialogHeader className="pb-3 sm:pb-4">
+              <DialogTitle className="text-lg sm:text-xl md:text-2xl">
                 {editingCategory ? "Edit Category" : "Add New Category"}
               </DialogTitle>
             </DialogHeader>
-            <form onSubmit={handleSubmit} className="space-y-4">
+            <form onSubmit={handleSubmit} className="space-y-3 sm:space-y-4">
               <div>
-                <Label htmlFor="name">Name</Label>
+                <Label htmlFor="name" className="text-sm font-medium">Name</Label>
                 <Input
                   id="name"
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                   placeholder="e.g., Pizza, Kebbeh"
+                  className="mt-1 h-11 sm:h-10 text-base"
                   required
                 />
               </div>
               <div>
-                <Label htmlFor="slug">Slug</Label>
+                <Label htmlFor="slug" className="text-sm font-medium">Slug</Label>
                 <Input
                   id="slug"
                   value={formData.slug}
                   onChange={(e) => setFormData({ ...formData, slug: e.target.value })}
                   placeholder="e.g., pizza, kebbeh"
+                  className="mt-1 h-11 sm:h-10 text-base"
                   required
                 />
               </div>
               <div>
-                <Label htmlFor="description">Description</Label>
+                <Label htmlFor="description" className="text-sm font-medium">Description</Label>
                 <Textarea
                   id="description"
                   value={formData.description}
                   onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                   placeholder="Brief description of the category"
                   rows={3}
+                  className="mt-1 text-base"
                 />
               </div>
 
               <div>
-                <Label htmlFor="sort_order">Sort Order</Label>
+                <Label htmlFor="sort_order" className="text-sm font-medium">Sort Order</Label>
                 <Input
                   id="sort_order"
                   type="number"
                   value={formData.sort_order}
-                  onChange={(e) => setFormData({ ...formData, sort_order: parseInt(e.target.value) })}
+                  onChange={(e) => setFormData({ ...formData, sort_order: e.target.value })}
                   placeholder="0"
+                  className="mt-1 h-11 sm:h-10 text-base"
                 />
               </div>
               <div className="flex items-center space-x-2">
@@ -187,10 +195,10 @@ export default function CategoriesPage() {
                   onChange={(e) => setFormData({ ...formData, is_active: e.target.checked })}
                   className="rounded"
                 />
-                <Label htmlFor="is_active">Active</Label>
+                <Label htmlFor="is_active" className="text-sm">Active</Label>
               </div>
-              <div className="flex gap-3 pt-4">
-                <Button type="submit" className="flex-1">
+              <div className="flex flex-col gap-2 pt-4">
+                <Button type="submit" className="w-full h-12 text-base">
                   {editingCategory ? "Update Category" : "Add Category"}
                 </Button>
                 <Button
@@ -204,10 +212,11 @@ export default function CategoriesPage() {
                       slug: "",
                       description: "",
                       image_url: "",
-                      sort_order: 0,
+                      sort_order: "",
                       is_active: true,
                     })
                   }}
+                  className="w-full h-12 text-base"
                 >
                   Cancel
                 </Button>
@@ -230,7 +239,7 @@ export default function CategoriesPage() {
               placeholder="Search categories..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-10 bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700"
+              className="pl-10 h-11 sm:h-10 text-base bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700"
             />
           </div>
           <div className="text-sm text-gray-600 dark:text-gray-400">

@@ -23,11 +23,12 @@ import Link from "next/link"
 import { usePathname, useRouter } from "next/navigation"
 import { cn } from "@/lib/utils"
 import { useAuth } from "@/contexts/AuthContext"
+import Image from "next/image"
 
 const navigation = [
-  { name: "Dashboard", href: "/admin", icon: LayoutDashboard },
-  { name: "Categories", href: "/admin/categories", icon: Menu },
-  { name: "Menu Items", href: "/admin/menu", icon: Utensils },
+  { name: "Dashboard", href: "/admin", icon: LayoutDashboard, emoji: "📊" },
+  { name: "Categories", href: "/admin/categories", icon: Menu, emoji: "🏷️" },
+  { name: "Menu Items", href: "/admin/menu", icon: Utensils, emoji: "🍽️" },
 ]
 
 export function AdminHeader() {
@@ -46,103 +47,165 @@ export function AdminHeader() {
   }
 
   return (
-    <header className="sticky top-0 z-40 flex h-16 items-center justify-between border-b border-gray-200 dark:border-gray-700 bg-white/95 dark:bg-gray-800/95 backdrop-blur-md px-6 shadow-sm">
-      <div className="flex items-center gap-6">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 bg-gradient-to-br from-black to-gray-800 rounded-xl flex items-center justify-center shadow-lg">
-            <span className="text-white font-bold text-lg">KB</span>
-          </div>
-          <div>
-            <span className="font-bold text-xl text-black dark:text-white">Kings Bakery</span>
-            <p className="text-xs text-gray-500 dark:text-gray-400 -mt-1">Admin Panel</p>
+    <header className="bg-black dark:bg-gray-900 text-white sticky top-0 z-50 shadow-lg transition-colors duration-300">
+      <div className="container mx-auto px-4">
+        <div className="flex items-center justify-between h-16 lg:h-20">
+          {/* Logo and Brand */}
+          <Link href="/admin" className="flex items-center space-x-2 lg:space-x-3">
+            <div className="w-10 h-10 lg:w-12 lg:h-12 relative rounded-full overflow-hidden bg-white p-1 shadow-lg">
+              <Image src="/images/logo.jpg" alt="Kings Bakery Logo" fill className="object-contain" />
+            </div>
+            <div className="hidden sm:block">
+              <span className="text-base lg:text-xl font-bold">Kings Bakery</span>
+              <div className="text-xs lg:text-sm text-yellow-300 dark:text-yellow-400 italic">
+                Admin Panel
+              </div>
+            </div>
+            <span className="sm:hidden text-base font-bold">Admin</span>
+          </Link>
+
+          {/* Desktop Navigation */}
+          <nav className="hidden lg:flex items-center space-x-2">
+            {navigation.map((item) => {
+              const isActive = pathname === item.href
+              return (
+                <Link
+                  key={item.name}
+                  href={item.href}
+                  className={cn(
+                    "flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all duration-300",
+                    isActive
+                      ? "bg-gradient-to-r from-yellow-400/20 to-yellow-300/20 text-yellow-300 dark:text-yellow-400 border border-yellow-300/30 shadow-lg"
+                      : "text-white hover:text-yellow-300 dark:hover:text-yellow-400 hover:bg-white/10 backdrop-blur-sm"
+                  )}
+                >
+                  <item.icon className="h-4 w-4" />
+                  {item.name}
+                </Link>
+              )
+            })}
+          </nav>
+
+          {/* Right Side Controls */}
+          <div className="flex items-center space-x-2 lg:space-x-4">
+            <ThemeToggle />
+
+            {/* User Dropdown */}
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button 
+                  variant="ghost" 
+                  size="sm" 
+                  className="relative h-10 w-10 rounded-full bg-white/10 hover:bg-white/20 border border-white/20 hover:border-yellow-300/40 transition-all duration-300"
+                >
+                  <User className="h-5 w-5" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="w-56 bg-gray-900 border-gray-700" align="end" forceMount>
+                <DropdownMenuLabel className="font-normal text-white">
+                  <div className="flex flex-col space-y-1">
+                    <p className="text-sm font-medium leading-none">{user?.email || "Admin User"}</p>
+                    <p className="text-xs leading-none text-yellow-300/70">{user?.email || "admin@thekingsbakerysl.com"}</p>
+                  </div>
+                </DropdownMenuLabel>
+                <DropdownMenuSeparator className="bg-gray-700" />
+                <DropdownMenuItem className="text-white hover:bg-gray-800 focus:bg-gray-800">
+                  <Settings className="mr-2 h-4 w-4" />
+                  Settings
+                </DropdownMenuItem>
+                <DropdownMenuSeparator className="bg-gray-700" />
+                <DropdownMenuItem 
+                  onClick={handleLogout}
+                  className="text-white hover:bg-gray-800 focus:bg-gray-800"
+                >
+                  <LogOut className="mr-2 h-4 w-4" />
+                  Log out
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+
+            {/* Mobile Menu Button */}
+            <div className="lg:hidden">
+              <button
+                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                className="relative w-10 h-10 rounded-xl bg-gradient-to-br from-yellow-400/20 to-yellow-300/20 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 flex items-center justify-center group border border-yellow-300/30"
+                aria-label="Toggle menu"
+              >
+                <div className="relative w-6 h-6 flex flex-col justify-center items-center">
+                  <span
+                    className={`block w-6 h-0.5 bg-yellow-300 transition-all duration-300 transform ${
+                      isMobileMenuOpen ? "rotate-45 translate-y-0.5" : "-translate-y-1.5"
+                    }`}
+                  />
+                  <span
+                    className={`block w-6 h-0.5 bg-yellow-300 transition-all duration-300 ${
+                      isMobileMenuOpen ? "opacity-0" : "opacity-100"
+                    }`}
+                  />
+                  <span
+                    className={`block w-6 h-0.5 bg-yellow-300 transition-all duration-300 transform ${
+                      isMobileMenuOpen ? "-rotate-45 -translate-y-0.5" : "translate-y-1.5"
+                    }`}
+                  />
+                </div>
+              </button>
+            </div>
           </div>
         </div>
 
-        <nav className="hidden md:flex items-center gap-1">
-          {navigation.map((item) => {
-            const isActive = pathname === item.href
-            return (
-              <Link
-                key={item.name}
-                href={item.href}
-                className={cn(
-                  "flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all duration-200",
-                  isActive
-                    ? "bg-gradient-to-r from-black to-gray-800 text-white shadow-lg shadow-black/20 dark:shadow-black/20"
-                    : "text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700/50 hover:text-gray-900 dark:hover:text-gray-100 hover:shadow-md",
-                )}
-              >
-                <item.icon className="h-4 w-4" />
-                {item.name}
-              </Link>
-            )
-          })}
-        </nav>
-
-        {/* Mobile Menu */}
-        <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
-          <SheetTrigger asChild>
-            <Button variant="ghost" size="sm" className="md:hidden h-10 w-10 p-0">
-              <Menu className="h-5 w-5" />
-            </Button>
-          </SheetTrigger>
-          <SheetContent side="left" className="w-64">
-            <SheetHeader>
-              <SheetTitle className="text-left">Navigation</SheetTitle>
-            </SheetHeader>
-            <nav className="flex flex-col gap-2 mt-6">
-              {navigation.map((item) => {
-                const isActive = pathname === item.href
-                return (
-                  <Link
-                    key={item.name}
-                    href={item.href}
-                    onClick={() => setIsMobileMenuOpen(false)}
-                    className={cn(
-                      "flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200",
-                      isActive
-                        ? "bg-gradient-to-r from-black to-gray-800 text-white shadow-lg"
-                        : "text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700/50 hover:text-gray-900 dark:hover:text-gray-100",
-                    )}
-                  >
-                    <item.icon className="h-5 w-5" />
-                    {item.name}
-                  </Link>
-                )
-              })}
-            </nav>
-          </SheetContent>
-        </Sheet>
-      </div>
-
-      <div className="flex items-center gap-3">
-        <ThemeToggle />
-
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" size="sm" className="relative h-10 w-10 rounded-full bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600">
-              <User className="h-5 w-5" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent className="w-56" align="end" forceMount>
-            <DropdownMenuLabel className="font-normal">
+        {/* Mobile Navigation */}
+        {isMobileMenuOpen && (
+          <div className="lg:hidden absolute top-full left-0 right-0 bg-gradient-to-br from-black via-gray-900 to-black shadow-2xl border-t border-yellow-300/20 backdrop-blur-lg transition-colors duration-300">
+            <nav className="py-6 px-4">
               <div className="flex flex-col space-y-1">
-                <p className="text-sm font-medium leading-none">{user?.email || "Admin User"}</p>
-                                 <p className="text-xs leading-none text-muted-foreground">{user?.email || "admin@thekingsbakerysl.com"}</p>
+                {navigation.map((item) => {
+                  const isActive = pathname === item.href
+                  return (
+                    <Link
+                      key={item.name}
+                      href={item.href}
+                      onClick={() => setIsMobileMenuOpen(false)}
+                      className={cn(
+                        "group flex items-center text-white transition-all duration-300 py-4 px-6 rounded-2xl backdrop-blur-sm",
+                        isActive
+                          ? "bg-gradient-to-r from-yellow-400/20 to-yellow-300/20 text-yellow-300 border border-yellow-300/30"
+                          : "hover:text-yellow-300 hover:bg-white/10"
+                      )}
+                    >
+                      <span className="text-2xl mr-4 group-hover:scale-110 transition-transform duration-300">
+                        {item.emoji}
+                      </span>
+                      <span className="font-medium text-lg">{item.name}</span>
+                    </Link>
+                  )
+                })}
+
+                {/* User Info Section */}
+                <div className="mt-4 pt-4 border-t border-yellow-300/20">
+                  <div className="flex items-center text-white py-4 px-6 rounded-2xl bg-white/5 backdrop-blur-sm">
+                    <User className="h-6 w-6 mr-4 text-yellow-300" />
+                    <div>
+                      <span className="font-medium text-lg block">{user?.email || "Admin User"}</span>
+                      <span className="text-yellow-300/70 text-sm">Administrator</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Logout Button */}
+                <button
+                  onClick={() => {
+                    handleLogout()
+                    setIsMobileMenuOpen(false)
+                  }}
+                  className="group flex items-center text-white hover:text-red-400 transition-all duration-300 py-4 px-6 rounded-2xl hover:bg-red-500/10 backdrop-blur-sm mt-2"
+                >
+                  <LogOut className="h-6 w-6 mr-4 group-hover:scale-110 transition-transform duration-300" />
+                  <span className="font-medium text-lg">Log Out</span>
+                </button>
               </div>
-            </DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>
-              <Settings className="mr-2 h-4 w-4" />
-              Settings
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={handleLogout}>
-              <LogOut className="mr-2 h-4 w-4" />
-              Log out
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+            </nav>
+          </div>
+        )}
       </div>
     </header>
   )

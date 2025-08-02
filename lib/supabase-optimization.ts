@@ -1,4 +1,4 @@
-// Supabase Free Tier Optimization Utilities
+
 
 interface UsageMetrics {
   apiCalls: number

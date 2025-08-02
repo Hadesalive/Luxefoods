@@ -2,6 +2,7 @@ import type React from "react"
 import type { Metadata } from "next"
 import { Inter } from "next/font/google"
 import "./globals.css"
+import { SpeedInsights } from "@vercel/speed-insights/next"
 import { ThemeProvider } from "@/components/theme-provider"
 import { CartProvider } from "@/contexts/CartContext"
 import { AuthProvider } from "@/contexts/AuthContext"
@@ -10,21 +11,32 @@ import ScrollToTop from "@/components/ScrollToTop"
 
 const inter = Inter({ subsets: ["latin"] })
 
+// Watermark Component
+function Watermark() {
+  return (
+    <div className="fixed bottom-2 right-2 z-40 pointer-events-none">
+      <div className="text-[10px] text-gray-300 dark:text-gray-600 opacity-40 select-none font-light tracking-wide">
+        made by ahmad 074762243
+      </div>
+    </div>
+  )
+}
+
 export const metadata: Metadata = {
   metadataBase: new URL('https://thekingsbakerysl.com'),
-  title: "Kings Bakery - Restaurant & Bakery | Fresh Food, Bread, Pastries & Local Dishes | Freetown, Sierra Leone",
+  title: "The Kings Bakery - Food Delivery | Fried Rice, Jollof Rice, Grilled Chicken, Burgers, Shawarma | Freetown, Sierra Leone",
   description:
-    "Kings Bakery Restaurant in Freetown, Sierra Leone. Fresh bread, pastries, local dishes, international cuisine, and delicious food delivered to your door. Order online for fast delivery in Lumley and surrounding areas.",
-  keywords: "restaurant Freetown, bakery Freetown, fresh bread Sierra Leone, local food Freetown, international cuisine, food delivery Lumley, Kings Bakery restaurant, online food order, restaurant delivery Freetown, Sierra Leone food, African cuisine, European dishes, Asian food, fresh pastries, cakes Freetown, jollof rice, fried rice, pizza, burgers, seafood, vegetarian options",
+    "Kings Baker & Restaurant in Freetown, Sierra Leone. Order delicious food online - fried rice, jollof rice, grilled chicken, fried chicken, shawarma, burgers, breakfast, lunch, dinner. Fast food delivery to Lumley and surrounding areas.",
+  keywords: "restaurant Freetown, food delivery Freetown, fried rice delivery, jollof rice delivery, grilled chicken delivery, fried chicken delivery, shawarma delivery, burger delivery, breakfast delivery, lunch delivery, dinner delivery, online food order, restaurant delivery Sierra Leone, Kings Restaurant, Kings Bakery, local food Freetown, international cuisine, food delivery Lumley, African food delivery, European food delivery, Asian food delivery, fast food delivery, date night food delivery, family meal delivery, party food delivery, catering delivery Freetown",
   authors: [{ name: "Kings Bakery", url: "https://thekingsbakerysl.com" }],
   creator: "Kings Bakery",
   publisher: "Kings Bakery",
   openGraph: {
-    title: "Kings Bakery - Restaurant & Bakery | Fresh Food, Bread, Pastries & Local Dishes | Freetown, Sierra Leone",
+    title: "The Kings Bakery - Food Delivery | Fried Rice, Jollof Rice, Grilled Chicken, Burgers, Shawarma | Freetown, Sierra Leone",
     description:
-      "Kings Bakery Restaurant in Freetown, Sierra Leone. Fresh bread, pastries, local dishes, international cuisine, and delicious food delivered to your door. Order online for fast delivery in Lumley and surrounding areas.",
+      "The Kings Bakery in Freetown, Sierra Leone. Order delicious food online - fried rice, jollof rice, grilled chicken, fried chicken, shawarma, burgers, breakfast, lunch, dinner. Fast food delivery to Lumley and surrounding areas.",
     url: "https://thekingsbakerysl.com",
-    siteName: "Kings Bakery",
+    siteName: "The Kings Bakery",
     images: [
       {
         url: "/images/og-image.jpg",
@@ -38,9 +50,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Kings Bakery - Restaurant & Bakery | Fresh Food, Bread, Pastries & Local Dishes | Freetown, Sierra Leone",
+    title: "The Kings Restaurant & Bakery - Food Delivery | Fried Rice, Jollof Rice, Grilled Chicken, Burgers, Shawarma | Freetown, Sierra Leone",
     description:
-      "Kings Bakery Restaurant in Freetown, Sierra Leone. Fresh bread, pastries, local dishes, international cuisine, and delicious food delivered to your door. Order online for fast delivery in Lumley and surrounding areas.",
+      "The Kings Restaurant & Bakery in Freetown, Sierra Leone. Order delicious food online - fried rice, jollof rice, grilled chicken, fried chicken, shawarma, burgers, breakfast, lunch, dinner. Fast food delivery to Lumley and surrounding areas.",
     images: ["/images/og-image.jpg"],
   },
   robots: {
@@ -83,13 +95,13 @@ export default function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{
             __html: JSON.stringify({
-              "@context": "https://schema.org",
-              "@type": "Restaurant",
-              "name": "Kings Bakery",
-              "description": "Restaurant and bakery serving fresh bread, pastries, local dishes, and international cuisine in Freetown, Sierra Leone",
-              "url": "https://thekingsbakerysl.com",
-              "telephone": "+23276533655",
-              "email": "info@thekingsbakerysl.com",
+                             "@context": "https://schema.org",
+               "@type": "Restaurant",
+               "name": "The Kings Restaurant & Bakery",
+               "description": "Restaurant serving delicious food including fried rice, jollof rice, grilled chicken, fried chicken, shawarma, burgers, breakfast, lunch, and dinner in Freetown, Sierra Leone",
+               "url": "https://thekingsbakerysl.com",
+               "telephone": "+23276533655",
+               "email": "info@thekingsbakerysl.com",
               "address": {
                 "@type": "PostalAddress",
                 "streetAddress": "117 Main Regent Road, Hill Station",
@@ -104,40 +116,40 @@ export default function RootLayout({
               },
               "openingHours": "Mo-Su 10:00-22:00",
               "priceRange": "$$",
-              "servesCuisine": ["African", "European", "Asian", "Bakery", "Local Dishes", "International Cuisine", "Bread", "Pastries", "Cakes", "Jollof Rice", "Fried Rice", "Pizza", "Burgers", "Seafood", "Vegetarian"],
+                             "servesCuisine": ["African", "European", "Asian", "Local Dishes", "International Cuisine", "Fried Rice", "Jollof Rice", "Grilled Chicken", "Fried Chicken", "Shawarma", "Burgers", "Breakfast", "Lunch", "Dinner", "Fast Food", "Restaurant Food"],
               "hasOfferCatalog": {
                 "@type": "OfferCatalog",
                 "name": "Menu",
-                "itemListElement": [
-                  {
-                    "@type": "Offer",
-                    "itemOffered": {
-                      "@type": "FoodEstablishment",
-                      "name": "Bread & Pastries"
-                    }
-                  },
-                  {
-                    "@type": "Offer",
-                    "itemOffered": {
-                      "@type": "FoodEstablishment",
-                      "name": "Local Dishes"
-                    }
-                  },
-                  {
-                    "@type": "Offer",
-                    "itemOffered": {
-                      "@type": "FoodEstablishment",
-                      "name": "International Cuisine"
-                    }
-                  },
-                  {
-                    "@type": "Offer",
-                    "itemOffered": {
-                      "@type": "FoodEstablishment",
-                      "name": "Cakes & Desserts"
-                    }
-                  }
-                ]
+                                 "itemListElement": [
+                   {
+                     "@type": "Offer",
+                     "itemOffered": {
+                       "@type": "FoodEstablishment",
+                       "name": "Fried Rice & Jollof Rice"
+                     }
+                   },
+                   {
+                     "@type": "Offer",
+                     "itemOffered": {
+                       "@type": "FoodEstablishment",
+                       "name": "Grilled Chicken & Fried Chicken"
+                     }
+                   },
+                   {
+                     "@type": "Offer",
+                     "itemOffered": {
+                       "@type": "FoodEstablishment",
+                       "name": "Shawarma & Burgers"
+                     }
+                   },
+                   {
+                     "@type": "Offer",
+                     "itemOffered": {
+                       "@type": "FoodEstablishment",
+                       "name": "Breakfast, Lunch & Dinner"
+                     }
+                   }
+                 ]
               },
               "sameAs": [
                 "https://www.facebook.com/share/14EFU5rMqBc/",
@@ -247,6 +259,8 @@ export default function RootLayout({
             </CartProvider>
           </AuthProvider>
         </ThemeProvider>
+        <SpeedInsights />
+        <Watermark />
       </body>
     </html>
   )

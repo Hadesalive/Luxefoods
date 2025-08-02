@@ -1,27 +1,54 @@
 "use client"
 
-import { useState, useMemo } from "react"
+import { useState, useMemo, useEffect } from "react"
 import ProductCard from "./ProductCard"
 import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { products } from "@/data/products"
+import { MenuService, type MenuItemWithCategory, type Category } from "@/lib/menu-service"
 
 export default function ProductGrid() {
   const [searchTerm, setSearchTerm] = useState("")
   const [sortBy, setSortBy] = useState("name")
   const [categoryFilter, setCategoryFilter] = useState("all")
+  const [menuItems, setMenuItems] = useState<MenuItemWithCategory[]>([])
+  const [categories, setCategories] = useState<Category[]>([])
+  const [isLoading, setIsLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
 
-  const categories = useMemo(() => {
-    const cats = [...new Set(products.map((p) => p.category))]
-    return cats
+  // Load menu data from database
+  useEffect(() => {
+    const loadMenuData = async () => {
+      try {
+        setIsLoading(true)
+        setError(null)
+        
+        const [menuData, categoriesData] = await Promise.all([
+          MenuService.getMenuItems(true),
+          MenuService.getCategories(true),
+        ])
+        
+        setMenuItems(menuData)
+        setCategories(categoriesData)
+      } catch (error) {
+        console.error("Error loading menu data:", error)
+        setError("Failed to load menu. Please try again.")
+      } finally {
+        setIsLoading(false)
+      }
+    }
+
+    loadMenuData()
   }, [])
 
   const filteredAndSortedProducts = useMemo(() => {
-    const filtered = products.filter((product) => {
+    const filtered = menuItems.filter((item) => {
       const matchesSearch =
-        product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        product.description.toLowerCase().includes(searchTerm.toLowerCase())
-      const matchesCategory = categoryFilter === "all" || product.category === categoryFilter
+        item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (item.description && item.description.toLowerCase().includes(searchTerm.toLowerCase()))
+      
+      // Show all items if "all" is selected, otherwise filter by category
+      const matchesCategory = categoryFilter === "all" || item.category?.slug === categoryFilter
+      
       return matchesSearch && matchesCategory
     })
 
@@ -39,7 +66,32 @@ export default function ProductGrid() {
     })
 
     return filtered
-  }, [searchTerm, sortBy, categoryFilter])
+  }, [searchTerm, sortBy, categoryFilter, menuItems])
+
+  if (isLoading) {
+    return (
+      <div className="text-center py-12">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-600 mx-auto mb-4"></div>
+        <p className="text-gray-600 dark:text-gray-400">Loading menu...</p>
+      </div>
+    )
+  }
+
+  if (error) {
+    return (
+      <div className="text-center py-12">
+        <div className="text-red-600 dark:text-red-400 text-6xl mb-4">⚠️</div>
+        <h2 className="text-xl font-bold mb-2 text-gray-900 dark:text-gray-100">Failed to Load Menu</h2>
+        <p className="text-gray-600 dark:text-gray-400 mb-4">{error}</p>
+        <button 
+          onClick={() => window.location.reload()} 
+          className="bg-orange-600 hover:bg-orange-700 text-white px-4 py-2 rounded-lg"
+        >
+          Try Again
+        </button>
+      </div>
+    )
+  }
 
   return (
     <div>
@@ -56,10 +108,10 @@ export default function ProductGrid() {
             <SelectValue placeholder="Category" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">All Categories</SelectItem>
+            <SelectItem value="all">All</SelectItem>
             {categories.map((category) => (
-              <SelectItem key={category} value={category}>
-                {category.charAt(0).toUpperCase() + category.slice(1)}
+              <SelectItem key={category.slug} value={category.slug}>
+                {category.name}
               </SelectItem>
             ))}
           </SelectContent>
@@ -78,14 +130,19 @@ export default function ProductGrid() {
 
       {/* Product Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-        {filteredAndSortedProducts.map((product) => (
-          <ProductCard key={product.id} product={product} />
+        {filteredAndSortedProducts.map((item) => (
+          <ProductCard key={item.id} product={item} />
         ))}
       </div>
 
       {filteredAndSortedProducts.length === 0 && (
         <div className="text-center py-12">
-          <p className="text-gray-500 text-lg">No products found matching your criteria.</p>
+          <div className="text-gray-400 dark:text-gray-600 text-6xl mb-4">🍽️</div>
+          <p className="text-gray-500 dark:text-gray-400 text-lg">
+            {searchTerm || categoryFilter !== "all" 
+              ? "No products found matching your criteria." 
+              : "No menu items available at the moment."}
+          </p>
         </div>
       )}
     </div>

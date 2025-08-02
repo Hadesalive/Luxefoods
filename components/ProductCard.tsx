@@ -6,13 +6,13 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardFooter } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { useCart } from "@/contexts/CartContext"
-import type { Product } from "@/types"
+import type { MenuItemWithCategory } from "@/lib/menu-service"
 import { ShoppingCart, Heart, Star, Sparkles } from "lucide-react"
 import { motion, AnimatePresence } from "framer-motion"
 import { useState } from "react"
 
 interface ProductCardProps {
-  product: Product
+  product: MenuItemWithCategory
 }
 
 export default function ProductCard({ product }: ProductCardProps) {
@@ -22,7 +22,13 @@ export default function ProductCard({ product }: ProductCardProps) {
 
   const handleAddToCart = () => {
     // Add the required 'type' property for cart items
-    addItem({ ...product, type: "product" })
+    addItem({ 
+      id: product.id,
+      name: product.name,
+      price: product.price,
+      type: product.category?.slug || "menu-item",
+      quantity: 1
+    })
     
     // Show success feedback
     setIsAdded(true)
@@ -83,7 +89,7 @@ export default function ProductCard({ product }: ProductCardProps) {
         <div className="relative overflow-hidden">
           <Link href={`/products/${product.id}`}>
             <Image
-              src={product.image || "/placeholder.svg"}
+              src={product.image_url || "/placeholder.svg"}
               alt={product.name}
               width={300}
               height={300}
@@ -92,9 +98,11 @@ export default function ProductCard({ product }: ProductCardProps) {
           </Link>
           
           {/* Category badge */}
-          <Badge className="absolute top-3 left-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white border-0 shadow-lg">
-            {product.category}
-          </Badge>
+          {product.category && (
+            <Badge className="absolute top-3 left-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white border-0 shadow-lg">
+              {product.category.name}
+            </Badge>
+          )}
 
           {/* Favorite button */}
           <motion.button
@@ -114,14 +122,14 @@ export default function ProductCard({ product }: ProductCardProps) {
 
           {/* Price badge */}
           <div className="absolute bottom-3 right-3 bg-gradient-to-r from-orange-600 to-red-600 text-white px-3 py-1 rounded-full text-sm font-bold shadow-lg">
-            ${product.price.toFixed(2)}
+            NLe{product.price.toFixed(2)}
           </div>
 
           {/* Popular indicator */}
-          {product.originalPrice && (
+          {product.is_popular && (
             <div className="absolute top-3 right-12 bg-yellow-400 text-black px-2 py-1 rounded-full text-xs font-bold flex items-center gap-1 shadow-lg">
-              <Sparkles className="h-3 w-3" />
-              Sale
+              <Star className="h-3 w-3 fill-current" />
+              Popular
             </div>
           )}
         </div>
@@ -133,19 +141,14 @@ export default function ProductCard({ product }: ProductCardProps) {
             </h3>
           </Link>
           <p className="text-gray-600 dark:text-gray-300 text-sm mb-4 line-clamp-2">
-            {product.description}
+            {product.description || "Delicious menu item from Kings Bakery"}
           </p>
           
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-2">
               <span className="text-2xl font-bold text-blue-600 dark:text-blue-400">
-                ${product.price.toFixed(2)}
+                NLe{product.price.toFixed(2)}
               </span>
-              {product.originalPrice && (
-                <span className="text-sm text-gray-500 line-through">
-                  ${product.originalPrice.toFixed(2)}
-                </span>
-              )}
             </div>
             
             {/* Rating */}
