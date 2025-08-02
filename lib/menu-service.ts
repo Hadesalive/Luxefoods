@@ -1,4 +1,5 @@
 import { createClient } from "@supabase/supabase-js"
+import { AuthService } from "./auth"
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
@@ -82,14 +83,9 @@ export class MenuService {
   private static CACHE_KEY = 'kings-bakery-menu-cache'
   private static CATEGORIES_CACHE_KEY = 'kings-bakery-categories-cache'
 
-  // Get authenticated Supabase client
+  // Get Supabase client (no auth required since we use local storage auth)
   private static getAuthenticatedClient() {
-    return supabase.auth.getSession().then(({ data: { session } }) => {
-      if (!session) {
-        throw new Error('No authenticated session found')
-      }
-      return supabase
-    })
+    return supabase
   }
 
   // Enhanced cache management with localStorage

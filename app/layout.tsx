@@ -15,7 +15,13 @@ const inter = Inter({ subsets: ["latin"] })
 function Watermark() {
   return (
     <div className="fixed bottom-2 right-2 z-40 pointer-events-none">
-      <div className="text-[10px] text-gray-300 dark:text-gray-600 opacity-40 select-none font-light tracking-wide">
+      <div className="text-[10px] font-light tracking-wide select-none
+        text-gray-600 dark:text-gray-400 
+        drop-shadow-[0_1px_2px_rgba(0,0,0,0.1)] dark:drop-shadow-[0_1px_2px_rgba(255,255,255,0.1)]
+        backdrop-blur-[1px] bg-white/10 dark:bg-black/10
+        px-2 py-1 rounded-sm border border-gray-200/20 dark:border-gray-700/20
+        transition-all duration-300 hover:opacity-80
+        [text-shadow:_0_1px_2px_rgba(0,0,0,0.1)] dark:[text-shadow:_0_1px_2px_rgba(255,255,255,0.1)]">
         made by ahmad 074762243
       </div>
     </div>

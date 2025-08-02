@@ -203,7 +203,7 @@ export function MenuProvider({ children }: { children: ReactNode }) {
     } catch (error) {
       console.error("Error adding menu item:", error)
       console.error("Error details:", JSON.stringify(error, null, 2))
-      dispatch({ type: "SET_ERROR", payload: "Failed to add menu item" })
+      dispatch({ type: "SET_ERROR", payload: `Failed to add menu item: ${error instanceof Error ? error.message : 'Unknown error'}` })
       throw error
     }
   }
@@ -276,7 +276,8 @@ export function MenuProvider({ children }: { children: ReactNode }) {
       }
     } catch (error) {
       console.error("Error updating menu item:", error)
-      dispatch({ type: "SET_ERROR", payload: "Failed to update menu item" })
+      console.error("Error details:", JSON.stringify(error, null, 2))
+      dispatch({ type: "SET_ERROR", payload: `Failed to update menu item: ${error instanceof Error ? error.message : 'Unknown error'}` })
       throw error
     }
   }
