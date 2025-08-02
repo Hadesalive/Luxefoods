@@ -201,10 +201,16 @@ export default function Footer() {
                   Privacy Policy
                 </Link>
                 <Link
-                  href="#"
+                  href="/terms"
                   className="text-amber-200/90 dark:text-amber-100/90 hover:text-amber-200 dark:hover:text-amber-100 transition-colors"
                 >
                   Terms of Service
+                </Link>
+                <Link
+                  href="/license"
+                  className="text-amber-200/90 dark:text-amber-100/90 hover:text-amber-200 dark:hover:text-amber-100 transition-colors"
+                >
+                  Software License
                 </Link>
                 <div className="text-amber-200/70 dark:text-amber-100/70 italic">"Enjoy HomeStyle cooking" ✨</div>
                 {/* Discreet Admin Link - Only visible on hover (desktop) or tap (mobile) */}
