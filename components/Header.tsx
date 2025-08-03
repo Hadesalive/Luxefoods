@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button"
 import { useCart } from "@/contexts/CartContext"
 import { useState } from "react"
 import Image from "next/image"
-import ThemeToggle from "./ThemeToggle"
+
 
 export default function Header() {
   const { items } = useCart()
@@ -60,8 +60,6 @@ export default function Header() {
           </nav>
 
           <div className="flex items-center space-x-2 lg:space-x-4">
-            <ThemeToggle />
-
             <Link
               href="tel:076533655"
               className="hidden md:flex items-center text-white hover:text-yellow-300 dark:hover:text-yellow-400 transition-colors"

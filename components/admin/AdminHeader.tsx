@@ -18,7 +18,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet"
-import ThemeToggle from "@/components/ThemeToggle"
+
 import Link from "next/link"
 import { usePathname, useRouter } from "next/navigation"
 import { cn } from "@/lib/utils"
@@ -88,8 +88,6 @@ export function AdminHeader() {
 
           {/* Right Side Controls */}
           <div className="flex items-center space-x-2 lg:space-x-4">
-            <ThemeToggle />
-
             {/* User Dropdown */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>

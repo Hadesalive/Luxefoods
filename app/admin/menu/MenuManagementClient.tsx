@@ -97,7 +97,13 @@ export default function MenuManagementClient() {
   }
 
   const removeSize = (index: number) => {
-    setSizes(sizes.filter((_, i) => i !== index))
+    const newSizes = sizes.filter((_, i) => i !== index)
+    // If we're removing the last size and toggle is on, add a default size
+    if (newSizes.length === 0 && enableSizes) {
+      setSizes([{ size_name: "Regular", price: "", is_default: true }])
+    } else {
+      setSizes(newSizes)
+    }
   }
 
   const updateSize = (index: number, field: string, value: any) => {
@@ -112,7 +118,13 @@ export default function MenuManagementClient() {
   }
 
   const removeOption = (index: number) => {
-    setCustomOptions(customOptions.filter((_, i) => i !== index))
+    const newOptions = customOptions.filter((_, i) => i !== index)
+    // If we're removing the last option and toggle is on, add a default empty option
+    if (newOptions.length === 0 && enableOptions) {
+      setCustomOptions([{ name: "", price_adjustment: "" }])
+    } else {
+      setCustomOptions(newOptions)
+    }
   }
 
   const updateOption = (index: number, field: string, value: any) => {
@@ -127,7 +139,13 @@ export default function MenuManagementClient() {
   }
 
   const removeEditSize = (index: number) => {
-    setEditSizes(editSizes.filter((_, i) => i !== index))
+    const newSizes = editSizes.filter((_, i) => i !== index)
+    // If we're removing the last size and toggle is on, add a default size
+    if (newSizes.length === 0 && editEnableSizes) {
+      setEditSizes([{ size_name: "Regular", price: "", is_default: true }])
+    } else {
+      setEditSizes(newSizes)
+    }
   }
 
   const updateEditSize = (index: number, field: string, value: any) => {
@@ -141,7 +159,13 @@ export default function MenuManagementClient() {
   }
 
   const removeEditOption = (index: number) => {
-    setEditCustomOptions(editCustomOptions.filter((_, i) => i !== index))
+    const newOptions = editCustomOptions.filter((_, i) => i !== index)
+    // If we're removing the last option and toggle is on, add a default empty option
+    if (newOptions.length === 0 && editEnableOptions) {
+      setEditCustomOptions([{ name: "", price_adjustment: "" }])
+    } else {
+      setEditCustomOptions(newOptions)
+    }
   }
 
   const updateEditOption = (index: number, field: string, value: any) => {
@@ -449,7 +473,13 @@ export default function MenuManagementClient() {
                    <Switch
                      id="enableSizes"
                      checked={enableSizes}
-                     onCheckedChange={setEnableSizes}
+                     onCheckedChange={(checked) => {
+                       setEnableSizes(checked)
+                       // If turning off, reset to default size
+                       if (!checked) {
+                         setSizes([{ size_name: "Regular", price: "", is_default: true }])
+                       }
+                     }}
                    />
                    <Label htmlFor="enableSizes" className="text-sm font-medium">Enable Size Variations</Label>
                  </div>
@@ -516,7 +546,13 @@ export default function MenuManagementClient() {
                    <Switch
                      id="enableOptions"
                      checked={enableOptions}
-                     onCheckedChange={setEnableOptions}
+                     onCheckedChange={(checked) => {
+                       setEnableOptions(checked)
+                       // If turning off, clear the options
+                       if (!checked) {
+                         setCustomOptions([{ name: "", price_adjustment: "" }])
+                       }
+                     }}
                    />
                    <Label htmlFor="enableOptions" className="text-sm font-medium">Enable Custom Options</Label>
                  </div>
@@ -566,7 +602,24 @@ export default function MenuManagementClient() {
                  <Button type="submit" disabled={isSubmitting} className="w-full h-12 text-base">
                    {isSubmitting ? "Adding..." : "Add Menu Item"}
                  </Button>
-                 <Button type="button" variant="outline" onClick={() => setIsAddDialogOpen(false)} className="w-full h-12 text-base">
+                 <Button type="button" variant="outline" onClick={() => {
+                   setIsAddDialogOpen(false)
+                   // Reset form when closing
+                   setAddFormData({
+                     name: "",
+                     description: "",
+                     price: "",
+                     image_url: "",
+                     category_id: "",
+                     is_available: true,
+                     is_popular: false,
+                     sort_order: "",
+                   })
+                   setSizes([{ size_name: "Regular", price: "", is_default: true }])
+                   setCustomOptions([{ name: "", price_adjustment: "" }])
+                   setEnableSizes(false)
+                   setEnableOptions(false)
+                 }} className="w-full h-12 text-base">
                    Cancel
                  </Button>
                </div>
@@ -935,7 +988,13 @@ export default function MenuManagementClient() {
                  <Switch
                    id="editEnableSizes"
                    checked={editEnableSizes}
-                   onCheckedChange={setEditEnableSizes}
+                   onCheckedChange={(checked) => {
+                     setEditEnableSizes(checked)
+                     // If turning off, reset to default size
+                     if (!checked) {
+                       setEditSizes([{ size_name: "Regular", price: "", is_default: true }])
+                     }
+                   }}
                  />
                  <Label htmlFor="editEnableSizes" className="text-sm font-medium">Enable Size Variations</Label>
                </div>
@@ -1002,7 +1061,13 @@ export default function MenuManagementClient() {
                  <Switch
                    id="editEnableOptions"
                    checked={editEnableOptions}
-                   onCheckedChange={setEditEnableOptions}
+                   onCheckedChange={(checked) => {
+                     setEditEnableOptions(checked)
+                     // If turning off, clear the options
+                     if (!checked) {
+                       setEditCustomOptions([{ name: "", price_adjustment: "" }])
+                     }
+                   }}
                  />
                  <Label htmlFor="editEnableOptions" className="text-sm font-medium">Enable Custom Options</Label>
                </div>
