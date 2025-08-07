@@ -7,7 +7,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Input } from "@/components/ui/input"
 import Image from "next/image"
 import { Button } from "@/components/ui/button"
-import { ShoppingCart, ArrowLeft, Plus, Minus, Star, Check, Home, Phone, Clock, Heart, Sparkles, Search, X } from "lucide-react"
+import { ShoppingCart, ArrowLeft, Plus, Minus, Star, Check, Home, Phone, Clock, Heart, Sparkles, Search, X, RefreshCw } from "lucide-react"
 import { MenuService, type MenuItemWithCategory, type Category } from "@/lib/menu-service"
 import { useCart } from "@/contexts/CartContext"
 import Link from "next/link"
@@ -29,6 +29,7 @@ export default function OrderPageClient() {
   const [favorites, setFavorites] = useState<{ [key: string]: boolean }>({})
   const [isSearchOpen, setIsSearchOpen] = useState(false)
   const [searchQuery, setSearchQuery] = useState("")
+  const [isRefreshing, setIsRefreshing] = useState(false)
 
   const itemCount = items.length
 
@@ -62,32 +63,38 @@ export default function OrderPageClient() {
     })
   }
 
-  useEffect(() => {
-    const loadMenuData = async () => {
-      try {
-        setIsLoading(true)
-        setError(null)
-        
-        // Use the optimized service with caching
-        const [menuData, categoriesData] = await Promise.all([
-          MenuService.getMenuItems(true), // Get all items for order page
-          MenuService.getCategories(true),
-        ])
-        
-        setMenuItems(menuData)
-        setCategories(categoriesData)
-        
-        // Set "all" as the default active tab
-        setActiveTab("all")
-      } catch (error) {
-        console.error("Error loading menu data:", error)
-        setError("Failed to load menu. Please try again.")
-      } finally {
-        setIsLoading(false)
-      }
+  const loadMenuData = async (bypassCache = false) => {
+    try {
+      setIsLoading(true)
+      setError(null)
+      
+      // Use the optimized service with caching (or bypass if requested)
+      const [menuData, categoriesData] = await Promise.all([
+        MenuService.getMenuItems(bypassCache), // Get all items for order page
+        MenuService.getCategories(bypassCache),
+      ])
+      
+      setMenuItems(menuData)
+      setCategories(categoriesData)
+      
+      // Set "all" as the default active tab
+      setActiveTab("all")
+    } catch (error) {
+      console.error("Error loading menu data:", error)
+      setError("Failed to load menu. Please try again.")
+    } finally {
+      setIsLoading(false)
+      setIsRefreshing(false)
     }
+  }
 
-    loadMenuData()
+  const handleManualRefresh = async () => {
+    setIsRefreshing(true)
+    await loadMenuData(true) // Bypass cache
+  }
+
+  useEffect(() => {
+    loadMenuData(false) // Use cache on initial load
   }, [])
 
   const container = {
@@ -142,7 +149,7 @@ export default function OrderPageClient() {
     }))
   }
 
-  const getItemPrice = (item: MenuItemWithCategory, selectedSize?: string, selectedOptions?: string[], quantity: number = 1) => {
+  const getItemPrice = (item: MenuItemWithCategory, selectedSize?: string, selectedOptions?: string[]) => {
     let basePrice = item.price
 
     // Apply size price adjustment
@@ -153,20 +160,20 @@ export default function OrderPageClient() {
       }
     }
 
-    // Apply options price adjustments
-    let optionsPrice = 0
-    if (selectedOptions && item.options) {
+    // If custom options are selected, use only the custom option price (not base + custom)
+    if (selectedOptions && selectedOptions.length > 0 && item.options) {
+      let customPrice = 0
       selectedOptions.forEach(optionName => {
         const option = item.options?.find(opt => opt.option_name === optionName)
         if (option) {
-          optionsPrice += option.price_adjustment || 0
+          customPrice += option.price_adjustment || 0
         }
       })
+      // Use the custom price instead of base price
+      return customPrice
     }
 
-    // Calculate total price including quantity
-    const pricePerItem = basePrice + optionsPrice
-    return pricePerItem * quantity
+    return basePrice
   }
 
   const getItemSizes = (item: MenuItemWithCategory) => {
@@ -183,18 +190,18 @@ export default function OrderPageClient() {
     const selectedOptionsList = selectedOptions[itemKey] || []
     const quantity = quantities[itemKey] || 1
 
-    // Get final price (already includes quantity)
-    const totalPrice = getItemPrice(item, selectedSize, selectedOptionsList, quantity)
+    // Get price per item
+    const pricePerItem = getItemPrice(item, selectedSize, selectedOptionsList)
 
-    // Add to cart as 1 item with total price
+    // Add to cart with correct quantity and price
     addItem({
       id: item.id,
       name: item.name,
-      price: totalPrice,
+      price: pricePerItem,
       type: item.category?.slug || "menu-item",
       size: selectedSize,
       options: selectedOptionsList,
-      quantity: 1 // Set to 1 since price already includes quantity
+      quantity: quantity
     })
 
     // Show success feedback
@@ -263,7 +270,7 @@ export default function OrderPageClient() {
 
             {/* Center Title */}
             <div className="text-center flex-1 min-w-0">
-              <h1 className="text-lg sm:text-xl font-bold text-gray-900 dark:text-gray-100 truncate">Order Online</h1>
+                              <h1 className="text-lg sm:text-xl font-bold text-gray-900 dark:text-gray-100 truncate">Full Menu</h1>
               <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 truncate">Fresh & Delicious</p>
             </div>
 
@@ -278,6 +285,24 @@ export default function OrderPageClient() {
               >
                 <Search className="h-4 w-4" />
                 <span className="hidden sm:inline ml-2">Search</span>
+              </Button>
+
+              {/* Refresh Button */}
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleManualRefresh}
+                disabled={isRefreshing}
+                className="bg-orange-50 dark:bg-orange-950/50 border-orange-200 dark:border-orange-700 text-orange-900 dark:text-orange-100 hover:bg-orange-100 dark:hover:bg-orange-900/50 p-2 sm:px-3"
+              >
+                {isRefreshing ? (
+                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-orange-600"></div>
+                ) : (
+                  <RefreshCw className="h-4 w-4" />
+                )}
+                <span className="hidden sm:inline ml-2">
+                  {isRefreshing ? "Refreshing..." : "Refresh"}
+                </span>
               </Button>
 
               {/* Cart Button */}
@@ -349,7 +374,7 @@ export default function OrderPageClient() {
                     const selectedSize = selectedSizes[itemKey]
                     const selectedOptionsList = selectedOptions[itemKey] || []
                     const quantity = quantities[itemKey] || 1
-                    const price = getItemPrice(item, selectedSize, selectedOptionsList, quantity)
+                    const price = getItemPrice(item, selectedSize, selectedOptionsList) * quantity
                     const isFavorite = favorites[itemKey]
                     const isAdded = addedItems[itemKey]
 
@@ -645,7 +670,7 @@ export default function OrderPageClient() {
                     const selectedSize = selectedSizes[itemKey]
                     const selectedOptionsList = selectedOptions[itemKey] || []
                     const quantity = quantities[itemKey] || 1
-                    const price = getItemPrice(item, selectedSize, selectedOptionsList, quantity)
+                    const price = getItemPrice(item, selectedSize, selectedOptionsList) * quantity
                     const isAdded = addedItems[itemKey]
 
                     return (
@@ -678,7 +703,7 @@ export default function OrderPageClient() {
                               
                               <div className="flex items-center justify-between">
                                 <span className="text-lg font-bold text-orange-600 dark:text-orange-400">
-                                  NLe{getItemPrice(item, selectedSize, selectedOptionsList, quantity).toFixed(2)}
+                                  NLe{(getItemPrice(item, selectedSize, selectedOptionsList) * quantity).toFixed(2)}
                                 </span>
                                 
                                 <Button

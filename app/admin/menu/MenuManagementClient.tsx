@@ -235,14 +235,14 @@ export default function MenuManagementClient() {
         .map(size => ({
           ...size,
           price: parseFloat(size.price) || 0
-        })) : undefined
+        })) : []
       
       const optionsToSubmit = editEnableOptions ? editCustomOptions
         .filter(option => option.name.trim())
         .map(option => ({
           ...option,
           price_adjustment: parseFloat(option.price_adjustment) || 0
-        })) : undefined
+        })) : []
       
       // Update the menu item with sizes and options
       await updateMenuItem(
@@ -990,8 +990,11 @@ export default function MenuManagementClient() {
                    checked={editEnableSizes}
                    onCheckedChange={(checked) => {
                      setEditEnableSizes(checked)
-                     // If turning off, reset to default size
+                     // If turning off, clear the sizes
                      if (!checked) {
+                       setEditSizes([])
+                     } else if (editSizes.length === 0) {
+                       // If turning on and no sizes exist, add a default one
                        setEditSizes([{ size_name: "Regular", price: "", is_default: true }])
                      }
                    }}
@@ -999,7 +1002,7 @@ export default function MenuManagementClient() {
                  <Label htmlFor="editEnableSizes" className="text-sm font-medium">Enable Size Variations</Label>
                </div>
                
-               {editEnableSizes && (
+               {editEnableSizes ? (
                  <div className="space-y-3 p-4 border rounded-lg bg-gray-50 dark:bg-gray-800">
                    <div className="flex items-center justify-between">
                      <Label className="text-sm font-medium">Size Options</Label>
@@ -1052,6 +1055,12 @@ export default function MenuManagementClient() {
                      </div>
                    ))}
                  </div>
+               ) : (
+                 <div className="p-4 border rounded-lg bg-gray-100 dark:bg-gray-800 text-center">
+                   <p className="text-sm text-gray-600 dark:text-gray-400">
+                     Size options are disabled. Enable the toggle above to add size options.
+                   </p>
+                 </div>
                )}
              </div>
 
@@ -1065,6 +1074,9 @@ export default function MenuManagementClient() {
                      setEditEnableOptions(checked)
                      // If turning off, clear the options
                      if (!checked) {
+                       setEditCustomOptions([])
+                     } else if (editCustomOptions.length === 0) {
+                       // If turning on and no options exist, add a default one
                        setEditCustomOptions([{ name: "", price_adjustment: "" }])
                      }
                    }}
@@ -1072,7 +1084,7 @@ export default function MenuManagementClient() {
                  <Label htmlFor="editEnableOptions" className="text-sm font-medium">Enable Custom Options</Label>
                </div>
                
-               {editEnableOptions && (
+               {editEnableOptions ? (
                  <div className="space-y-3 p-4 border rounded-lg bg-gray-50 dark:bg-gray-800">
                    <div className="flex items-center justify-between">
                      <Label className="text-sm font-medium">Custom Options</Label>
@@ -1110,6 +1122,12 @@ export default function MenuManagementClient() {
                        )}
                      </div>
                    ))}
+                 </div>
+               ) : (
+                 <div className="p-4 border rounded-lg bg-gray-100 dark:bg-gray-800 text-center">
+                   <p className="text-sm text-gray-600 dark:text-gray-400">
+                     Custom options are disabled. Enable the toggle above to add custom options.
+                   </p>
                  </div>
                )}
              </div>

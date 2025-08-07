@@ -49,7 +49,7 @@ export default function Hero() {
                 className="space-y-2"
               >
                 <h1 className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold text-white leading-tight drop-shadow-lg">
-                  The KINGS
+                  THE KINGS
                 </h1>
                 <h1 className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold bg-gradient-to-r from-amber-200/90 to-amber-100/90 bg-clip-text text-transparent leading-tight drop-shadow-lg">
                   BAKERY 
@@ -84,7 +84,7 @@ export default function Hero() {
               transition={{ duration: 0.8, delay: 1.0 }}
               className="flex flex-col sm:flex-row gap-4 mt-8 sm:mt-12 justify-center max-w-md mx-auto"
             >
-              <Link href="#menu">
+              <Link href="/order">
                 <Button
                   size="lg"
                   className="w-full sm:w-auto bg-red-600 hover:bg-red-700 dark:bg-red-700 dark:hover:bg-red-600 text-white text-lg sm:text-xl font-bold px-8 py-4 sm:py-5 rounded-full shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105 border-2 border-red-500"

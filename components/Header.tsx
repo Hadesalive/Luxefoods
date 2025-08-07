@@ -40,7 +40,7 @@ export default function Header() {
               Home
             </Link>
             <Link
-              href="#menu"
+              href="/order"
               className="text-white hover:text-yellow-300 dark:hover:text-yellow-400 transition-colors font-medium"
             >
               Menu
@@ -127,7 +127,7 @@ export default function Header() {
                   <span className="font-medium text-lg">Home</span>
                 </Link>
                 <Link
-                  href="#menu"
+                  href="/order"
                   className="group flex items-center text-white hover:text-yellow-300 dark:hover:text-yellow-400 transition-all duration-300 py-4 px-6 rounded-2xl hover:bg-white/10 backdrop-blur-sm"
                   onClick={() => setIsMenuOpen(false)}
                 >
