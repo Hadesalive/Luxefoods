@@ -670,7 +670,7 @@ export default function CheckoutPageClient() {
               <div className="mt-6 bg-gray-50 dark:bg-gray-950/50 p-4 rounded-lg border border-gray-200 dark:border-gray-800">
                 <h3 className="font-bold text-black dark:text-white mb-2">Restaurant Contact</h3>
                 <p className="text-gray-700 dark:text-gray-300 text-sm">For any questions about your order:</p>
-                <p className="font-bold text-black dark:text-white mt-1">077 254220 / 076 369828</p>
+                <p className="font-bold text-black dark:text-white mt-1">+23232020263 / +23276533655</p>
               </div>
             </div>
           </div>
