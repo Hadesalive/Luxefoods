@@ -36,6 +36,7 @@ export default function MenuManagementClient() {
   const { menuItems, categories, deleteMenuItem, updateMenuItem, addMenuItem, isLoading } = useMenu()
   const [searchTerm, setSearchTerm] = useState("")
   const [selectedCategory, setSelectedCategory] = useState("all")
+  const [sortBy, setSortBy] = useState("sort_order")
   const [editingItem, setEditingItem] = useState<any>(null)
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false)
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false)
@@ -47,6 +48,7 @@ export default function MenuManagementClient() {
     category_id: "",
     is_available: true,
     is_popular: false,
+    sort_order: "",
   })
   const [addFormData, setAddFormData] = useState({
     name: "",
@@ -174,11 +176,30 @@ export default function MenuManagementClient() {
     setEditCustomOptions(newOptions)
   }
 
-  const filteredItems = menuItems.filter((item) => {
-    const matchesSearch = item.name.toLowerCase().includes(searchTerm.toLowerCase())
-    const matchesCategory = selectedCategory === "all" || item.category?.slug === selectedCategory
-    return matchesSearch && matchesCategory
-  })
+  const filteredItems = menuItems
+    .filter((item) => {
+      const matchesSearch = item.name.toLowerCase().includes(searchTerm.toLowerCase())
+      const matchesCategory = selectedCategory === "all" || item.category?.slug === selectedCategory
+      return matchesSearch && matchesCategory
+    })
+    .sort((a, b) => {
+      switch (sortBy) {
+        case "sort_order":
+          return (a.sort_order || 0) - (b.sort_order || 0)
+        case "name":
+          return a.name.localeCompare(b.name)
+        case "price_low":
+          return (a.price || 0) - (b.price || 0)
+        case "price_high":
+          return (b.price || 0) - (a.price || 0)
+        case "newest":
+          return new Date(b.created_at || 0).getTime() - new Date(a.created_at || 0).getTime()
+        case "oldest":
+          return new Date(a.created_at || 0).getTime() - new Date(b.created_at || 0).getTime()
+        default:
+          return (a.sort_order || 0) - (b.sort_order || 0)
+      }
+    })
 
   const handleEdit = (item: any) => {
     setEditingItem(item)
@@ -190,6 +211,7 @@ export default function MenuManagementClient() {
       category_id: item.category_id || "",
       is_available: item.is_available,
       is_popular: item.is_popular,
+      sort_order: item.sort_order?.toString() || "0",
     })
     
     // Load existing sizes and options
@@ -227,6 +249,7 @@ export default function MenuManagementClient() {
       const formDataToSubmit = {
         ...editFormData,
         price: parseFloat(editFormData.price) || 0,
+        sort_order: parseInt(editFormData.sort_order) || 0,
       }
       
       // Convert size and option prices to numbers
@@ -262,7 +285,9 @@ export default function MenuManagementClient() {
         category_id: "",
         is_available: true,
         is_popular: false,
+        sort_order: "",
       })
+      setSortBy("sort_order")
     } catch (error) {
       console.error("Error updating menu item:", error)
     } finally {
@@ -318,6 +343,7 @@ export default function MenuManagementClient() {
       setCustomOptions([{ name: "", price_adjustment: "" }])
       setEnableSizes(false)
       setEnableOptions(false)
+      setSortBy("sort_order")
     } catch (error) {
       console.error("Error adding menu item:", error)
     } finally {
@@ -619,6 +645,7 @@ export default function MenuManagementClient() {
                    setCustomOptions([{ name: "", price_adjustment: "" }])
                    setEnableSizes(false)
                    setEnableOptions(false)
+                   setSortBy("sort_order")
                  }} className="w-full h-12 text-base">
                    Cancel
                  </Button>
@@ -655,6 +682,19 @@ export default function MenuManagementClient() {
                 {category.name}
               </SelectItem>
             ))}
+          </SelectContent>
+        </Select>
+        <Select value={sortBy} onValueChange={setSortBy}>
+          <SelectTrigger className="w-full lg:w-48 h-11 sm:h-10 text-base">
+            <SelectValue placeholder="Sort by..." />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="sort_order">Sort Order</SelectItem>
+            <SelectItem value="name">Name (A-Z)</SelectItem>
+            <SelectItem value="price_low">Price (Low to High)</SelectItem>
+            <SelectItem value="price_high">Price (High to Low)</SelectItem>
+            <SelectItem value="newest">Newest First</SelectItem>
+            <SelectItem value="oldest">Oldest First</SelectItem>
           </SelectContent>
         </Select>
         <div className="flex items-center space-x-2">
@@ -736,6 +776,9 @@ export default function MenuManagementClient() {
                           {item.category.name}
                         </Badge>
                       )}
+                      <Badge variant="outline" className="text-xs">
+                        Order: {item.sort_order || 0}
+                      </Badge>
                     </div>
                   </div>
                   
@@ -823,6 +866,9 @@ export default function MenuManagementClient() {
                         <span className="text-sm font-medium text-indigo-600 dark:text-indigo-400">
                           NLe {item.price}
                         </span>
+                        <Badge variant="outline" className="text-xs">
+                          Order: {item.sort_order || 0}
+                        </Badge>
                       </div>
                       
                       {/* Size and Options Info for List View */}
@@ -942,17 +988,29 @@ export default function MenuManagementClient() {
                 className="mt-1 text-base"
               />
             </div>
-            <div>
-              <Label htmlFor="edit-price" className="text-sm font-medium">Price (NLe)</Label>
-                                                             <Input
-                   id="edit-price"
-                   type="number"
-                   step="0.01"
-                   value={editFormData.price}
-                   onChange={(e) => setEditFormData({ ...editFormData, price: e.target.value })}
-                   className="mt-1 h-11 sm:h-10 text-base"
-                   required
-                 />
+            <div className="space-y-3 sm:space-y-4 sm:grid sm:grid-cols-2 sm:gap-4">
+              <div>
+                <Label htmlFor="edit-price" className="text-sm font-medium">Price (NLe)</Label>
+                <Input
+                  id="edit-price"
+                  type="number"
+                  step="0.01"
+                  value={editFormData.price}
+                  onChange={(e) => setEditFormData({ ...editFormData, price: e.target.value })}
+                  className="mt-1 h-11 sm:h-10 text-base"
+                  required
+                />
+              </div>
+              <div>
+                <Label htmlFor="edit-sort-order" className="text-sm font-medium">Sort Order</Label>
+                <Input
+                  id="edit-sort-order"
+                  type="number"
+                  value={editFormData.sort_order}
+                  onChange={(e) => setEditFormData({ ...editFormData, sort_order: e.target.value })}
+                  className="mt-1 h-11 sm:h-10 text-base"
+                />
+              </div>
             </div>
             <div>
               <Label className="text-sm font-medium">Image</Label>
