@@ -152,7 +152,7 @@ export default function CartPageClient() {
                 <div className="mt-6 bg-orange-50 dark:bg-orange-950/50 p-4 rounded-lg border border-orange-200 dark:border-orange-800">
                   <h3 className="font-bold text-gray-900 dark:text-gray-100 mb-2">Need Help?</h3>
                   <p className="text-gray-700 dark:text-gray-300 text-sm mb-2">Call us for assistance with your order:</p>
-                  <p className="font-bold text-orange-600 dark:text-orange-400">077 254220 / 076 369828</p>
+                  <p className="font-bold text-orange-600 dark:text-orange-400">+23232020263 / +23276533655</p>
                 </div>
               </motion.div>
             </div>

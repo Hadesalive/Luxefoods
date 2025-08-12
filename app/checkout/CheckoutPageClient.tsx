@@ -584,7 +584,7 @@ export default function CheckoutPageClient() {
                       <div className="mt-4 p-3 bg-orange-100 dark:bg-orange-900/30 rounded-md">
                         <p className="text-sm text-orange-800 dark:text-orange-200">
                           <strong>Instructions:</strong> Please send payment to Orange Money number:{" "}
-                          <strong>076 369828</strong>
+                          <strong>+076533655</strong>
                           and enter the transaction ID above.
                         </p>
                       </div>
@@ -670,7 +670,7 @@ export default function CheckoutPageClient() {
               <div className="mt-6 bg-gray-50 dark:bg-gray-950/50 p-4 rounded-lg border border-gray-200 dark:border-gray-800">
                 <h3 className="font-bold text-black dark:text-white mb-2">Restaurant Contact</h3>
                 <p className="text-gray-700 dark:text-gray-300 text-sm">For any questions about your order:</p>
-                <p className="font-bold text-black dark:text-white mt-1">077 254220 / 076 369828</p>
+                <p className="font-bold text-black dark:text-white mt-1">+23232020263 / +23276533655</p>
               </div>
             </div>
           </div>

@@ -173,13 +173,13 @@ export default function ContactPageClient() {
                       href="tel:077254220"
                       className="block text-indigo-600 dark:text-indigo-400 font-semibold hover:text-indigo-800 dark:hover:text-indigo-300 transition-colors"
                     >
-                      077 254220
+                      076 533655
                     </Link>
                     <Link
                       href="tel:076369828"
                       className="block text-indigo-600 dark:text-indigo-400 font-semibold hover:text-indigo-800 dark:hover:text-indigo-300 transition-colors"
                     >
-                      076 369828
+                      076 533655
                     </Link>
                   </div>
                 </CardContent>
@@ -200,12 +200,12 @@ export default function ContactPageClient() {
                   <p className="text-gray-600 dark:text-gray-400 mb-4 text-sm">Instant messaging</p>
                   <div className="mt-auto">
                     <Link
-                      href="https://wa.me/23277254220"
+                      href="https://wa.me/23276533655"
                       target="_blank"
                       rel="noopener noreferrer"
                       className="block text-green-600 dark:text-green-400 font-semibold hover:text-green-800 dark:hover:text-green-300 transition-colors"
                     >
-                      077 254220
+                      076 533655
                     </Link>
                   </div>
                 </CardContent>
