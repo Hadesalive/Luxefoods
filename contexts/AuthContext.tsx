@@ -35,7 +35,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     // Listen for auth state changes
     const { data: { subscription } } = AuthService.onAuthStateChange(
       async (event, session) => {
-        console.log('Auth state changed:', event, session)
+        // Auth state changed
         setUser(session?.user ?? null)
         setIsLoading(false)
       }
@@ -47,9 +47,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const login = async (credentials: LoginCredentials) => {
     setIsLoading(true)
     try {
-      console.log('AuthContext - Attempting login...')
       const { user } = await AuthService.login(credentials)
-      console.log('AuthContext - Login successful, user:', user?.email)
       setUser(user)
     } catch (error) {
       console.error('AuthContext - Login error:', error)

@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server"
-import { MenuService } from "@/lib/menu-service"
+import { MenuService, type MenuItemWithCategory, type Category } from "@/lib/menu-service"
 
 // Enable static generation with longer cache to reduce function calls
 export const revalidate = 900 // 15 minutes (matches service cache)
@@ -7,12 +7,19 @@ export const revalidate = 900 // 15 minutes (matches service cache)
 export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url)
-    const limit = searchParams.get('limit') ? parseInt(searchParams.get('limit')!) : undefined
+    const limit = searchParams.get('limit') ? parseInt(searchParams.get('limit')!, 10) : undefined
     const category = searchParams.get('category')
-    const page = searchParams.get('page') ? parseInt(searchParams.get('page')!) : 1
-    const pageSize = searchParams.get('pageSize') ? parseInt(searchParams.get('pageSize')!) : 12
+    const page = searchParams.get('page') ? parseInt(searchParams.get('page')!, 10) : 1
+    const pageSize = searchParams.get('pageSize') ? parseInt(searchParams.get('pageSize')!, 10) : 12
 
-    let data: any = {}
+    let data: {
+      menuItems?: MenuItemWithCategory[]
+      categories?: Category[]
+      total: number
+      hasMore?: boolean
+      page?: number
+      pageSize?: number
+    } = { total: 0 }
 
     if (category) {
       // Get paginated items by category

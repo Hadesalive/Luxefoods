@@ -102,7 +102,7 @@ export class AuthService {
   }
 
   // Auth state change listener (simplified)
-  static onAuthStateChange(callback: (event: string, session: any) => void) {
+  static onAuthStateChange(callback: (event: string, session: { user: AuthUser | null } | null) => void) {
     if (typeof window === 'undefined') {
       return { data: { subscription: { unsubscribe: () => {} } } }
     }

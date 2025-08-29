@@ -1,5 +1,10 @@
 import { type NextRequest, NextResponse } from "next/server"
 
+interface OrderItem {
+  name: string
+  price: number
+}
+
 export async function POST(request: NextRequest) {
   try {
     const formData = await request.formData()
@@ -25,7 +30,7 @@ export async function POST(request: NextRequest) {
 
     // Order items
     message += "\n🛒 *Order Items:*\n"
-    orderData.items.forEach((item: any, index: number) => {
+    orderData.items.forEach((item: OrderItem, index: number) => {
       message += `${index + 1}. ${item.name} - NLe${item.price.toFixed(2)}\n`
     })
 
@@ -51,9 +56,7 @@ export async function POST(request: NextRequest) {
     const encodedMessage = encodeURIComponent(message)
     const whatsappUrl = `https://api.whatsapp.com/send?phone=${restaurantNumber}&text=${encodedMessage}`
 
-    // Simulate successful sending (in real implementation, this would open WhatsApp)
-    console.log("Order message prepared:", message)
-    console.log("WhatsApp URL:", whatsappUrl)
+    // WhatsApp URL prepared successfully
 
     return NextResponse.json({
       success: true,

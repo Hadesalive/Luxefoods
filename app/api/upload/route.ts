@@ -1,8 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { put } from '@vercel/blob'
-import { writeFile } from 'fs/promises'
-import { join } from 'path'
-import { tmpdir } from 'os'
 
 export async function POST(request: NextRequest) {
   try {

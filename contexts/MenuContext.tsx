@@ -158,12 +158,7 @@ export function MenuProvider({ children }: { children: ReactNode }) {
   const addMenuItem = async (menuItemData: Omit<MenuItemWithCategory, "id" | "created_at" | "updated_at" | "category" | "sizes" | "options">, sizes?: any[], options?: any[]) => {
     try {
       dispatch({ type: "SET_ERROR", payload: null })
-      console.log("Adding menu item with data:", menuItemData)
-      console.log("Sizes:", sizes)
-      console.log("Options:", options)
-      
       const newMenuItem = await MenuService.createMenuItem(menuItemData)
-      console.log("Created menu item:", newMenuItem)
       
       // Create sizes if provided
       if (sizes && sizes.length > 0) {

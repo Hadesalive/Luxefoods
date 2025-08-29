@@ -33,7 +33,7 @@ export function middleware(request: NextRequest) {
     // If admin key is provided, validate timestamp
     if (adminKey === 'alpha_dev_2024' && timestamp) {
       const currentTime = Date.now()
-      const requestTime = parseInt(timestamp)
+      const requestTime = parseInt(timestamp, 10)
       const timeDiff = currentTime - requestTime
       
       // If request is older than 5 minutes, redirect

@@ -9,6 +9,7 @@ import { AuthProvider } from "@/contexts/AuthContext"
 import { Toaster } from "@/components/ui/toaster"
 import ScrollToTop from "@/components/ScrollToTop"
 import TermsPopup from "@/components/TermsPopup"
+import { ErrorBoundary } from "@/components/ErrorBoundary"
 
 const inter = Inter({ subsets: ["latin"] })
 
@@ -157,18 +158,19 @@ export default function RootLayout({
         />
       </head>
       <body className={inter.className}>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="dark"
-          enableSystem={false}
-          disableTransitionOnChange
-        >
-          <AuthProvider>
-            <CartProvider>
-              {children}
-              <Toaster />
-              <ScrollToTop />
-              <TermsPopup />
+        <ErrorBoundary>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="dark"
+            enableSystem={false}
+            disableTransitionOnChange
+          >
+            <AuthProvider>
+              <CartProvider>
+                {children}
+                <Toaster />
+                <ScrollToTop />
+                <TermsPopup />
               {/* Admin Access Scripts */}
               <script
                 dangerouslySetInnerHTML={{
@@ -252,6 +254,7 @@ export default function RootLayout({
             </CartProvider>
           </AuthProvider>
         </ThemeProvider>
+        </ErrorBoundary>
         <SpeedInsights />
       </body>
     </html>
