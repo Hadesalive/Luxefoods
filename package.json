@@ -6,7 +6,14 @@
     "build": "next build",
     "dev": "next dev",
     "lint": "next lint",
-    "start": "next start"
+    "start": "next start",
+    "migrate-images": "tsx scripts/migrate-images.ts",
+    "list-blob-urls": "tsx scripts/update-cloudinary-urls.ts list",
+    "update-cloudinary-urls": "tsx scripts/update-cloudinary-urls.ts update",
+    "bulk-upload:generate": "tsx scripts/bulk-upload-images.ts generate",
+    "bulk-upload:interactive": "tsx scripts/bulk-upload-images.ts interactive",
+    "bulk-upload:folder": "tsx scripts/bulk-upload-images.ts folder",
+    "bulk-upload:json": "tsx scripts/bulk-upload-images.ts json"
   },
   "dependencies": {
     "@emotion/is-prop-valid": "latest",
@@ -44,6 +51,7 @@
     "@vercel/speed-insights": "^1.2.0",
     "autoprefixer": "^10.4.20",
     "class-variance-authority": "^0.7.1",
+    "cloudinary": "^2.8.0",
     "clsx": "^2.1.1",
     "cmdk": "1.0.4",
     "date-fns": "4.1.0",
@@ -53,7 +61,7 @@
     "geist": "^1.3.1",
     "input-otp": "1.4.1",
     "lucide-react": "^0.454.0",
-    "next": "15.2.4",
+    "next": "^15.5.9",
     "next-themes": "latest",
     "react": "^19",
     "react-day-picker": "9.8.0",
@@ -73,8 +81,10 @@
     "@types/node": "^22",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "dotenv": "^16.6.1",
     "postcss": "^8.5",
     "tailwindcss": "^3.4.17",
+    "tsx": "^4.21.0",
     "typescript": "^5"
   }
 }

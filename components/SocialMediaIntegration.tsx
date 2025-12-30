@@ -15,8 +15,8 @@ interface SocialStats {
 
 export default function SocialMediaIntegration() {
   const [stats] = useState<SocialStats>({
-    followers: 2500,
-    likes: 15600,
+    followers: 106400,
+    likes: 237200,
     reviews: 450,
     rating: 4.8,
   })
@@ -81,75 +81,75 @@ export default function SocialMediaIntegration() {
   }
 
   return (
-    <section className="py-16 bg-gradient-to-br from-gray-50 via-white to-gray-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
+    <section className="py-16 bg-gray-900 border-t border-gray-800">
       <div className="container mx-auto px-4">
         <div className="text-center mb-12">
-          <h2 className="text-3xl lg:text-4xl font-bold text-black dark:text-white mb-4">
+          <h2 className="text-3xl lg:text-4xl font-bold text-white mb-4">
             Join Our Food Community! 🍽️
           </h2>
-          <p className="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
+          <p className="text-lg text-gray-400 max-w-2xl mx-auto">
             Follow us on social media for daily food inspiration, special offers, and behind-the-scenes content from our kitchen!
           </p>
         </div>
 
         <div className="grid lg:grid-cols-2 gap-8 max-w-4xl mx-auto">
           {/* Social Stats */}
-          <Card className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm border-gray-200 dark:border-gray-700">
+          <Card className="bg-gray-800 border-gray-700 hover:border-gray-600 transition-colors">
             <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-black dark:text-white">
-                <Users className="h-5 w-5" />
+              <CardTitle className="flex items-center gap-2 text-white">
+                <Users className="h-5 w-5 text-orange-400" />
                 Community Stats
               </CardTitle>
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-2 gap-4">
-                <div className="text-center p-4 bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900/20 dark:to-blue-800/20 rounded-xl">
-                  <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">{stats.followers.toLocaleString()}</div>
-                  <div className="text-sm text-gray-600 dark:text-gray-400">Followers</div>
+                <div className="text-center p-4 bg-gray-900/50 rounded-xl border border-gray-700 hover:border-blue-500/50 transition-colors">
+                  <div className="text-2xl font-bold text-blue-400">106.4k</div>
+                  <div className="text-sm text-gray-300">Followers</div>
                 </div>
-                <div className="text-center p-4 bg-gradient-to-br from-red-50 to-red-100 dark:from-red-900/20 dark:to-red-800/20 rounded-xl">
-                  <div className="text-2xl font-bold text-red-600 dark:text-red-400">{stats.likes.toLocaleString()}</div>
-                  <div className="text-sm text-gray-600 dark:text-gray-400">Likes</div>
+                <div className="text-center p-4 bg-gray-900/50 rounded-xl border border-gray-700 hover:border-red-500/50 transition-colors">
+                  <div className="text-2xl font-bold text-red-400">237.2k</div>
+                  <div className="text-sm text-gray-300">Likes</div>
                 </div>
-                <div className="text-center p-4 bg-gradient-to-br from-green-50 to-green-100 dark:from-green-900/20 dark:to-green-800/20 rounded-xl">
-                  <div className="text-2xl font-bold text-green-600 dark:text-green-400">{stats.reviews}</div>
-                  <div className="text-sm text-gray-600 dark:text-gray-400">Reviews</div>
+                <div className="text-center p-4 bg-gray-900/50 rounded-xl border border-gray-700 hover:border-green-500/50 transition-colors">
+                  <div className="text-2xl font-bold text-green-400">{stats.reviews}</div>
+                  <div className="text-sm text-gray-300">Reviews</div>
                 </div>
-                <div className="text-center p-4 bg-gradient-to-br from-yellow-50 to-yellow-100 dark:from-yellow-900/20 dark:to-yellow-800/20 rounded-xl">
-                  <div className="text-2xl font-bold text-yellow-600 dark:text-yellow-400">{stats.rating}</div>
-                  <div className="text-sm text-gray-600 dark:text-gray-400">Rating</div>
+                <div className="text-center p-4 bg-gray-900/50 rounded-xl border border-gray-700 hover:border-yellow-500/50 transition-colors">
+                  <div className="text-2xl font-bold text-yellow-400">{stats.rating}</div>
+                  <div className="text-sm text-gray-300">Rating</div>
                 </div>
               </div>
             </CardContent>
           </Card>
 
           {/* Social Actions */}
-          <Card className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm border-gray-200 dark:border-gray-700">
+          <Card className="bg-gray-800 border-gray-700 hover:border-gray-600 transition-colors">
             <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-black dark:text-white">
-                <Share2 className="h-5 w-5" />
+              <CardTitle className="flex items-center gap-2 text-white">
+                <Share2 className="h-5 w-5 text-orange-400" />
                 Connect & Share
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-6">
               {/* Follow Buttons */}
               <div>
-                <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">Follow Us</h3>
+                <h3 className="text-sm font-medium text-gray-300 mb-3">Follow Us</h3>
                 <div className="flex gap-3">
                   <Button
                     variant="outline"
                     size="sm"
                     onClick={() => window.open(socialLinks.facebook, "_blank")}
-                    className="flex items-center gap-2 hover:bg-blue-50 hover:border-blue-300 dark:hover:bg-blue-900/20"
+                    className="flex items-center gap-2 border-gray-600 bg-transparent text-gray-200 hover:bg-blue-600 hover:border-blue-600 hover:text-white transition-colors"
                   >
-                    <Facebook className="h-4 w-4 text-blue-600" />
+                    <Facebook className="h-4 w-4" />
                     Facebook
                   </Button>
                   <Button
                     variant="outline"
                     size="sm"
                     onClick={() => window.open(socialLinks.tiktok, "_blank")}
-                    className="flex items-center gap-2 hover:bg-black hover:border-black dark:hover:bg-gray-800"
+                    className="flex items-center gap-2 border-gray-600 bg-transparent text-gray-200 hover:bg-gray-700 hover:border-gray-500 hover:text-white transition-colors"
                   >
                     <svg className="h-4 w-4 fill-current" viewBox="0 0 24 24">
                       <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/>
@@ -161,13 +161,13 @@ export default function SocialMediaIntegration() {
 
               {/* Share Buttons */}
               <div>
-                <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">Share This Page</h3>
+                <h3 className="text-sm font-medium text-gray-300 mb-3">Share This Page</h3>
                 <div className="grid grid-cols-2 gap-2">
                   <Button
                     variant="outline"
                     size="sm"
                     onClick={() => handleShare("facebook")}
-                    className="flex items-center gap-2"
+                    className="flex items-center gap-2 border-gray-600 bg-transparent text-gray-200 hover:bg-blue-600 hover:border-blue-600 hover:text-white transition-colors"
                   >
                     <Facebook className="h-4 w-4" />
                     Facebook
@@ -176,7 +176,7 @@ export default function SocialMediaIntegration() {
                     variant="outline"
                     size="sm"
                     onClick={() => handleShare("tiktok")}
-                    className="flex items-center gap-2"
+                    className="flex items-center gap-2 border-gray-600 bg-transparent text-gray-200 hover:bg-gray-700 hover:border-gray-500 hover:text-white transition-colors"
                   >
                     <svg className="h-4 w-4 fill-current" viewBox="0 0 24 24">
                       <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/>
@@ -187,7 +187,7 @@ export default function SocialMediaIntegration() {
                     variant="outline"
                     size="sm"
                     onClick={() => handleShare("whatsapp")}
-                    className="flex items-center gap-2"
+                    className="flex items-center gap-2 border-gray-600 bg-transparent text-gray-200 hover:bg-green-600 hover:border-green-600 hover:text-white transition-colors"
                   >
                     <MessageCircle className="h-4 w-4" />
                     WhatsApp
@@ -196,7 +196,7 @@ export default function SocialMediaIntegration() {
                     variant="outline"
                     size="sm"
                     onClick={() => handleShare("copy")}
-                    className="flex items-center gap-2"
+                    className="flex items-center gap-2 border-gray-600 bg-transparent text-gray-200 hover:bg-gray-700 hover:border-gray-500 hover:text-white transition-colors"
                   >
                     <Copy className="h-4 w-4" />
                     Copy Link
@@ -209,8 +209,8 @@ export default function SocialMediaIntegration() {
 
         {/* Call to Action */}
         <div className="text-center mt-12">
-          <div className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-black to-gray-800 text-white rounded-full font-medium">
-            <Heart className="h-5 w-5" />
+          <div className="inline-flex items-center gap-2 px-6 py-3 bg-gray-800 border border-gray-700 text-white rounded-full font-medium hover:border-orange-500/50 transition-colors">
+            <Heart className="h-5 w-5 text-orange-400" />
             Join thousands of food lovers who follow us!
           </div>
         </div>

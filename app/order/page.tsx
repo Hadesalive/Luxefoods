@@ -41,6 +41,10 @@ export const metadata: Metadata = {
   },
 }
 
+// Enable static rendering where possible
+export const dynamic = 'force-dynamic'
+export const revalidate = 300 // Revalidate every 5 minutes
+
 export default function OrderPage() {
   return <OrderPageClient />
 }

@@ -3,6 +3,14 @@
 @tailwind utilities;
 
 @layer base {
+  /* Performance optimization: content-visibility */
+  .menu-item-card {
+    content-visibility: auto;
+    contain-intrinsic-size: 400px;
+  }
+}
+
+@layer base {
   :root {
     --background: 0 0% 100%;
     --foreground: 222.2 84% 4.9%;
@@ -85,21 +93,43 @@ html {
   transition: background-color 0.5s ease, color 0.5s ease;
 }
 
-/* Custom scrollbar */
+/* Custom scrollbar - Thin and barely noticeable */
 ::-webkit-scrollbar {
-  width: 10px;
+  width: 3px;
+  height: 3px;
 }
 
 ::-webkit-scrollbar-track {
-  @apply bg-gray-100 dark:bg-gray-800;
+  background: transparent;
 }
 
 ::-webkit-scrollbar-thumb {
-  @apply bg-indigo-400 dark:bg-indigo-600 rounded-full;
+  @apply bg-gray-600 dark:bg-gray-500;
+  border-radius: 3px;
+  opacity: 0.3;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  @apply bg-indigo-500 dark:bg-indigo-500;
+  opacity: 0.5;
+}
+
+/* Order page scrollbar */
+.order-scrollbar::-webkit-scrollbar {
+  height: 3px;
+}
+
+.order-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.order-scrollbar::-webkit-scrollbar-thumb {
+  @apply bg-gray-600;
+  border-radius: 3px;
+  opacity: 0.3;
+}
+
+.order-scrollbar::-webkit-scrollbar-thumb:hover {
+  opacity: 0.5;
 }
 
 /* Animations */
@@ -127,4 +157,31 @@ html {
 /* Gradient text */
 .gradient-text {
   @apply bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-purple-600 dark:from-indigo-400 dark:to-purple-400;
+}
+
+/* Hide scrollbar but keep functionality */
+.scrollbar-hide {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;  /* Chrome, Safari and Opera */
+}
+
+/* Performance optimizations */
+@layer utilities {
+  .will-change-transform {
+    will-change: transform;
+  }
+  
+  .will-change-opacity {
+    will-change: opacity;
+  }
+  
+  .gpu-accelerated {
+    transform: translateZ(0);
+    backface-visibility: hidden;
+    perspective: 1000px;
+  }
 }

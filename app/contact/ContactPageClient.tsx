@@ -7,9 +7,11 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Card, CardContent } from "@/components/ui/card"
-import { Phone, Mail, MapPin, Send, CheckCircle, Loader2, HelpCircle, Clock, ArrowLeft, Star } from "lucide-react"
+import { Phone, Mail, MapPin, Send, CheckCircle, Loader2, HelpCircle, Clock, Star } from "lucide-react"
 import Link from "next/link"
 import { WhatsappIcon } from "@/components/WhatsappIcon"
+import Header from "@/components/Header"
+import Footer from "@/components/Footer"
 
 export default function ContactPageClient() {
   const [formState, setFormState] = useState({
@@ -89,63 +91,57 @@ export default function ContactPageClient() {
   ]
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-indigo-50 dark:from-gray-950 dark:via-gray-900 dark:to-indigo-950 transition-colors duration-300">
-      <div className="container mx-auto px-4 py-6 lg:py-8">
-        <Link
-          href="/"
-          className="inline-flex items-center text-indigo-900 dark:text-indigo-100 hover:text-indigo-700 dark:hover:text-indigo-300 mb-6 lg:mb-8 transition-colors group"
-        >
-          <ArrowLeft className="h-4 w-4 mr-2 group-hover:-translate-x-1 transition-transform" />
-          <span className="font-medium">Back to Home</span>
-        </Link>
+    <div className="min-h-screen bg-gray-900">
+      <Header />
+      <main className="pt-20">
+        <div className="container mx-auto px-4 py-8 lg:py-12">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            className="text-center mb-8 lg:mb-12"
+          >
+            <h1 className="text-3xl sm:text-4xl lg:text-6xl font-bold mb-4 lg:mb-6 text-white">
+              Get in Touch
+            </h1>
+            <p className="text-lg lg:text-xl text-gray-400 max-w-3xl mx-auto leading-relaxed">
+              Have questions, feedback, or want to place a special order? We're here to help!
+            </p>
+          </motion.div>
 
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          className="text-center mb-8 lg:mb-12"
-        >
-          <h1 className="text-3xl sm:text-4xl lg:text-6xl font-bold mb-4 lg:mb-6 text-indigo-900 dark:text-indigo-100">
-            Get in Touch
-          </h1>
-          <p className="text-lg lg:text-xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto leading-relaxed">
-            Have questions, feedback, or want to place a special order? We're here to help!
-          </p>
-        </motion.div>
-
-        {/* Tab Navigation */}
-        <div className="flex flex-wrap justify-center gap-3 mb-8 lg:mb-12 px-4">
-          <Button
-            className={`text-base lg:text-lg px-6 lg:px-8 py-3 lg:py-4 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 ${
-              activeTab === "contact"
-                ? "bg-indigo-900 hover:bg-indigo-800 dark:bg-indigo-700 dark:hover:bg-indigo-600 text-white"
-                : "bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 text-indigo-900 dark:text-indigo-100 border-2 border-indigo-900 dark:border-indigo-700"
-            }`}
-            onClick={() => setActiveTab("contact")}
-          >
-            📞 Contact Us
-          </Button>
-          <Button
-            className={`text-base lg:text-lg px-6 lg:px-8 py-3 lg:py-4 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 ${
-              activeTab === "faq"
-                ? "bg-indigo-900 hover:bg-indigo-800 dark:bg-indigo-700 dark:hover:bg-indigo-600 text-white"
-                : "bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 text-indigo-900 dark:text-indigo-100 border-2 border-indigo-900 dark:border-indigo-700"
-            }`}
-            onClick={() => setActiveTab("faq")}
-          >
-            ❓ FAQ
-          </Button>
-          <Button
-            className={`text-base lg:text-lg px-6 lg:px-8 py-3 lg:py-4 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 ${
-              activeTab === "location"
-                ? "bg-indigo-900 hover:bg-indigo-800 dark:bg-indigo-700 dark:hover:bg-indigo-600 text-white"
-                : "bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 text-indigo-900 dark:text-indigo-100 border-2 border-indigo-900 dark:border-indigo-700"
-            }`}
-            onClick={() => setActiveTab("location")}
-          >
-            📍 Location
-          </Button>
-        </div>
+          {/* Tab Navigation */}
+          <div className="flex flex-wrap justify-center gap-3 mb-8 lg:mb-12 px-4">
+            <Button
+              className={`text-base lg:text-lg px-6 lg:px-8 py-3 lg:py-4 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 ${
+                activeTab === "contact"
+                  ? "bg-orange-600 hover:bg-orange-700 text-white"
+                  : "bg-gray-800 hover:bg-gray-700 text-gray-200 border-2 border-gray-700 hover:border-gray-600"
+              }`}
+              onClick={() => setActiveTab("contact")}
+            >
+              📞 Contact Us
+            </Button>
+            <Button
+              className={`text-base lg:text-lg px-6 lg:px-8 py-3 lg:py-4 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 ${
+                activeTab === "faq"
+                  ? "bg-orange-600 hover:bg-orange-700 text-white"
+                  : "bg-gray-800 hover:bg-gray-700 text-gray-200 border-2 border-gray-700 hover:border-gray-600"
+              }`}
+              onClick={() => setActiveTab("faq")}
+            >
+              ❓ FAQ
+            </Button>
+            <Button
+              className={`text-base lg:text-lg px-6 lg:px-8 py-3 lg:py-4 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 ${
+                activeTab === "location"
+                  ? "bg-orange-600 hover:bg-orange-700 text-white"
+                  : "bg-gray-800 hover:bg-gray-700 text-gray-200 border-2 border-gray-700 hover:border-gray-600"
+              }`}
+              onClick={() => setActiveTab("location")}
+            >
+              📍 Location
+            </Button>
+          </div>
 
         {/* Contact Tab */}
         {activeTab === "contact" && (
@@ -161,23 +157,17 @@ export default function ContactPageClient() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.1 }}
             >
-              <Card className="overflow-hidden group hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm border border-white/20 dark:border-gray-700/20 h-full">
+              <Card className="overflow-hidden group hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 bg-gray-800 border border-gray-700 hover:border-orange-500/50 h-full">
                 <CardContent className="p-6 flex flex-col items-center text-center h-full">
-                  <div className="w-16 h-16 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 dark:from-blue-600 dark:to-indigo-700 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
+                  <div className="w-16 h-16 rounded-full bg-gradient-to-br from-blue-600 to-blue-700 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
                     <Phone className="h-8 w-8 text-white" />
                   </div>
-                  <h3 className="text-xl font-bold mb-2 text-indigo-900 dark:text-indigo-100">Call Us</h3>
-                  <p className="text-gray-600 dark:text-gray-400 mb-4 text-sm">Quick phone support</p>
+                  <h3 className="text-xl font-bold mb-2 text-white">Call Us</h3>
+                  <p className="text-gray-300 mb-4 text-sm">Quick phone support</p>
                   <div className="space-y-2 mt-auto">
                     <Link
-                      href="tel:077254220"
-                      className="block text-indigo-600 dark:text-indigo-400 font-semibold hover:text-indigo-800 dark:hover:text-indigo-300 transition-colors"
-                    >
-                      076 533655
-                    </Link>
-                    <Link
-                      href="tel:076369828"
-                      className="block text-indigo-600 dark:text-indigo-400 font-semibold hover:text-indigo-800 dark:hover:text-indigo-300 transition-colors"
+                      href="tel:076533655"
+                      className="block text-orange-400 font-semibold hover:text-orange-300 transition-colors"
                     >
                       076 533655
                     </Link>
@@ -191,19 +181,19 @@ export default function ContactPageClient() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.2 }}
             >
-              <Card className="overflow-hidden group hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm border border-white/20 dark:border-gray-700/20 h-full">
+              <Card className="overflow-hidden group hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 bg-gray-800 border border-gray-700 hover:border-green-500/50 h-full">
                 <CardContent className="p-6 flex flex-col items-center text-center h-full">
-                  <div className="w-16 h-16 rounded-full bg-gradient-to-br from-green-500 to-emerald-600 dark:from-green-600 dark:to-emerald-700 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
+                  <div className="w-16 h-16 rounded-full bg-gradient-to-br from-green-600 to-green-700 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
                     <WhatsappIcon className="h-8 w-8 text-white" />
                   </div>
-                  <h3 className="text-xl font-bold mb-2 text-indigo-900 dark:text-indigo-100">WhatsApp</h3>
-                  <p className="text-gray-600 dark:text-gray-400 mb-4 text-sm">Instant messaging</p>
+                  <h3 className="text-xl font-bold mb-2 text-white">WhatsApp</h3>
+                  <p className="text-gray-300 mb-4 text-sm">Instant messaging</p>
                   <div className="mt-auto">
                     <Link
                       href="https://wa.me/23276533655"
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="block text-green-600 dark:text-green-400 font-semibold hover:text-green-800 dark:hover:text-green-300 transition-colors"
+                      className="block text-green-400 font-semibold hover:text-green-300 transition-colors"
                     >
                       076 533655
                     </Link>
@@ -217,19 +207,19 @@ export default function ContactPageClient() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.3 }}
             >
-              <Card className="overflow-hidden group hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm border border-white/20 dark:border-gray-700/20 h-full">
+              <Card className="overflow-hidden group hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 bg-gray-800 border border-gray-700 hover:border-purple-500/50 h-full">
                 <CardContent className="p-6 flex flex-col items-center text-center h-full">
-                  <div className="w-16 h-16 rounded-full bg-gradient-to-br from-purple-500 to-pink-600 dark:from-purple-600 dark:to-pink-700 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
+                  <div className="w-16 h-16 rounded-full bg-gradient-to-br from-purple-600 to-pink-700 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
                     <Mail className="h-8 w-8 text-white" />
                   </div>
-                  <h3 className="text-xl font-bold mb-2 text-indigo-900 dark:text-indigo-100">Email</h3>
-                  <p className="text-gray-600 dark:text-gray-400 mb-4 text-sm">Send us a message</p>
+                  <h3 className="text-xl font-bold mb-2 text-white">Email</h3>
+                  <p className="text-gray-300 mb-4 text-sm">Send us a message</p>
                   <div className="mt-auto">
                     <Link
                       href="mailto:info@thekingsbakerysl.com"
-                      className="block text-purple-600 dark:text-purple-400 font-semibold hover:text-purple-800 dark:hover:text-purple-300 transition-colors text-sm"
+                      className="block text-purple-400 font-semibold hover:text-purple-300 transition-colors text-sm"
                     >
-                                              info@thekingsbakerysl.com
+                      info@thekingsbakerysl.com
                     </Link>
                   </div>
                 </CardContent>
@@ -243,7 +233,7 @@ export default function ContactPageClient() {
               transition={{ duration: 0.5, delay: 0.4 }}
               className="sm:col-span-2 lg:col-span-3 xl:col-span-1"
             >
-              <Card className="overflow-hidden group hover:shadow-2xl transition-all duration-500 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm border border-white/20 dark:border-gray-700/20 h-full">
+              <Card className="overflow-hidden group hover:shadow-2xl transition-all duration-500 bg-gray-800 border border-gray-700 hover:border-orange-500/50 h-full">
                 <CardContent className="p-6">
                   {formStatus === "success" ? (
                     <motion.div
@@ -251,21 +241,21 @@ export default function ContactPageClient() {
                       animate={{ opacity: 1, scale: 1 }}
                       className="text-center py-8"
                     >
-                      <CheckCircle className="h-16 w-16 text-green-500 dark:text-green-400 mx-auto mb-4" />
-                      <h3 className="text-2xl font-bold text-indigo-900 dark:text-indigo-100 mb-2">Message Sent!</h3>
-                      <p className="text-gray-600 dark:text-gray-400 mb-6">
+                      <CheckCircle className="h-16 w-16 text-green-400 mx-auto mb-4" />
+                      <h3 className="text-2xl font-bold text-white mb-2">Message Sent!</h3>
+                      <p className="text-gray-300 mb-6">
                         Thank you for reaching out. We'll get back to you shortly.
                       </p>
                       <Button
                         onClick={() => setFormStatus("idle")}
-                        className="bg-indigo-600 hover:bg-indigo-700 dark:bg-indigo-700 dark:hover:bg-indigo-600"
+                        className="bg-orange-600 hover:bg-orange-700 text-white"
                       >
                         Send Another Message
                       </Button>
                     </motion.div>
                   ) : (
                     <>
-                      <h3 className="text-xl font-bold mb-4 text-indigo-900 dark:text-indigo-100">Send Message</h3>
+                      <h3 className="text-xl font-bold mb-4 text-white">Send Message</h3>
                       <form onSubmit={handleSubmit} className="space-y-4">
                         <div>
                           <Input
@@ -274,7 +264,7 @@ export default function ContactPageClient() {
                             value={formState.name}
                             onChange={handleChange}
                             required
-                            className="bg-gray-50 dark:bg-gray-900 border-gray-200 dark:border-gray-700"
+                            className="bg-gray-900 border-gray-700 text-white placeholder:text-gray-500 focus:border-orange-500"
                           />
                         </div>
                         <div>
@@ -285,7 +275,7 @@ export default function ContactPageClient() {
                             value={formState.email}
                             onChange={handleChange}
                             required
-                            className="bg-gray-50 dark:bg-gray-900 border-gray-200 dark:border-gray-700"
+                            className="bg-gray-900 border-gray-700 text-white placeholder:text-gray-500 focus:border-orange-500"
                           />
                         </div>
                         <div>
@@ -294,7 +284,7 @@ export default function ContactPageClient() {
                             placeholder="Phone Number"
                             value={formState.phone}
                             onChange={handleChange}
-                            className="bg-gray-50 dark:bg-gray-900 border-gray-200 dark:border-gray-700"
+                            className="bg-gray-900 border-gray-700 text-white placeholder:text-gray-500 focus:border-orange-500"
                           />
                         </div>
                         <div>
@@ -304,7 +294,7 @@ export default function ContactPageClient() {
                             value={formState.subject}
                             onChange={handleChange}
                             required
-                            className="bg-gray-50 dark:bg-gray-900 border-gray-200 dark:border-gray-700"
+                            className="bg-gray-900 border-gray-700 text-white placeholder:text-gray-500 focus:border-orange-500"
                           />
                         </div>
                         <div>
@@ -315,13 +305,13 @@ export default function ContactPageClient() {
                             value={formState.message}
                             onChange={handleChange}
                             required
-                            className="bg-gray-50 dark:bg-gray-900 border-gray-200 dark:border-gray-700 resize-none"
+                            className="bg-gray-900 border-gray-700 text-white placeholder:text-gray-500 focus:border-orange-500 resize-none"
                           />
                         </div>
                         <Button
                           type="submit"
                           disabled={formStatus === "submitting"}
-                          className="w-full bg-indigo-900 hover:bg-indigo-800 dark:bg-indigo-700 dark:hover:bg-indigo-600 text-white py-3 font-medium flex items-center justify-center gap-2 rounded-2xl"
+                          className="w-full bg-orange-600 hover:bg-orange-700 text-white py-3 font-medium flex items-center justify-center gap-2 rounded-2xl"
                         >
                           {formStatus === "submitting" ? (
                             <>
@@ -359,17 +349,17 @@ export default function ContactPageClient() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
               >
-                <Card className="overflow-hidden group hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm border border-white/20 dark:border-gray-700/20 h-full">
+                <Card className="overflow-hidden group hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 bg-gray-800 border border-gray-700 hover:border-orange-500/50 h-full">
                   <CardContent className="p-6">
                     <div className="flex items-start mb-4">
-                      <div className="w-10 h-10 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 dark:from-indigo-600 dark:to-purple-700 flex items-center justify-center mr-4 flex-shrink-0">
+                      <div className="w-10 h-10 rounded-full bg-gradient-to-br from-orange-600 to-orange-700 flex items-center justify-center mr-4 flex-shrink-0">
                         <HelpCircle className="h-5 w-5 text-white" />
                       </div>
-                      <h3 className="text-lg font-bold text-indigo-900 dark:text-indigo-100 leading-tight">
+                      <h3 className="text-lg font-bold text-white leading-tight">
                         {faq.question}
                       </h3>
                     </div>
-                    <p className="text-gray-600 dark:text-gray-400 leading-relaxed ml-14">{faq.answer}</p>
+                    <p className="text-gray-300 leading-relaxed ml-14">{faq.answer}</p>
                   </CardContent>
                 </Card>
               </motion.div>
@@ -390,41 +380,41 @@ export default function ContactPageClient() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.1 }}
             >
-              <Card className="overflow-hidden group hover:shadow-2xl transition-all duration-500 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm border border-white/20 dark:border-gray-700/20 h-full">
+              <Card className="overflow-hidden group hover:shadow-2xl transition-all duration-500 bg-gray-800 border border-gray-700 hover:border-orange-500/50 h-full">
                 <CardContent className="p-6">
-                  <h3 className="text-2xl font-bold mb-6 text-indigo-900 dark:text-indigo-100">Visit Our Restaurant</h3>
+                  <h3 className="text-2xl font-bold mb-6 text-white">Visit Our Restaurant</h3>
                   <div className="space-y-6">
                     <div className="flex items-start">
-                      <div className="w-12 h-12 rounded-full bg-gradient-to-br from-red-500 to-orange-600 dark:from-red-600 dark:to-orange-700 flex items-center justify-center mr-4 flex-shrink-0">
+                      <div className="w-12 h-12 rounded-full bg-gradient-to-br from-orange-600 to-orange-700 flex items-center justify-center mr-4 flex-shrink-0">
                         <MapPin className="h-6 w-6 text-white" />
                       </div>
                       <div>
-                        <p className="font-bold text-indigo-900 dark:text-indigo-100 mb-1">📍 Address</p>
-                        <p className="text-gray-600 dark:text-gray-400">
-                          40F SHERIFF DRIVE, REGENT ROAD
+                        <p className="font-bold text-white mb-1">📍 Address</p>
+                        <p className="text-gray-300">
+                          117 MAIN REGENT ROAD, HILL STATION
                           <br />
-                          LUMLEY, FREETOWN
+                          OPPOSITE CITY SUPERMARKET
                         </p>
                       </div>
                     </div>
                     <div className="flex items-start">
-                      <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 dark:from-blue-600 dark:to-indigo-700 flex items-center justify-center mr-4 flex-shrink-0">
+                      <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-600 to-blue-700 flex items-center justify-center mr-4 flex-shrink-0">
                         <Clock className="h-6 w-6 text-white" />
                       </div>
                       <div>
-                        <p className="font-bold text-indigo-900 dark:text-indigo-100 mb-2">🕐 Opening Hours</p>
-                        <div className="space-y-1 text-gray-600 dark:text-gray-400">
+                        <p className="font-bold text-white mb-2">🕐 Opening Hours</p>
+                        <div className="space-y-1 text-gray-300">
                           <div className="flex justify-between">
                             <span>Monday - Friday:</span>
-                            <span className="font-semibold">10:00 AM - 10:00 PM</span>
+                            <span className="font-semibold text-orange-400">10:00 AM - 10:00 PM</span>
                           </div>
                           <div className="flex justify-between">
                             <span>Saturday - Sunday:</span>
-                            <span className="font-semibold">11:00 AM - 11:00 PM</span>
+                            <span className="font-semibold text-orange-400">11:00 AM - 11:00 PM</span>
                           </div>
                         </div>
-                        <div className="mt-3 p-2 bg-green-100 dark:bg-green-900/30 rounded-lg">
-                          <p className="text-green-700 dark:text-green-400 text-sm font-medium flex items-center">
+                        <div className="mt-3 p-2 bg-green-900/30 border border-green-700/50 rounded-lg">
+                          <p className="text-green-400 text-sm font-medium flex items-center">
                             <span className="w-2 h-2 bg-green-500 rounded-full mr-2 animate-pulse"></span>
                             Open Now - Ready to serve you! 🍕
                           </p>
@@ -441,18 +431,18 @@ export default function ContactPageClient() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.2 }}
             >
-              <Card className="overflow-hidden group hover:shadow-2xl transition-all duration-500 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm border border-white/20 dark:border-gray-700/20 h-full">
-                <div className="h-[300px] bg-gray-200 dark:bg-gray-700 relative">
-                  <div className="absolute inset-0 flex items-center justify-center p-8 text-gray-700 dark:text-gray-300 text-center">
+              <Card className="overflow-hidden group hover:shadow-2xl transition-all duration-500 bg-gray-800 border border-gray-700 hover:border-orange-500/50 h-full">
+                <div className="h-[300px] bg-gray-700 relative">
+                  <div className="absolute inset-0 flex items-center justify-center p-8 text-gray-300 text-center">
                     <div>
-                      <MapPin className="h-12 w-12 mx-auto mb-4 text-indigo-600 dark:text-indigo-400" />
+                      <MapPin className="h-12 w-12 mx-auto mb-4 text-orange-400" />
                       <p className="font-medium text-lg mb-2">Map location would be displayed here.</p>
-                      <p className="text-sm">40F SHERIFF DRIVE, REGENT ROAD, LUMLEY</p>
+                      <p className="text-sm">117 MAIN REGENT ROAD, HILL STATION</p>
                     </div>
                   </div>
                 </div>
                 <CardContent className="p-6">
-                  <h3 className="text-xl font-bold mb-4 text-indigo-900 dark:text-indigo-100">Customer Rating</h3>
+                  <h3 className="text-xl font-bold mb-4 text-white">Customer Rating</h3>
                   <div className="flex items-center mb-4">
                     <div className="flex items-center mr-4">
                       {[1, 2, 3, 4, 5].map((star) => (
@@ -460,11 +450,11 @@ export default function ContactPageClient() {
                       ))}
                     </div>
                     <div>
-                      <p className="font-bold text-yellow-500 text-xl">4.8/5</p>
-                      <p className="text-xs text-gray-500 dark:text-gray-400">Based on 150+ reviews</p>
+                      <p className="font-bold text-yellow-400 text-xl">4.8/5</p>
+                      <p className="text-xs text-gray-400">Based on 450+ reviews</p>
                     </div>
                   </div>
-                  <p className="text-gray-600 dark:text-gray-400 text-sm italic">
+                  <p className="text-gray-300 text-sm italic">
                     "Amazing homestyle cooking! The pizza is absolutely delicious and the service is excellent." -
                     Recent Customer
                   </p>
@@ -473,7 +463,9 @@ export default function ContactPageClient() {
             </motion.div>
           </motion.div>
         )}
-      </div>
+        </div>
+      </main>
+      <Footer />
     </div>
   )
 }

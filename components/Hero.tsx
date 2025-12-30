@@ -1,148 +1,137 @@
 "use client"
 
+import { useState, useEffect } from "react"
 import Image from "next/image"
-import { Button } from "@/components/ui/button"
 import Link from "next/link"
-import { motion } from "framer-motion"
+import { motion, AnimatePresence } from "framer-motion"
+import { ArrowRight, MapPin, Clock } from "lucide-react"
+
+const heroImages = [
+  "https://images.unsplash.com/photo-1513104890138-7c749659a591?w=1920&h=1080&fit=crop&q=85", // Pizza
+  "https://images.unsplash.com/photo-1603133872878-684f208fb84b?w=1920&h=1080&fit=crop&q=85", // Fried Rice
+  "https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=1920&h=1080&fit=crop&q=85", // Jollof Rice / West African Rice
+  "https://images.unsplash.com/photo-1608039829573-8c4c85b0e1a5?w=1920&h=1080&fit=crop&q=85", // Grilled Chicken
+  "https://images.unsplash.com/photo-1555939594-58d7cb561b1a?w=1920&h=1080&fit=crop&q=85", // African Stew / Cassava Leaf
+  "https://images.unsplash.com/photo-1604908176997-125f25cc6f3d?w=1920&h=1080&fit=crop&q=85", // African Food Spread
+]
 
 export default function Hero() {
+  const [currentIndex, setCurrentIndex] = useState(0)
+
+  // Preload images
+  useEffect(() => {
+    heroImages.forEach((src) => {
+      const img = new window.Image()
+      img.src = src
+    })
+  }, [])
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentIndex((prev) => (prev + 1) % heroImages.length)
+    }, 5000) // Change image every 5 seconds
+
+    return () => clearInterval(interval)
+  }, [])
+
   return (
-    <section className="relative h-screen overflow-hidden">
-      {/* Background Image */}
+    <section className="relative h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-orange-900 flex items-center justify-center overflow-hidden border-b border-gray-800">
+      {/* Background Image Slideshow */}
       <div className="absolute inset-0">
-        <Image 
-          src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=1920&h=1080&fit=crop" 
-          alt="Delicious Restaurant Food" 
-          fill 
-          className="object-cover" 
-          priority 
-        />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/60 to-black/90 dark:from-black/90 dark:via-black/70 dark:to-black/95"></div>
+        {heroImages.map((src, index) => {
+          const imageNames = ['Pizza', 'Fried Rice', 'Jollof Rice', 'Grilled Chicken', 'Cassava Leaf Stew', 'African Cuisine']
+          const isActive = index === currentIndex
+          return (
+            <motion.div
+              key={`${src}-${index}`}
+              initial={false}
+              animate={{ 
+                opacity: isActive ? 1 : 0,
+              }}
+              transition={{ duration: 2, ease: "easeInOut" }}
+              className="absolute inset-0"
+            >
+              <Image
+                src={src}
+                alt={`The Kings Bakery - ${imageNames[index]}`}
+                fill
+                className="object-cover"
+                priority={index === 0}
+                sizes="100vw"
+              />
+            </motion.div>
+          )
+        })}
+        {/* Dark Overlay */}
+        <div className="absolute inset-0 bg-black/60 z-10"></div>
       </div>
 
-      {/* Centered Content */}
-      <div className="relative z-10 h-full flex items-center justify-center">
-        <div className="container mx-auto px-4">
-          <div className="text-center max-w-4xl mx-auto">
-            {/* Main Content */}
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8 }}
-              className="space-y-6 sm:space-y-8"
-            >
-              {/* Subtitle */}
-              <motion.h2
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.8, delay: 0.2 }}
-                className="text-amber-200/90 dark:text-amber-100/90 text-xl sm:text-2xl lg:text-3xl font-medium"
-              >
-                🍽️ Local & International Cuisine
-              </motion.h2>
+      {/* Content */}
+      <div className="container mx-auto px-4 lg:px-8 relative z-10 py-20">
+        <div className="max-w-4xl mx-auto text-center">
+          
+          {/* Main Heading */}
+          <motion.h1
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-light text-white mb-4 md:mb-6 leading-tight tracking-wide drop-shadow-2xl"
+          >
+            <span className="font-serif italic text-orange-300">The</span>{" "}
+            <span className="font-bold">Kings</span>{" "}
+            <span className="font-light tracking-wider">Bakery</span>
+          </motion.h1>
 
-              {/* Restaurant Name */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: 0.4 }}
-                className="space-y-2"
-              >
-                <h1 className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold text-white leading-tight drop-shadow-lg">
-                  THE KINGS
-                </h1>
-                <h1 className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold bg-gradient-to-r from-amber-200/90 to-amber-100/90 bg-clip-text text-transparent leading-tight drop-shadow-lg">
-                  BAKERY 
-                </h1>
-              </motion.div>
+          {/* Subheading */}
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.1 }}
+            className="text-lg md:text-xl lg:text-2xl text-yellow-300 mb-6 md:mb-8 leading-relaxed max-w-2xl mx-auto drop-shadow-lg px-4"
+          >
+            Authentic African flavors, fresh ingredients, and traditional recipes. 
+            From jollof rice to grilled chicken, experience the taste of Sierra Leone.
+          </motion.p>
 
-              {/* Tagline */}
-              <motion.p
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.8, delay: 0.6 }}
-                className="text-lg sm:text-xl lg:text-2xl text-amber-100/80 dark:text-amber-50/80 italic font-medium max-w-2xl mx-auto"
-              >
-                "✨ Local & International Dishes Made Fresh Daily ✨"
-              </motion.p>
+          {/* Info */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className="flex flex-wrap items-center justify-center gap-4 md:gap-6 mb-6 md:mb-10 text-gray-200"
+          >
+            <div className="flex items-center gap-2">
+              <MapPin className="w-4 h-4 md:w-5 md:h-5 text-orange-400" />
+              <span className="text-xs md:text-sm drop-shadow-md">117 Main Regent Road, Hill Station</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <Clock className="w-4 h-4 md:w-5 md:h-5 text-orange-400" />
+              <span className="text-xs md:text-sm drop-shadow-md">30-45min delivery</span>
+            </div>
+          </motion.div>
 
-              {/* Address */}
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.8, delay: 0.8 }}
-                className="text-amber-100/70 dark:text-amber-50/70 text-sm sm:text-base lg:text-lg font-medium"
-              >
-                📍 117 Main Regent Road, Hill Station, Opposite City Supermarket
-              </motion.div>
-            </motion.div>
+          {/* Call to Action Buttons */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.3 }}
+            className="flex flex-col sm:flex-row gap-3 md:gap-4 justify-center px-4"
+          >
+            <Link href="/order">
+              <button className="group w-full sm:w-auto px-6 md:px-8 py-3 md:py-4 bg-orange-600 hover:bg-orange-700 text-white font-semibold rounded-lg transition-all flex items-center justify-center gap-2 hover:shadow-xl hover:shadow-orange-600/20 hover:scale-105 active:scale-95 text-sm md:text-base">
+                Order Now
+                <ArrowRight className="w-4 h-4 md:w-5 md:h-5 group-hover:translate-x-1 transition-transform" />
+              </button>
+            </Link>
+            <Link href="/order">
+              <button className="w-full sm:w-auto px-6 md:px-8 py-3 md:py-4 bg-gray-800 hover:bg-gray-700 border border-gray-700 text-white font-medium rounded-lg transition-all hover:border-orange-600 active:scale-95 text-sm md:text-base">
+                View Menu
+              </button>
+            </Link>
+          </motion.div>
 
-            {/* Buttons */}
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 1.0 }}
-              className="flex flex-col sm:flex-row gap-4 mt-8 sm:mt-12 justify-center max-w-md mx-auto"
-            >
-              <Link href="/order">
-                <Button
-                  size="lg"
-                  className="w-full sm:w-auto bg-red-600 hover:bg-red-700 dark:bg-red-700 dark:hover:bg-red-600 text-white text-lg sm:text-xl font-bold px-8 py-4 sm:py-5 rounded-full shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105 border-2 border-red-500"
-                >
-                  📋 View Menu
-                </Button>
-              </Link>
-              <Link href="/order">
-                <Button
-                  size="lg"
-                  className="w-full sm:w-auto bg-amber-200/20 dark:bg-amber-100/20 text-amber-100 dark:text-amber-50 hover:bg-amber-200/30 dark:hover:bg-amber-100/30 text-lg sm:text-xl font-bold px-8 py-4 sm:py-5 rounded-full shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105 border-2 border-amber-200/40 dark:border-amber-100/40 backdrop-blur-sm"
-                >
-                  🛒 Order Now
-                </Button>
-              </Link>
-            </motion.div>
-
-            {/* Stats Cards */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.8, delay: 1.2 }}
-              className="mt-8 sm:mt-12 flex flex-wrap justify-center gap-4 sm:gap-6"
-            >
-              <div className="bg-black/20 dark:bg-black/30 backdrop-blur-sm rounded-2xl px-4 py-3 border border-amber-200/20 dark:border-amber-100/20">
-                <div className="text-amber-200/90 dark:text-amber-100/90 text-2xl mb-1">⭐</div>
-                <div className="text-white text-sm font-bold">4.8/5</div>
-                <div className="text-white/80 text-xs">Rating</div>
-              </div>
-              <div className="bg-black/20 dark:bg-black/30 backdrop-blur-sm rounded-2xl px-4 py-3 border border-amber-200/20 dark:border-amber-100/20">
-                <div className="text-amber-200/90 dark:text-amber-100/90 text-2xl mb-1">🚚</div>
-                <div className="text-white text-sm font-bold">30-45min</div>
-                <div className="text-white/80 text-xs">Delivery</div>
-              </div>
-              <div className="bg-black/20 dark:bg-black/30 backdrop-blur-sm rounded-2xl px-4 py-3 border border-amber-200/20 dark:border-amber-100/20">
-                <div className="text-amber-200/90 dark:text-amber-100/90 text-2xl mb-1">🔥</div>
-                <div className="text-white text-sm font-bold">Fresh</div>
-                <div className="text-white/80 text-xs">Daily</div>
-              </div>
-            </motion.div>
-          </div>
         </div>
       </div>
-
-      {/* Scroll Indicator */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 1, delay: 1.5, repeat: Number.POSITIVE_INFINITY, repeatType: "reverse" }}
-        className="absolute bottom-8 left-1/2 transform -translate-x-1/2 text-white/80"
-      >
-        <div className="flex flex-col items-center gap-2">
-          <span className="text-xs font-medium">Scroll for Menu</span>
-          <div className="w-1 h-6 bg-white/50 rounded-full">
-            <div className="w-1 h-2 bg-white rounded-full animate-bounce"></div>
-          </div>
-        </div>
-      </motion.div>
     </section>
   )
 }

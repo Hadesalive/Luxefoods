@@ -7,11 +7,17 @@ import { ThemeProvider } from "@/components/theme-provider"
 import { CartProvider } from "@/contexts/CartContext"
 import { AuthProvider } from "@/contexts/AuthContext"
 import { Toaster } from "@/components/ui/toaster"
+import { Toaster as SonnerToaster } from "sonner"
 import ScrollToTop from "@/components/ScrollToTop"
 import TermsPopup from "@/components/TermsPopup"
 import { ErrorBoundary } from "@/components/ErrorBoundary"
 
-const inter = Inter({ subsets: ["latin"] })
+const inter = Inter({ 
+  subsets: ["latin"],
+  display: 'swap',
+  preload: true,
+  variable: '--font-inter',
+})
 
 
 
@@ -21,9 +27,9 @@ export const metadata: Metadata = {
   description:
     "Kings Baker & Restaurant in Freetown, Sierra Leone. Order delicious food online - fried rice, jollof rice, grilled chicken, fried chicken, shawarma, burgers, breakfast, lunch, dinner. Fast food delivery to Lumley and surrounding areas.",
   keywords: "restaurant Freetown, food delivery Freetown, fried rice delivery, jollof rice delivery, grilled chicken delivery, fried chicken delivery, shawarma delivery, burger delivery, breakfast delivery, lunch delivery, dinner delivery, online food order, restaurant delivery Sierra Leone, Kings Restaurant, Kings Bakery, local food Freetown, international cuisine, food delivery Lumley, African food delivery, European food delivery, Asian food delivery, fast food delivery, date night food delivery, family meal delivery, party food delivery, catering delivery Freetown",
-  authors: [{ name: "Kings Bakery", url: "https://thekingsbakerysl.com" }],
-  creator: "Kings Bakery",
-  publisher: "Kings Bakery",
+  authors: [{ name: "Alpha Amadu Bah", url: "https://thekingsbakerysl.com" }],
+  creator: "Alpha Amadu Bah",
+  publisher: "Alpha Amadu Bah",
   openGraph: {
     title: "The Kings Bakery - Food Delivery | Fried Rice, Jollof Rice, Grilled Chicken, Burgers, Shawarma | Freetown, Sierra Leone",
     description:
@@ -70,6 +76,10 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
+        {/* Resource Hints for Performance */}
+        <link rel="preconnect" href="https://res.cloudinary.com" />
+        <link rel="dns-prefetch" href="https://res.cloudinary.com" />
+        
         {/* Favicon */}
         <link rel="icon" type="image/x-icon" href="/favicon.ico" />
         <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
@@ -169,6 +179,7 @@ export default function RootLayout({
               <CartProvider>
                 {children}
                 <Toaster />
+                <SonnerToaster />
                 <ScrollToTop />
                 <TermsPopup />
               {/* Admin Access Scripts */}
