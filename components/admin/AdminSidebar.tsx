@@ -3,7 +3,7 @@
 import Link from "next/link"
 import Image from "next/image"
 import { usePathname, useRouter } from "next/navigation"
-import { SquaresFour, ShoppingBag, ClipboardText, ForkKnife, Tag, Article, Briefcase, Images, SignOut } from "@phosphor-icons/react"
+import { SquaresFour, ShoppingBag, ClipboardText, ForkKnife, Tag, Article, Briefcase, Images, SignOut, UsersThree } from "@phosphor-icons/react"
 import { cn } from "@/lib/utils"
 import { createSupabaseBrowserClient } from "@/lib/supabase-browser"
 
@@ -19,6 +19,7 @@ const manage = [
   { href: "/admin/content",  label: "Content",  icon: Article },
   { href: "/admin/services", label: "Services", icon: Briefcase },
   { href: "/admin/gallery",  label: "Gallery",  icon: Images },
+  { href: "/admin/users",    label: "Users",    icon: UsersThree },
 ]
 
 export default function AdminSidebar({ role }: { role: string }) {

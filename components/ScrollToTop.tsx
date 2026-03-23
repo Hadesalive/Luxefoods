@@ -28,6 +28,8 @@ export default function ScrollToTop() {
 
   const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(WHATSAPP_MESSAGE)}`
 
+  if (pathname.startsWith("/admin")) return null
+
   return (
     <a
       href={whatsappUrl}
