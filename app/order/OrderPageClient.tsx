@@ -166,39 +166,37 @@ const MenuItemCard = memo(({
         </div>
 
         {/* Footer: price + controls */}
-        <div className="mt-auto flex items-center justify-between gap-2">
-          <span className="text-sm sm:text-base font-bold text-stone-900">NLe {totalPrice.toFixed(0)}</span>
-
-          <div className="flex items-center gap-1.5 sm:gap-2">
-            <div className="flex items-center gap-0.5 sm:gap-1">
+        <div className="mt-auto space-y-2">
+          <div className="flex items-center justify-between">
+            <span className="text-sm font-bold text-stone-900">NLe {totalPrice.toFixed(0)}</span>
+            <div className="flex items-center gap-0.5">
               <button
                 onClick={() => onQuantityChange(-1)}
-                className="w-6 h-6 sm:w-7 sm:h-7 rounded-full bg-stone-100 hover:bg-stone-200 flex items-center justify-center transition-colors"
+                className="w-7 h-7 rounded-full bg-stone-100 hover:bg-stone-200 flex items-center justify-center transition-colors"
               >
-                <Minus className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-stone-600" />
+                <Minus className="w-3 h-3 text-stone-600" />
               </button>
-              <span className="w-4 sm:w-5 text-center text-xs sm:text-sm font-semibold text-stone-800">{quantity}</span>
+              <span className="w-6 text-center text-sm font-semibold text-stone-800">{quantity}</span>
               <button
                 onClick={() => onQuantityChange(1)}
-                className="w-6 h-6 sm:w-7 sm:h-7 rounded-full bg-stone-100 hover:bg-stone-200 flex items-center justify-center transition-colors"
+                className="w-7 h-7 rounded-full bg-stone-100 hover:bg-stone-200 flex items-center justify-center transition-colors"
               >
-                <Plus className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-stone-600" />
+                <Plus className="w-3 h-3 text-stone-600" />
               </button>
             </div>
-
-            <button
-              onClick={onAddToCart}
-              disabled={isAdded}
-              className={cn(
-                "px-3 sm:px-4 py-1.5 rounded-lg text-xs sm:text-sm font-semibold transition-colors",
-                isAdded
-                  ? "bg-stone-100 text-stone-400 cursor-not-allowed"
-                  : "bg-yellow-500 hover:bg-yellow-400 text-stone-900"
-              )}
-            >
-              Add
-            </button>
           </div>
+          <button
+            onClick={onAddToCart}
+            disabled={isAdded}
+            className={cn(
+              "w-full py-2 rounded-lg text-xs font-semibold transition-colors",
+              isAdded
+                ? "bg-stone-100 text-stone-400 cursor-not-allowed"
+                : "bg-yellow-500 hover:bg-yellow-400 text-stone-900"
+            )}
+          >
+            {isAdded ? "Added!" : "Add to cart"}
+          </button>
         </div>
       </div>
     </div>
@@ -316,8 +314,8 @@ export default function OrderPageClient() {
   if (isLoading) {
     return (
       <div className="min-h-screen bg-stone-50">
-        <section className="pt-16" style={{ backgroundColor: "#1C1917" }}>
-          <div className="container mx-auto px-6 pt-12 pb-10">
+        <section className="pt-16 lg:pt-20" style={{ backgroundColor: "#1C1917" }}>
+          <div className="container mx-auto px-4 sm:px-6 pt-8 pb-8 lg:pt-12 lg:pb-10">
             <div className="h-3 w-20 bg-white/10 rounded mb-4 animate-pulse" />
             <div className="h-10 w-48 bg-white/10 rounded animate-pulse" />
           </div>
@@ -367,8 +365,8 @@ export default function OrderPageClient() {
     <div className="min-h-screen font-sans" style={{ backgroundColor: "#FFFDF8" }}>
 
       {/* Page header */}
-      <section className="pt-16" style={{ backgroundColor: "#1C1917" }}>
-        <div className="container mx-auto px-6 pt-10 pb-10 lg:pt-14 lg:pb-12">
+      <section className="pt-16 lg:pt-20" style={{ backgroundColor: "#1C1917" }}>
+        <div className="container mx-auto px-4 sm:px-6 pt-8 pb-8 lg:pt-12 lg:pb-12">
           <p className="text-xs font-bold tracking-[0.2em] uppercase text-yellow-500 mb-3">
             Order Online
           </p>
@@ -381,7 +379,7 @@ export default function OrderPageClient() {
             </p>
           </div>
           {/* Inline search */}
-          <div className="flex items-center gap-3 px-4 py-3 bg-white/8 border border-white/10 rounded-xl max-w-md">
+          <div className="flex items-center gap-3 px-4 py-3 bg-white/8 border border-white/10 rounded-xl w-full sm:max-w-md">
             <Search className="w-4 h-4 text-stone-400 flex-shrink-0" />
             <input
               className="flex-1 bg-transparent border-none outline-none text-sm placeholder:text-stone-500 text-white"
