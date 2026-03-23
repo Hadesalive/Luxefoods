@@ -1,83 +1,40 @@
-import { createClient } from "@supabase/supabase-js"
-import { AuthService } from "./auth"
+import { MOCK_CATEGORIES, MOCK_MENU_ITEMS } from "./mock-data"
+import type { Category, MenuItem, MenuItemSize, MenuItemOption, MenuItemWithCategory } from "./types"
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
 
-if (!supabaseUrl || !supabaseAnonKey) {
-  throw new Error(
-    "Missing Supabase environment variables. Please check your .env.local file and ensure NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY are set."
-  )
+// Check if Supabase is configured
+const isSupabaseConfigured = !!(supabaseUrl && supabaseAnonKey)
+
+// Only import and initialize Supabase if configured
+let supabase: any = null
+if (isSupabaseConfigured) {
+  try {
+    const { createClient } = require("@supabase/supabase-js")
+    supabase = createClient(supabaseUrl, supabaseAnonKey, {
+      auth: {
+        persistSession: true,
+        autoRefreshToken: true,
+      },
+      db: {
+        schema: "public",
+      },
+      global: {
+        headers: {
+          "x-application-name": "luxe-food",
+        },
+      },
+    })
+  } catch (error) {
+    console.warn("Supabase not available, using mock data")
+  }
 }
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
-  auth: {
-    persistSession: true,
-    autoRefreshToken: true,
-  },
-  db: {
-    schema: "public",
-  },
-  global: {
-    headers: {
-      "x-application-name": "kings-bakery",
-    },
-  },
-})
+export { supabase }
 
-// Types for the new schema
-export interface Category {
-  id: string
-  name: string
-  slug: string
-  description?: string
-  image_url?: string
-  sort_order: number
-  is_active: boolean
-  created_at: string
-  updated_at: string
-}
-
-export interface MenuItem {
-  id: string
-  category_id: string
-  name: string
-  description?: string
-  price: number
-  image_url?: string
-  is_available: boolean
-  is_popular: boolean
-  sort_order: number
-  created_at: string
-  updated_at: string
-  category?: Category
-  sizes?: MenuItemSize[]
-}
-
-export interface MenuItemSize {
-  id: string
-  menu_item_id: string
-  size_name: string
-  price: number
-  is_default: boolean
-  created_at: string
-}
-
-export interface MenuItemOption {
-  id: string
-  menu_item_id: string
-  option_name: string
-  price_adjustment: number
-  is_available: boolean
-  sort_order: number
-  created_at: string
-}
-
-export interface MenuItemWithCategory extends MenuItem {
-  category: Category
-  sizes: MenuItemSize[]
-  options: MenuItemOption[]
-}
+// Re-export types
+export type { Category, MenuItem, MenuItemSize, MenuItemOption, MenuItemWithCategory }
 
 // Optimized Menu service for Supabase free tier
 export class MenuService {
@@ -86,12 +43,20 @@ export class MenuService {
   private static categoriesCache: Category[] | null = null
   private static cacheExpiry = 0
   private static CACHE_DURATION = 15 * 60 * 1000 // 15 minutes (increased from 5)
-  private static CACHE_KEY = 'kings-bakery-menu-cache'
-  private static CATEGORIES_CACHE_KEY = 'kings-bakery-categories-cache'
+  private static CACHE_KEY = 'luxe-foods-menu-cache'
+  private static CATEGORIES_CACHE_KEY = 'luxe-foods-categories-cache'
 
   // Get Supabase client (no auth required since we use local storage auth)
   private static getAuthenticatedClient() {
+    if (!isSupabaseConfigured) {
+      throw new Error("Supabase is not configured. Cannot perform admin operations with mock data.")
+    }
     return supabase
+  }
+
+  // Check if using mock data
+  private static isUsingMockData() {
+    return !isSupabaseConfigured || !supabase
   }
 
   // Enhanced cache management with localStorage
@@ -126,6 +91,11 @@ export class MenuService {
 
   // Optimized: Get all categories with better caching
   static async getCategories(useCache = true): Promise<Category[]> {
+    // Use mock data if Supabase not configured
+    if (this.isUsingMockData()) {
+      return MOCK_CATEGORIES.filter(cat => cat.is_active)
+    }
+
     // Check memory cache first
     if (useCache && this.categoriesCache && Date.now() < this.cacheExpiry) {
       return this.categoriesCache
@@ -164,6 +134,22 @@ export class MenuService {
 
   // Optimized: Get menu items with single query and better caching
   static async getMenuItems(useCache = true, limit?: number): Promise<MenuItemWithCategory[]> {
+    // Use mock data if Supabase not configured
+    if (this.isUsingMockData()) {
+      const items = MOCK_MENU_ITEMS
+        .filter(item => item.is_available)
+        .map(item => {
+          const category = MOCK_CATEGORIES.find(cat => cat.id === item.category_id)!
+          return {
+            ...item,
+            category,
+            sizes: item.sizes || [],
+            options: item.options || []
+          } as MenuItemWithCategory
+        })
+      return limit ? items.slice(0, limit) : items
+    }
+
     // Check memory cache first
     if (useCache && this.menuCache && Date.now() < this.cacheExpiry) {
       return limit ? this.menuCache.slice(0, limit) : this.menuCache
@@ -225,6 +211,32 @@ export class MenuService {
     page = 1, 
     pageSize = 12
   ): Promise<{ items: MenuItemWithCategory[], total: number, hasMore: boolean }> {
+    // Use mock data if Supabase not configured
+    if (this.isUsingMockData()) {
+      const category = MOCK_CATEGORIES.find(cat => cat.slug === categorySlug && cat.is_active)
+      if (!category) {
+        return { items: [], total: 0, hasMore: false }
+      }
+
+      const allItems = MOCK_MENU_ITEMS
+        .filter(item => item.category_id === category.id && item.is_available)
+        .map(item => ({
+          ...item,
+          category,
+          sizes: item.sizes || [],
+          options: item.options || []
+        } as MenuItemWithCategory))
+
+      const offset = (page - 1) * pageSize
+      const items = allItems.slice(offset, offset + pageSize)
+      
+      return {
+        items,
+        total: allItems.length,
+        hasMore: allItems.length > offset + pageSize
+      }
+    }
+
     const offset = (page - 1) * pageSize
 
     // Get category first
@@ -282,6 +294,23 @@ export class MenuService {
 
   // Optimized: Get popular menu items (limited to reduce bandwidth)
   static async getPopularMenuItems(limit = 8): Promise<MenuItemWithCategory[]> {
+    // Use mock data if Supabase not configured
+    if (this.isUsingMockData()) {
+      const items = MOCK_MENU_ITEMS
+        .filter(item => item.is_available && item.is_popular)
+        .slice(0, limit)
+        .map(item => {
+          const category = MOCK_CATEGORIES.find(cat => cat.id === item.category_id)!
+          return {
+            ...item,
+            category,
+            sizes: item.sizes || [],
+            options: item.options || []
+          } as MenuItemWithCategory
+        })
+      return items
+    }
+
     const { data, error } = await supabase
       .from("menu_items")
       .select(`

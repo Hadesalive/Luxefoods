@@ -5,7 +5,6 @@ import "./globals.css"
 import { SpeedInsights } from "@vercel/speed-insights/next"
 import { ThemeProvider } from "@/components/theme-provider"
 import { CartProvider } from "@/contexts/CartContext"
-import { AuthProvider } from "@/contexts/AuthContext"
 import { Toaster } from "@/components/ui/toaster"
 import { Toaster as SonnerToaster } from "sonner"
 import ScrollToTop from "@/components/ScrollToTop"
@@ -22,26 +21,48 @@ const inter = Inter({
 
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://thekingsbakerysl.com'),
-  title: "The Kings Bakery - Food Delivery | Fried Rice, Jollof Rice, Grilled Chicken, Burgers, Shawarma | Freetown, Sierra Leone",
+  metadataBase: new URL('https://luxefood.com'),
+  title: {
+    default: "LUXE FOOD — Affordable Food Delivery Across Freetown, Sierra Leone",
+    template: "%s | LUXE FOOD Freetown",
+  },
   description:
-    "Kings Baker & Restaurant in Freetown, Sierra Leone. Order delicious food online - fried rice, jollof rice, grilled chicken, fried chicken, shawarma, burgers, breakfast, lunch, dinner. Fast food delivery to Lumley and surrounding areas.",
-  keywords: "restaurant Freetown, food delivery Freetown, fried rice delivery, jollof rice delivery, grilled chicken delivery, fried chicken delivery, shawarma delivery, burger delivery, breakfast delivery, lunch delivery, dinner delivery, online food order, restaurant delivery Sierra Leone, Kings Restaurant, Kings Bakery, local food Freetown, international cuisine, food delivery Lumley, African food delivery, European food delivery, Asian food delivery, fast food delivery, date night food delivery, family meal delivery, party food delivery, catering delivery Freetown",
-  authors: [{ name: "Alpha Amadu Bah", url: "https://thekingsbakerysl.com" }],
-  creator: "Alpha Amadu Bah",
-  publisher: "Alpha Amadu Bah",
+    "LUXE FOOD is Freetown's favourite mobile food cart — homestyle Sierra Leone cooking delivered straight to you at affordable prices. Jollof rice, grilled chicken, soups and more. Order now for fast delivery across Freetown.",
+  keywords: [
+    "food delivery Freetown",
+    "affordable food Freetown Sierra Leone",
+    "LUXE FOOD",
+    "food cart Freetown",
+    "street food Freetown",
+    "jollof rice delivery Freetown",
+    "Sierra Leone food delivery",
+    "cheap food delivery Freetown",
+    "homestyle cooking Freetown",
+    "mobile food vendor Sierra Leone",
+    "food tricycle Freetown",
+    "fast food delivery Freetown",
+    "catering Freetown Sierra Leone",
+    "local food Freetown",
+    "cassava leaf delivery",
+    "grilled chicken Freetown",
+    "order food online Freetown",
+    "food delivery Sierra Leone",
+  ],
+  authors: [{ name: "LUXE FOOD", url: "https://luxefood.com" }],
+  creator: "LUXE FOOD",
+  publisher: "LUXE FOOD",
   openGraph: {
-    title: "The Kings Bakery - Food Delivery | Fried Rice, Jollof Rice, Grilled Chicken, Burgers, Shawarma | Freetown, Sierra Leone",
+    title: "LUXE FOOD — Affordable Food Delivery Across Freetown, Sierra Leone",
     description:
-      "The Kings Bakery in Freetown, Sierra Leone. Order delicious food online - fried rice, jollof rice, grilled chicken, fried chicken, shawarma, burgers, breakfast, lunch, dinner. Fast food delivery to Lumley and surrounding areas.",
-    url: "https://thekingsbakerysl.com",
-    siteName: "The Kings Bakery",
+      "Freetown's favourite mobile food cart. Homestyle Sierra Leone cooking — jollof rice, grilled chicken, soups and more — delivered fast at prices everyone can afford.",
+    url: "https://luxefood.com",
+    siteName: "LUXE FOOD",
     images: [
       {
-        url: "/images/og-image.jpg",
+        url: "/images/logo.png",
         width: 1200,
         height: 630,
-        alt: "Kings Bakery Restaurant - Fresh Food, Bread, Pastries & Local Dishes in Freetown, Sierra Leone",
+        alt: "LUXE FOOD — The Bites Of Delight, Freetown Sierra Leone",
       },
     ],
     locale: "en_US",
@@ -49,10 +70,10 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "The Kings Restaurant & Bakery - Food Delivery | Fried Rice, Jollof Rice, Grilled Chicken, Burgers, Shawarma | Freetown, Sierra Leone",
+    title: "LUXE FOOD — Affordable Food Delivery Across Freetown",
     description:
-      "The Kings Restaurant & Bakery in Freetown, Sierra Leone. Order delicious food online - fried rice, jollof rice, grilled chicken, fried chicken, shawarma, burgers, breakfast, lunch, dinner. Fast food delivery to Lumley and surrounding areas.",
-    images: ["/images/og-image.jpg"],
+      "Freetown's favourite mobile food cart. Homestyle Sierra Leone cooking delivered fast at prices everyone can afford.",
+    images: ["/images/logo.png"],
   },
   robots: {
     index: true,
@@ -65,7 +86,6 @@ export const metadata: Metadata = {
       "max-snippet": -1,
     },
   },
-    generator: 'v0.dev'
 }
 
 export default function RootLayout({
@@ -90,79 +110,62 @@ export default function RootLayout({
         
         {/* Web App Manifest */}
         <link rel="manifest" href="/site.webmanifest" />
-        <meta name="theme-color" content="#f59e0b" />
+        <meta name="theme-color" content="#eab308" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
-        <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-        <meta name="apple-mobile-web-app-title" content="Kings Bakery" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+        <meta name="apple-mobile-web-app-title" content="LUXE FOOD" />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
             __html: JSON.stringify({
-                             "@context": "https://schema.org",
-               "@type": "Restaurant",
-               "name": "The Kings Restaurant & Bakery",
-               "description": "Restaurant serving delicious food including fried rice, jollof rice, grilled chicken, fried chicken, shawarma, burgers, breakfast, lunch, and dinner in Freetown, Sierra Leone",
-               "url": "https://thekingsbakerysl.com",
-               "telephone": "+23276533655",
-               "email": "info@thekingsbakerysl.com",
+              "@context": "https://schema.org",
+              "@type": "FoodEstablishment",
+              "name": "LUXE FOOD",
+              "alternateName": "Luxe Food Freetown",
+              "description": "Mobile food cart delivering homestyle Sierra Leone cooking across Freetown at affordable prices. Specialising in jollof rice, grilled chicken, cassava leaf, soups, and catering for events.",
+              "slogan": "The Bites Of Delight",
+              "url": "https://luxefood.com",
+              "telephone": "+23274762243",
+              "email": "info@luxefood.com",
               "address": {
                 "@type": "PostalAddress",
-                "streetAddress": "117 Main Regent Road, Hill Station",
                 "addressLocality": "Freetown",
-                "addressRegion": "Freetown",
-                "addressCountry": "Sierra Leone"
+                "addressRegion": "Western Area",
+                "addressCountry": "SL"
               },
               "geo": {
                 "@type": "GeoCoordinates",
                 "latitude": "8.4840",
                 "longitude": "-13.2299"
               },
-              "openingHours": "Mo-Su 10:00-22:00",
-              "priceRange": "$$",
-                             "servesCuisine": ["African", "European", "Asian", "Local Dishes", "International Cuisine", "Fried Rice", "Jollof Rice", "Grilled Chicken", "Fried Chicken", "Shawarma", "Burgers", "Breakfast", "Lunch", "Dinner", "Fast Food", "Restaurant Food"],
+              "areaServed": {
+                "@type": "City",
+                "name": "Freetown",
+                "addressCountry": "SL"
+              },
+              "openingHours": "Mo-Fr 10:00-22:00, Sa-Su 11:00-23:00",
+              "priceRange": "Le",
+              "servesCuisine": [
+                "Sierra Leonean",
+                "West African",
+                "Local Dishes",
+                "Street Food"
+              ],
               "hasOfferCatalog": {
                 "@type": "OfferCatalog",
-                "name": "Menu",
-                                 "itemListElement": [
-                   {
-                     "@type": "Offer",
-                     "itemOffered": {
-                       "@type": "FoodEstablishment",
-                       "name": "Fried Rice & Jollof Rice"
-                     }
-                   },
-                   {
-                     "@type": "Offer",
-                     "itemOffered": {
-                       "@type": "FoodEstablishment",
-                       "name": "Grilled Chicken & Fried Chicken"
-                     }
-                   },
-                   {
-                     "@type": "Offer",
-                     "itemOffered": {
-                       "@type": "FoodEstablishment",
-                       "name": "Shawarma & Burgers"
-                     }
-                   },
-                   {
-                     "@type": "Offer",
-                     "itemOffered": {
-                       "@type": "FoodEstablishment",
-                       "name": "Breakfast, Lunch & Dinner"
-                     }
-                   }
-                 ]
+                "name": "LUXE FOOD Menu",
+                "itemListElement": [
+                  { "@type": "Offer", "itemOffered": { "@type": "MenuItem", "name": "Jollof Rice" } },
+                  { "@type": "Offer", "itemOffered": { "@type": "MenuItem", "name": "Grilled Chicken" } },
+                  { "@type": "Offer", "itemOffered": { "@type": "MenuItem", "name": "Cassava Leaf" } },
+                  { "@type": "Offer", "itemOffered": { "@type": "MenuItem", "name": "Soup Bowls" } },
+                  { "@type": "Offer", "itemOffered": { "@type": "MenuItem", "name": "Fried Rice" } }
+                ]
               },
               "sameAs": [
-                "https://www.facebook.com/share/14EFU5rMqBc/",
-                "https://www.tiktok.com/@kingsbakery.sl"
-              ],
-              "aggregateRating": {
-                "@type": "AggregateRating",
-                "ratingValue": "4.8",
-                "reviewCount": "450"
-              }
+                "https://www.facebook.com/luxefood",
+                "https://www.instagram.com/luxefood"
+              ]
             }),
           }}
         />
@@ -175,95 +178,13 @@ export default function RootLayout({
             enableSystem={false}
             disableTransitionOnChange
           >
-            <AuthProvider>
               <CartProvider>
                 {children}
                 <Toaster />
                 <SonnerToaster />
                 <ScrollToTop />
                 <TermsPopup />
-              {/* Admin Access Scripts */}
-              <script
-                dangerouslySetInnerHTML={{
-                  __html: `
-                    // Desktop: Keyboard shortcut (Ctrl+Shift+A)
-                    document.addEventListener('keydown', function(e) {
-                      if (e.ctrlKey && e.shiftKey && e.key === 'A') {
-                        e.preventDefault();
-                        window.location.href = '/login';
-                      }
-                    });
-
-                    // Mobile: Triple tap on bottom right corner
-                    let tapCount = 0;
-                    let tapTimer = null;
-                    let lastTapTime = 0;
-                    
-                    document.addEventListener('touchstart', function(e) {
-                      const now = Date.now();
-                      const timeDiff = now - lastTapTime;
-                      
-                      // Check if tap is in bottom right corner (last 100px)
-                      const touch = e.touches[0];
-                      const isBottomRight = touch.clientX > window.innerWidth - 100 && 
-                                          touch.clientY > window.innerHeight - 100;
-                      
-                      if (isBottomRight && timeDiff < 500) {
-                        tapCount++;
-                        lastTapTime = now;
-                        
-                        if (tapCount === 3) {
-                          e.preventDefault();
-                          window.location.href = '/login';
-                          tapCount = 0;
-                        }
-                        
-                        // Reset counter after 2 seconds
-                        clearTimeout(tapTimer);
-                        tapTimer = setTimeout(() => {
-                          tapCount = 0;
-                        }, 2000);
-                      } else if (timeDiff > 500) {
-                        tapCount = 1;
-                        lastTapTime = now;
-                      }
-                    });
-
-                    // Mobile: Long press on logo (3 seconds)
-                    let longPressTimer = null;
-                    let isLongPress = false;
-                    
-                    document.addEventListener('touchstart', function(e) {
-                      const target = e.target;
-                      const logo = target.closest('img[alt*="logo"], img[alt*="Logo"]');
-                      
-                      if (logo) {
-                        longPressTimer = setTimeout(() => {
-                          isLongPress = true;
-                          window.location.href = '/login';
-                        }, 3000);
-                      }
-                    });
-                    
-                    document.addEventListener('touchend', function() {
-                      if (longPressTimer) {
-                        clearTimeout(longPressTimer);
-                        longPressTimer = null;
-                      }
-                      isLongPress = false;
-                    });
-                    
-                    document.addEventListener('touchmove', function() {
-                      if (longPressTimer) {
-                        clearTimeout(longPressTimer);
-                        longPressTimer = null;
-                      }
-                    });
-                  `,
-                }}
-              />
-            </CartProvider>
-          </AuthProvider>
+              </CartProvider>
         </ThemeProvider>
         </ErrorBoundary>
         <SpeedInsights />

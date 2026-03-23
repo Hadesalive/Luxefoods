@@ -51,7 +51,7 @@ export default function PrivacyPage() {
             </p>
             <div className="mt-4 p-4 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg">
               <p className="text-blue-800 dark:text-blue-200 font-semibold">
-                📋 This policy describes how Kings Bakery collects, uses, and protects your information
+                📋 This policy describes how LUXE FOOD collects, uses, and protects your information
               </p>
             </div>
           </div>
@@ -65,15 +65,15 @@ export default function PrivacyPage() {
               </h2>
               <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4 mb-4">
                 <p className="text-gray-700 dark:text-gray-300">
-                  <strong>Company:</strong> Kings Bakery<br />
-                  <strong>Website:</strong> https://thekingsbakerysl.com<br />
+                  <strong>Company:</strong> LUXE FOOD<br />
+                  <strong>Website:</strong> https://luxefood.com<br />
                   <strong>Contact:</strong> 076533655<br />
                   <strong>Location:</strong> Freetown, Sierra Leone<br />
                   <strong>Effective Date:</strong> {new Date(LAST_UPDATED).toLocaleDateString()}
                 </p>
               </div>
               <p className="text-gray-700 dark:text-gray-300 mb-4">
-                At Kings Bakery, we are committed to protecting your privacy and ensuring the security of your personal information. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you visit our website, use our services, or interact with us.
+                At LUXE FOOD, we are committed to protecting your privacy and ensuring the security of your personal information. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you visit our website, use our services, or interact with us.
               </p>
             </section>
 
@@ -229,10 +229,10 @@ export default function PrivacyPage() {
               </p>
               <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
                 <p className="text-gray-700 dark:text-gray-300">
-                  <strong>Kings Bakery</strong><br />
+                  <strong>LUXE FOOD</strong><br />
                   <strong>Phone:</strong> 076533655<br />
                   <strong>Address:</strong> Freetown, Sierra Leone<br />
-                  <strong>Website:</strong> https://thekingsbakerysl.com<br />
+                  <strong>Website:</strong> https://luxefood.com<br />
                   <strong>Developer Contact:</strong> Alpha Amadu Bah (074762243)
                 </p>
               </div>

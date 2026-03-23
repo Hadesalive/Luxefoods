@@ -11,7 +11,7 @@ export async function POST(request: NextRequest) {
     const orderData = JSON.parse(formData.get("orderData") as string)
 
     // Format the order message for WhatsApp
-    let message = "🍞 *NEW ORDER - KINGS BAKERY* 🍞\n\n"
+    let message = "*NEW ORDER - LUXE FOOD*\n\n"
 
     // Customer info
     message += "👤 *Customer Details:*\n"
@@ -44,7 +44,7 @@ export async function POST(request: NextRequest) {
 
     message += `\n📋 Order ID: ${orderData.orderId}\n`
     message += `⏰ Time: ${new Date(orderData.timestamp).toLocaleString()}\n\n`
-    message += "🙏 Thank you for choosing Kings Bakery!\n"
+    message += "Thank you for choosing LUXE FOOD!\n"
     message += "⚡ Please confirm this order ASAP"
 
     // Restaurant WhatsApp number (Sierra Leone format)
@@ -56,7 +56,34 @@ export async function POST(request: NextRequest) {
     const encodedMessage = encodeURIComponent(message)
     const whatsappUrl = `https://api.whatsapp.com/send?phone=${restaurantNumber}&text=${encodedMessage}`
 
-    // WhatsApp URL prepared successfully
+    // Persist to Supabase (fire-and-forget)
+    try {
+      const { createClient } = await import('@supabase/supabase-js')
+      const sUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+      const sKey = process.env.SUPABASE_SERVICE_ROLE_KEY
+      if (sUrl && sKey) {
+        const db = createClient(sUrl, sKey)
+        await db.from('orders').insert({
+          order_ref:       orderData.orderId,
+          source:          'online',
+          status:          'pending',
+          customer_name:   orderData.customer?.name || null,
+          customer_phone:  orderData.customer?.phone || null,
+          customer_address: orderData.deliveryMethod === 'delivery'
+            ? `${orderData.customer?.address || ''}, ${orderData.customer?.city || ''}`.trim()
+            : null,
+          delivery_method: orderData.deliveryMethod === 'delivery' ? 'delivery' : 'pickup',
+          payment_method:  orderData.paymentMethod === 'orange-money' ? 'orange_money' : (orderData.paymentMethod || 'cash'),
+          discount_amount: 0,
+          items: (orderData.items || []).map((item: OrderItem, idx: number) => ({
+            id: String(idx), name: item.name, price: item.price, quantity: 1,
+          })),
+          subtotal: orderData.total,
+          total:    orderData.total,
+          notes:    orderData.customer?.notes || null,
+        })
+      }
+    } catch { /* DB failure never blocks the WhatsApp response */ }
 
     return NextResponse.json({
       success: true,

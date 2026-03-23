@@ -1,217 +1,125 @@
 "use client"
 
 import { useState } from "react"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Facebook, Share2, Copy, MessageCircle, Heart, Users, Star } from "lucide-react"
+import { Facebook, Share2, Copy, MessageCircle } from "lucide-react"
 import { toast } from "@/hooks/use-toast"
+import Link from "next/link"
 
-interface SocialStats {
-  followers: number
-  likes: number
-  reviews: number
-  rating: number
+const socialLinks = {
+  facebook: "https://www.facebook.com/luxefood",
+  instagram: "https://www.instagram.com/luxefood",
 }
 
+const shareUrl = typeof window !== "undefined" ? window.location.origin : ""
+const shareText = "Experience delicious meals with quality ingredients and exceptional taste!"
+
 export default function SocialMediaIntegration() {
-  const [stats] = useState<SocialStats>({
-    followers: 106400,
-    likes: 237200,
-    reviews: 450,
-    rating: 4.8,
-  })
-
-  const socialLinks = {
-    facebook: "https://www.facebook.com/share/14EFU5rMqBc/",
-    tiktok: "https://www.tiktok.com/@kingsbakery.sl",
-  }
-
-  const shareContent = {
-    title: "Kings Bakery Restaurant - Fresh Food, Local Dishes & International Cuisine",
-    text: "Experience the finest local dishes and international cuisine! Fresh bread, pastries, jollof rice, fried rice, pizza, and delicious treats. 🍽️✨",
-    url: typeof window !== "undefined" ? window.location.origin : "",
-  }
-
   const handleShare = async (platform: string) => {
-    const { title, text, url } = shareContent
-
     switch (platform) {
       case "facebook":
         window.open(
-          `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`,
+          `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`,
           "_blank",
           "width=600,height=400",
         )
         break
-      case "tiktok":
-        // TikTok doesn't have a direct share URL, so we'll copy the link
+      case "instagram":
         try {
-          await navigator.clipboard.writeText(url)
-          toast({
-            title: "Link copied!",
-            description: "The link has been copied to your clipboard. Share it on TikTok!",
-          })
-        } catch (err) {
-          toast({
-            title: "Failed to copy",
-            description: "Please copy the link manually.",
-            variant: "destructive",
-          })
+          await navigator.clipboard.writeText(shareUrl)
+          toast({ title: "Link copied!", description: "Share it on Instagram!" })
+        } catch {
+          toast({ title: "Failed to copy", description: "Please copy the link manually.", variant: "destructive" })
         }
         break
       case "whatsapp":
-        window.open(`https://wa.me/?text=${encodeURIComponent(`${text} ${url}`)}`, "_blank")
+        window.open(`https://wa.me/?text=${encodeURIComponent(`${shareText} ${shareUrl}`)}`, "_blank")
         break
       case "copy":
         try {
-          await navigator.clipboard.writeText(url)
-          toast({
-            title: "Link copied!",
-            description: "The link has been copied to your clipboard.",
-          })
-        } catch (err) {
-          toast({
-            title: "Failed to copy",
-            description: "Please copy the link manually.",
-            variant: "destructive",
-          })
+          await navigator.clipboard.writeText(shareUrl)
+          toast({ title: "Link copied!", description: "The link has been copied to your clipboard." })
+        } catch {
+          toast({ title: "Failed to copy", description: "Please copy the link manually.", variant: "destructive" })
         }
         break
     }
   }
 
   return (
-    <section className="py-16 bg-gray-900 border-t border-gray-800">
-      <div className="container mx-auto px-4">
-        <div className="text-center mb-12">
-          <h2 className="text-3xl lg:text-4xl font-bold text-white mb-4">
-            Join Our Food Community! 🍽️
-          </h2>
-          <p className="text-lg text-gray-400 max-w-2xl mx-auto">
-            Follow us on social media for daily food inspiration, special offers, and behind-the-scenes content from our kitchen!
-          </p>
-        </div>
+    <section className="relative py-20 lg:py-28 bg-grain overflow-hidden" style={{ backgroundColor: "#F5ECD7" }}>
+      <div className="container mx-auto px-6">
+        <div className="max-w-5xl mx-auto">
 
-        <div className="grid lg:grid-cols-2 gap-8 max-w-4xl mx-auto">
-          {/* Social Stats */}
-          <Card className="bg-gray-800 border-gray-700 hover:border-gray-600 transition-colors">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-white">
-                <Users className="h-5 w-5 text-orange-400" />
-                Community Stats
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-2 gap-4">
-                <div className="text-center p-4 bg-gray-900/50 rounded-xl border border-gray-700 hover:border-blue-500/50 transition-colors">
-                  <div className="text-2xl font-bold text-blue-400">106.4k</div>
-                  <div className="text-sm text-gray-300">Followers</div>
-                </div>
-                <div className="text-center p-4 bg-gray-900/50 rounded-xl border border-gray-700 hover:border-red-500/50 transition-colors">
-                  <div className="text-2xl font-bold text-red-400">237.2k</div>
-                  <div className="text-sm text-gray-300">Likes</div>
-                </div>
-                <div className="text-center p-4 bg-gray-900/50 rounded-xl border border-gray-700 hover:border-green-500/50 transition-colors">
-                  <div className="text-2xl font-bold text-green-400">{stats.reviews}</div>
-                  <div className="text-sm text-gray-300">Reviews</div>
-                </div>
-                <div className="text-center p-4 bg-gray-900/50 rounded-xl border border-gray-700 hover:border-yellow-500/50 transition-colors">
-                  <div className="text-2xl font-bold text-yellow-400">{stats.rating}</div>
-                  <div className="text-sm text-gray-300">Rating</div>
-                </div>
+          {/* Header */}
+          <div className="grid lg:grid-cols-2 gap-8 items-end mb-14">
+            <div>
+              <p className="text-xs font-bold tracking-[0.2em] uppercase text-yellow-700 mb-4">Stay Connected</p>
+              <h2 className="text-3xl lg:text-4xl font-bold text-stone-800 leading-[1.1]">
+                Follow us for<br />daily updates.
+              </h2>
+            </div>
+            <div>
+              <p className="text-base text-stone-500 leading-relaxed">
+                Daily food inspiration, special offers, and behind-the-scenes content — straight from our kitchen.
+              </p>
+            </div>
+          </div>
+
+          {/* Social + Share row */}
+          <div className="flex flex-col sm:flex-row gap-10 sm:gap-16 border-t border-stone-200 pt-10">
+
+            {/* Follow */}
+            <div>
+              <p className="text-xs font-semibold tracking-widest uppercase text-stone-400 mb-4">Follow Us</p>
+              <div className="flex flex-col gap-3">
+                <Link
+                  href={socialLinks.facebook}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-3 text-sm font-medium text-stone-700 hover:text-blue-600 transition-colors"
+                >
+                  <Facebook className="h-4 w-4" />
+                  Facebook
+                </Link>
+                <button
+                  onClick={() => window.open(socialLinks.instagram, "_blank")}
+                  className="inline-flex items-center gap-3 text-sm font-medium text-stone-700 hover:text-pink-600 transition-colors"
+                >
+                  <svg className="h-4 w-4 fill-current" viewBox="0 0 24 24">
+                    <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+                  </svg>
+                  Instagram
+                </button>
               </div>
-            </CardContent>
-          </Card>
+            </div>
 
-          {/* Social Actions */}
-          <Card className="bg-gray-800 border-gray-700 hover:border-gray-600 transition-colors">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-white">
-                <Share2 className="h-5 w-5 text-orange-400" />
-                Connect & Share
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              {/* Follow Buttons */}
-              <div>
-                <h3 className="text-sm font-medium text-gray-300 mb-3">Follow Us</h3>
-                <div className="flex gap-3">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => window.open(socialLinks.facebook, "_blank")}
-                    className="flex items-center gap-2 border-gray-600 bg-transparent text-gray-200 hover:bg-blue-600 hover:border-blue-600 hover:text-white transition-colors"
-                  >
-                    <Facebook className="h-4 w-4" />
-                    Facebook
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => window.open(socialLinks.tiktok, "_blank")}
-                    className="flex items-center gap-2 border-gray-600 bg-transparent text-gray-200 hover:bg-gray-700 hover:border-gray-500 hover:text-white transition-colors"
-                  >
-                    <svg className="h-4 w-4 fill-current" viewBox="0 0 24 24">
-                      <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/>
-                    </svg>
-                    TikTok
-                  </Button>
-                </div>
+            {/* Share */}
+            <div>
+              <p className="text-xs font-semibold tracking-widest uppercase text-stone-400 mb-4">Share This Page</p>
+              <div className="flex flex-wrap gap-3">
+                <button
+                  onClick={() => handleShare("facebook")}
+                  className="inline-flex items-center gap-2 text-sm font-medium text-stone-600 hover:text-blue-600 transition-colors"
+                >
+                  <Facebook className="h-4 w-4" /> Facebook
+                </button>
+                <span className="text-stone-300">·</span>
+                <button
+                  onClick={() => handleShare("whatsapp")}
+                  className="inline-flex items-center gap-2 text-sm font-medium text-stone-600 hover:text-green-600 transition-colors"
+                >
+                  <MessageCircle className="h-4 w-4" /> WhatsApp
+                </button>
+                <span className="text-stone-300">·</span>
+                <button
+                  onClick={() => handleShare("copy")}
+                  className="inline-flex items-center gap-2 text-sm font-medium text-stone-600 hover:text-stone-900 transition-colors"
+                >
+                  <Copy className="h-4 w-4" /> Copy Link
+                </button>
               </div>
+            </div>
 
-              {/* Share Buttons */}
-              <div>
-                <h3 className="text-sm font-medium text-gray-300 mb-3">Share This Page</h3>
-                <div className="grid grid-cols-2 gap-2">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => handleShare("facebook")}
-                    className="flex items-center gap-2 border-gray-600 bg-transparent text-gray-200 hover:bg-blue-600 hover:border-blue-600 hover:text-white transition-colors"
-                  >
-                    <Facebook className="h-4 w-4" />
-                    Facebook
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => handleShare("tiktok")}
-                    className="flex items-center gap-2 border-gray-600 bg-transparent text-gray-200 hover:bg-gray-700 hover:border-gray-500 hover:text-white transition-colors"
-                  >
-                    <svg className="h-4 w-4 fill-current" viewBox="0 0 24 24">
-                      <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/>
-                    </svg>
-                    TikTok
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => handleShare("whatsapp")}
-                    className="flex items-center gap-2 border-gray-600 bg-transparent text-gray-200 hover:bg-green-600 hover:border-green-600 hover:text-white transition-colors"
-                  >
-                    <MessageCircle className="h-4 w-4" />
-                    WhatsApp
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => handleShare("copy")}
-                    className="flex items-center gap-2 border-gray-600 bg-transparent text-gray-200 hover:bg-gray-700 hover:border-gray-500 hover:text-white transition-colors"
-                  >
-                    <Copy className="h-4 w-4" />
-                    Copy Link
-                  </Button>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* Call to Action */}
-        <div className="text-center mt-12">
-          <div className="inline-flex items-center gap-2 px-6 py-3 bg-gray-800 border border-gray-700 text-white rounded-full font-medium hover:border-orange-500/50 transition-colors">
-            <Heart className="h-5 w-5 text-orange-400" />
-            Join thousands of food lovers who follow us!
           </div>
         </div>
       </div>

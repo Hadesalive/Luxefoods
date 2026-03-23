@@ -22,7 +22,7 @@ export default function LicensePage() {
     // Allow access from admin pages or specific allowed domains
     const allowedDomains = [
       window.location.origin,
-      "https://thekingsbakerysl.com",
+      "https://luxefood.com",
       "http://localhost:3000"
     ]
     
@@ -184,7 +184,7 @@ export default function LicensePage() {
             </p>
             <div className="mt-4 p-4 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg">
               <p className="text-blue-800 dark:text-blue-200 font-semibold">
-                📋 This agreement governs the use of the Kings Bakery website system
+                📋 This agreement governs the use of the LUXE FOOD website system
               </p>
             </div>
           </div>
@@ -199,8 +199,8 @@ export default function LicensePage() {
               <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4 mb-4">
                 <p className="text-gray-700 dark:text-gray-300">
                   <strong>Licensor (Developer):</strong> Alpha Amadu Bah (074762243)<br />
-                  <strong>Licensee (Client):</strong> Kings Bakery<br />
-                  <strong>Software:</strong> Kings Bakery Website System<br />
+                  <strong>Licensee (Client):</strong> LUXE FOOD<br />
+                  <strong>Software:</strong> LUXE FOOD Website System<br />
                   <strong>License Fee:</strong> $100 USD (One-time payment)
                 </p>
               </div>
@@ -236,7 +236,7 @@ export default function LicensePage() {
                   📜 LICENSE TERMS:
                 </p>
                 <p className="text-blue-700 dark:text-blue-300 mb-3">
-                  The Developer grants Kings Bakery a perpetual, non-exclusive, worldwide license to:
+                  The Developer grants LUXE FOOD a perpetual, non-exclusive, worldwide license to:
                 </p>
                 <ul className="list-disc pl-6 text-blue-700 dark:text-blue-300 space-y-2">
                   <li><strong>System Access:</strong> Full access to the website system frontend and backend</li>
@@ -309,7 +309,7 @@ export default function LicensePage() {
                 </p>
                 <ul className="list-disc pl-6 text-purple-700 dark:text-purple-300 space-y-2">
                   <li><strong>No Expiration:</strong> This license has no expiration date</li>
-                  <li><strong>Unlimited Use:</strong> Kings Bakery can use the system indefinitely</li>
+                  <li><strong>Unlimited Use:</strong> LUXE FOOD can use the system indefinitely</li>
                   <li><strong>No Renewal Fees:</strong> No ongoing licensing fees or payments</li>
                   <li><strong>One-Time Payment:</strong> $100 USD paid in full - no additional charges</li>
                   <li><strong>Transfer of Access:</strong> Access rights cannot be revoked by the Developer</li>
@@ -327,12 +327,12 @@ export default function LicensePage() {
                   ⚠️ IMPORTANT RESTRICTIONS:
                 </p>
                 <ul className="list-disc pl-6 text-red-700 dark:text-red-300 space-y-2">
-                  <li><strong>NO SOURCE CODE ACCESS:</strong> Kings Bakery does not have access to the underlying source code</li>
-                  <li><strong>NO RESALE:</strong> Kings Bakery may not sell, resell, or commercially distribute the system</li>
-                  <li><strong>NO TRANSFER:</strong> Kings Bakery may not transfer the license to another business</li>
-                  <li><strong>NO SUBLICENSING:</strong> Kings Bakery may not sublicense the system to third parties</li>
-                  <li><strong>NO WHITE-LABELING:</strong> Kings Bakery may not rebrand the system as their own product</li>
-                  <li><strong>NO REVERSE ENGINEERING:</strong> Kings Bakery may not attempt to reverse engineer or decompile the system</li>
+                  <li><strong>NO SOURCE CODE ACCESS:</strong> LUXE FOOD does not have access to the underlying source code</li>
+                  <li><strong>NO RESALE:</strong> LUXE FOOD may not sell, resell, or commercially distribute the system</li>
+                  <li><strong>NO TRANSFER:</strong> LUXE FOOD may not transfer the license to another business</li>
+                  <li><strong>NO SUBLICENSING:</strong> LUXE FOOD may not sublicense the system to third parties</li>
+                  <li><strong>NO WHITE-LABELING:</strong> LUXE FOOD may not rebrand the system as their own product</li>
+                  <li><strong>NO REVERSE ENGINEERING:</strong> LUXE FOOD may not attempt to reverse engineer or decompile the system</li>
                 </ul>
               </div>
             </section>
@@ -342,7 +342,7 @@ export default function LicensePage() {
                 8. Support and Maintenance
               </h2>
               <p className="text-gray-700 dark:text-gray-300 mb-4">
-                The Developer is not obligated to provide ongoing support, maintenance, or updates. Kings Bakery is responsible for:
+                The Developer is not obligated to provide ongoing support, maintenance, or updates. LUXE FOOD is responsible for:
               </p>
               <ul className="list-disc pl-6 text-gray-700 dark:text-gray-300 space-y-2 mb-4">
                 <li>Maintaining and updating the system within their access capabilities</li>
@@ -353,7 +353,7 @@ export default function LicensePage() {
               </ul>
               <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
                 <p className="text-blue-800 dark:text-blue-200 font-semibold">
-                  💡 Note: For any system modifications, new features, or technical changes, Kings Bakery must contact the Developer directly. The Developer will evaluate each request individually and determine appropriate pricing and terms.
+                  💡 Note: For any system modifications, new features, or technical changes, LUXE FOOD must contact the Developer directly. The Developer will evaluate each request individually and determine appropriate pricing and terms.
                 </p>
               </div>
             </section>
@@ -385,7 +385,7 @@ export default function LicensePage() {
                 </div>
               </div>
               <p className="text-gray-700 dark:text-gray-300 mb-4">
-                The system is provided "as is" without any warranties beyond the specific responsibilities outlined above. The Developer shall not be liable for any damages arising from the use or modification of the system by Kings Bakery, except for issues directly related to the Developer's code or business logic implementation.
+                The system is provided "as is" without any warranties beyond the specific responsibilities outlined above. The Developer shall not be liable for any damages arising from the use or modification of the system by LUXE FOOD, except for issues directly related to the Developer's code or business logic implementation.
               </p>
             </section>
 
@@ -394,7 +394,7 @@ export default function LicensePage() {
                 10. Termination
               </h2>
               <p className="text-gray-700 dark:text-gray-300 mb-4">
-                This license is perpetual and cannot be terminated by the Developer. However, Kings Bakery's rights may be limited if they violate the restrictions outlined in Section 7.
+                This license is perpetual and cannot be terminated by the Developer. However, LUXE FOOD's rights may be limited if they violate the restrictions outlined in Section 7.
               </p>
             </section>
 
@@ -464,7 +464,7 @@ export default function LicensePage() {
               </h3>
               <div className="grid md:grid-cols-2 gap-4 text-sm mb-4">
                 <div>
-                  <h4 className="font-semibold text-gray-900 dark:text-white mb-2">✅ What Kings Bakery Can Do:</h4>
+                  <h4 className="font-semibold text-gray-900 dark:text-white mb-2">✅ What LUXE FOOD Can Do:</h4>
                   <ul className="text-gray-700 dark:text-gray-300 space-y-1">
                     <li>• Use the system forever</li>
                     <li>• Access frontend and backend</li>
@@ -474,7 +474,7 @@ export default function LicensePage() {
                   </ul>
                 </div>
                 <div>
-                  <h4 className="font-semibold text-gray-900 dark:text-white mb-2">❌ What Kings Bakery Cannot Do:</h4>
+                  <h4 className="font-semibold text-gray-900 dark:text-white mb-2">❌ What LUXE FOOD Cannot Do:</h4>
                   <ul className="text-gray-700 dark:text-gray-300 space-y-1">
                     <li>• Access the source code</li>
                     <li>• Sell the system to others</li>

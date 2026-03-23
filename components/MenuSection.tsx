@@ -3,13 +3,12 @@
 import { useState, useEffect, useMemo, memo } from "react"
 import Image from "next/image"
 import { Button } from "@/components/ui/button"
-import { Plus, Minus } from "lucide-react"
+import { Plus, Minus, Check, ArrowRight } from "lucide-react"
 import { useCart } from "@/contexts/CartContext"
 import { motion, AnimatePresence } from "framer-motion"
 import { MenuService, type MenuItemWithCategory } from "@/lib/menu-service"
 import { cn } from "@/lib/utils"
 
-// Helper function to optimize Cloudinary image URLs
 const optimizeImageUrl = (url: string | null | undefined, width = 600, quality = 75): string => {
   if (!url) return "/placeholder.jpg"
   if (url.includes('res.cloudinary.com')) {
@@ -21,38 +20,29 @@ const optimizeImageUrl = (url: string | null | undefined, width = 600, quality =
   return url
 }
 
-// Minimalist Pill for Sizes/Options with Orange Theme
-const SelectionPill = ({ 
-  label, 
-  price, 
-  isSelected, 
-  onClick 
-}: { 
-  label: string
-  price?: number
-  isSelected: boolean
-  onClick: () => void
-}) => (
-  <button
-    onClick={onClick}
-    className={cn(
-      "px-3 py-1.5 text-xs font-medium rounded-full transition-all duration-200 border",
-      isSelected
-        ? "bg-orange-600 text-white border-orange-600 shadow-sm hover:bg-orange-700"
-        : "bg-gray-800 text-gray-300 border-gray-700 hover:border-orange-600 hover:text-orange-400"
-    )}
-  >
-    {label}
-    {price && price > 0 && <span className="ml-1 opacity-80">+NLe{price.toFixed(2)}</span>}
-  </button>
+const SkeletonCard = () => (
+  <div className="bg-white rounded-2xl border border-stone-100 shadow-sm overflow-hidden animate-pulse">
+    <div className="aspect-[4/3] bg-stone-100" />
+    <div className="p-5">
+      <div className="flex justify-between items-start gap-3 mb-3">
+        <div className="h-5 bg-stone-100 rounded w-2/3" />
+        <div className="h-4 bg-stone-100 rounded w-12" />
+      </div>
+      <div className="h-3.5 bg-stone-100 rounded w-full mb-1.5" />
+      <div className="h-3.5 bg-stone-100 rounded w-4/5 mb-6" />
+      <div className="border-t border-stone-100 pt-4 flex items-center justify-between">
+        <div className="h-6 bg-stone-100 rounded w-16" />
+        <div className="h-8 bg-stone-100 rounded w-16" />
+      </div>
+    </div>
+  </div>
 )
 
-// Menu Item Card - Adapted from OrderPageClient
-const MenuItemCard = memo(({ 
-  item, 
-  selectedSize, 
-  selectedOptionsList, 
-  quantity, 
+const MenuItemCard = memo(({
+  item,
+  selectedSize,
+  selectedOptionsList,
+  quantity,
   isAdded,
   onSizeSelect,
   onOptionToggle,
@@ -69,7 +59,6 @@ const MenuItemCard = memo(({
   onQuantityChange: (change: number) => void
   onAddToCart: () => void
 }) => {
-  // Calculate price dynamically
   const basePrice = useMemo(() => {
     let price = item.price
     if (selectedSize && item.sizes) {
@@ -94,139 +83,155 @@ const MenuItemCard = memo(({
 
   return (
     <motion.div
-      initial={{ opacity: 0, scale: 0.95 }}
-      animate={{ opacity: 1, scale: 1 }}
-      whileHover={{ y: -4 }}
-      className="group menu-item-card"
+      initial={{ opacity: 0, y: 16 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.4, ease: [0.25, 0.46, 0.45, 0.94] }}
     >
-      <div className="bg-gray-800 rounded-3xl p-4 transition-all duration-300 hover:shadow-xl hover:border-orange-500/50 border border-gray-700 h-full flex flex-col relative overflow-hidden will-change-transform">
-        
-        {/* Success overlay */}
+      <div className="bg-white rounded-2xl border border-stone-100 shadow-sm h-full flex flex-col relative overflow-hidden">
+
+        {/* Added to cart overlay */}
         <AnimatePresence>
           {isAdded && (
             <motion.div
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.8 }}
-              className="absolute inset-0 bg-green-600/90 flex items-center justify-center z-20 rounded-3xl"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.15 }}
+              className="absolute inset-0 bg-white/95 flex items-center justify-center z-20"
             >
-              <motion.div
-                initial={{ scale: 0 }}
-                animate={{ scale: 1 }}
-                transition={{ delay: 0.1, type: "spring" }}
-                className="text-white text-center"
-              >
-                <p className="font-bold text-lg">Added to Cart!</p>
-              </motion.div>
+              <div className="text-center">
+                <div className="w-11 h-11 rounded-full bg-green-50 border border-green-100 flex items-center justify-center mx-auto mb-2">
+                  <Check className="w-5 h-5 text-green-600" />
+                </div>
+                <p className="text-sm font-semibold text-stone-800">Added to cart</p>
+              </div>
             </motion.div>
           )}
         </AnimatePresence>
-        
-        {/* Image Area */}
-        <div className="relative aspect-[4/3] rounded-2xl overflow-hidden mb-4 bg-gray-800">
+
+        {/* Image — flush to top, no inner rounding */}
+        <div className="relative aspect-[4/3] bg-stone-100 overflow-hidden">
           <Image
             src={optimizeImageUrl(item.image_url, 600)}
             alt={item.name}
             fill
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-            className="object-cover transition-transform duration-500 group-hover:scale-105"
+            className="object-cover"
             loading="lazy"
             placeholder="blur"
             blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAb/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWEREiMxUf/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="
           />
           {item.is_popular && (
-            <span className="absolute top-3 left-3 bg-orange-500 text-white backdrop-blur-sm text-xs font-semibold px-2.5 py-1 rounded-full shadow-lg">
-              ⭐ Popular
+            <span className="absolute top-3 left-3 bg-white/90 backdrop-blur-sm text-stone-700 text-[10px] font-semibold px-2 py-0.5 rounded-full tracking-wide uppercase">
+              Popular
             </span>
           )}
         </div>
 
         {/* Content */}
-        <div className="flex-1 flex flex-col">
-          <div className="mb-2">
-            <h3 className="font-bold text-white text-lg leading-tight mb-1">
+        <div className="p-5 flex flex-col flex-1">
+
+          {/* Name + base price on same row */}
+          <div className="flex items-start justify-between gap-3 mb-2">
+            <h3 className="font-semibold text-stone-900 text-base leading-snug">
               {item.name}
             </h3>
-            <p className="text-gray-300 text-sm line-clamp-2 leading-relaxed">
-              {item.description || "Freshly prepared with premium ingredients."}
-            </p>
+            <span className="text-stone-400 text-sm font-medium shrink-0 mt-px">
+              NLe {basePrice.toFixed(0)}
+            </span>
           </div>
 
-          {/* Configuration Area */}
-          <div className="space-y-3 mb-4 flex-1">
-            {/* Sizes */}
-            {item.sizes && item.sizes.length > 0 && (
-              <div className="flex flex-wrap gap-2">
-                {item.sizes.map((size) => (
-                  <SelectionPill
-                    key={size.size_name}
-                    label={size.size_name}
-                    price={size.price !== item.price ? size.price : undefined}
-                    isSelected={selectedSize === size.size_name}
-                    onClick={() => onSizeSelect(size.size_name)}
-                  />
-                ))}
-              </div>
-            )}
+          {/* Description */}
+          <p className="text-stone-400 text-sm line-clamp-2 leading-relaxed mb-4">
+            {item.description || "Freshly prepared with quality ingredients."}
+          </p>
 
-            {/* Options */}
-            {item.options && item.options.length > 0 && (
-              <div className="flex flex-wrap gap-2">
-                {item.options.map((opt) => (
-                  <SelectionPill
-                    key={opt.option_name}
-                    label={opt.option_name}
-                    price={opt.price_adjustment}
-                    isSelected={selectedOptionsList.includes(opt.option_name)}
-                    onClick={() => onOptionToggle(opt.option_name)}
-                  />
-                ))}
-              </div>
-            )}
-          </div>
-
-          {/* Action Area */}
-          <div className="mt-auto pt-4 border-t border-gray-700 flex items-center justify-between gap-4">
-            <div className="flex flex-col">
-              <span className="text-xs text-gray-300 font-medium uppercase tracking-wider">Total</span>
-              <span className="text-xl font-bold text-orange-400">
-                NLe{totalPrice.toFixed(2)}
-              </span>
+          {/* Sizes */}
+          {item.sizes && item.sizes.length > 0 && (
+            <div className="flex flex-wrap gap-1.5 mb-2">
+              {item.sizes.map((size) => (
+                <button
+                  key={size.size_name}
+                  onClick={() => onSizeSelect(size.size_name)}
+                  className={cn(
+                    "px-2.5 py-1 text-xs font-medium rounded-md border transition-colors",
+                    selectedSize === size.size_name
+                      ? "bg-stone-900 text-white border-stone-900"
+                      : "text-stone-500 border-stone-200 hover:border-stone-400 hover:text-stone-700"
+                  )}
+                >
+                  {size.size_name}
+                  {size.price !== item.price && (
+                    <span className="ml-1 opacity-60">+{size.price - item.price}</span>
+                  )}
+                </button>
+              ))}
             </div>
+          )}
 
-            <div className="flex items-center gap-2">
-              {/* Quantity Controls - Smaller */}
-              <div className="flex items-center bg-gray-900/50 rounded-lg p-0.5 border border-gray-700 hover:border-orange-500/50 transition-colors">
-                <button 
+          {/* Options */}
+          {item.options && item.options.length > 0 && (
+            <div className="flex flex-wrap gap-1.5 mb-4">
+              {item.options.map((opt) => (
+                <button
+                  key={opt.option_name}
+                  onClick={() => onOptionToggle(opt.option_name)}
+                  className={cn(
+                    "px-2.5 py-1 text-xs font-medium rounded-md border transition-colors",
+                    selectedOptionsList.includes(opt.option_name)
+                      ? "bg-stone-900 text-white border-stone-900"
+                      : "text-stone-500 border-stone-200 hover:border-stone-400 hover:text-stone-700"
+                  )}
+                >
+                  {opt.option_name}
+                  {opt.price_adjustment > 0 && (
+                    <span className="ml-1 opacity-60">+{opt.price_adjustment}</span>
+                  )}
+                </button>
+              ))}
+            </div>
+          )}
+
+          {/* Bottom bar */}
+          <div className="mt-auto pt-4 border-t border-stone-100 flex items-center justify-between">
+            <span className="text-lg font-bold text-stone-900">
+              NLe {totalPrice.toFixed(0)}
+            </span>
+
+            <div className="flex items-center gap-3">
+              {/* Qty controls */}
+              <div className="flex items-center gap-2">
+                <button
                   onClick={() => onQuantityChange(-1)}
-                  className="w-6 h-6 flex items-center justify-center rounded-md hover:bg-orange-600/20 transition-colors text-orange-400 hover:text-orange-300"
+                  className="w-7 h-7 rounded-full flex items-center justify-center text-stone-400 hover:text-stone-700 hover:bg-stone-100 transition-colors"
                 >
                   <Minus className="w-3 h-3" />
                 </button>
-                <span className="w-5 text-center text-xs font-semibold text-orange-400">{quantity}</span>
-                <button 
+                <span className="w-4 text-center text-sm font-semibold text-stone-900">{quantity}</span>
+                <button
                   onClick={() => onQuantityChange(1)}
-                  className="w-6 h-6 flex items-center justify-center rounded-md hover:bg-orange-600/20 transition-colors text-orange-400 hover:text-orange-300"
+                  className="w-7 h-7 rounded-full flex items-center justify-center text-stone-400 hover:text-stone-700 hover:bg-stone-100 transition-colors"
                 >
                   <Plus className="w-3 h-3" />
                 </button>
               </div>
 
-              {/* Add Button - Smaller */}
-              <Button
+              {/* Add button */}
+              <button
                 onClick={onAddToCart}
                 disabled={isAdded}
                 className={cn(
-                  "rounded-lg px-4 h-8 text-xs transition-all duration-300 shadow-sm hover:shadow-md hover:shadow-orange-600/20 font-medium",
-                  isAdded 
-                    ? "bg-green-600 hover:bg-green-700 text-white" 
-                    : "bg-orange-600 hover:bg-orange-700 text-white"
+                  "px-4 h-8 rounded-lg text-xs font-semibold transition-colors",
+                  isAdded
+                    ? "bg-stone-100 text-stone-400 cursor-default"
+                    : "bg-yellow-500 hover:bg-yellow-400 text-stone-900"
                 )}
               >
-                {isAdded ? "✓ Added" : "Add"}
-              </Button>
+                {isAdded ? "Added" : "Add"}
+              </button>
             </div>
           </div>
+
         </div>
       </div>
     </motion.div>
@@ -249,10 +254,7 @@ export default function MenuSection() {
     try {
       setIsLoading(true)
       setError(null)
-      
-      // Only fetch popular items for the homepage menu section
-      const menuData = await MenuService.getPopularMenuItems(3) // Limit to 3 popular items
-      
+      const menuData = await MenuService.getPopularMenuItems(3)
       setMenuItems(menuData)
     } catch (error) {
       console.error("Error loading menu data:", error)
@@ -289,28 +291,18 @@ export default function MenuSection() {
 
   const getItemPrice = (item: MenuItemWithCategory, selectedSize?: string, selectedOptions?: string[]) => {
     let basePrice = item.price
-
-    // Apply size price adjustment
     if (selectedSize && item.sizes) {
       const size = item.sizes.find(s => s.size_name === selectedSize)
-      if (size) {
-        basePrice = size.price
-      }
+      if (size) basePrice = size.price
     }
-
-    // If custom options are selected, use only the custom option price (not base + custom)
     if (selectedOptions && selectedOptions.length > 0 && item.options) {
       let customPrice = 0
       selectedOptions.forEach(optionName => {
         const option = item.options?.find(opt => opt.option_name === optionName)
-        if (option) {
-          customPrice += option.price_adjustment || 0
-        }
+        if (option) customPrice += option.price_adjustment || 0
       })
-      // Use the custom price instead of base price
       return customPrice
     }
-
     return basePrice
   }
 
@@ -319,11 +311,8 @@ export default function MenuSection() {
     const selectedSize = selectedSizes[itemId]
     const selectedOptionsList = selectedOptions[itemId] || []
     const quantity = quantities[itemId] || 1
-
-    // Get price per item
     const pricePerItem = getItemPrice(item, selectedSize, selectedOptionsList)
 
-    // Add to cart with correct quantity and price
     addItem({
       id: item.id,
       name: item.name,
@@ -334,7 +323,6 @@ export default function MenuSection() {
       quantity: quantity
     })
 
-    // Show success feedback
     setAddedItems((prev) => ({ ...prev, [itemId]: true }))
     setTimeout(() => {
       setAddedItems((prev) => ({ ...prev, [itemId]: false }))
@@ -345,19 +333,24 @@ export default function MenuSection() {
     hidden: { opacity: 0 },
     show: {
       opacity: 1,
-      transition: {
-        staggerChildren: 0.1,
-      },
+      transition: { staggerChildren: 0.1 },
     },
   }
 
   if (isLoading) {
     return (
-      <section className="py-16 bg-gray-900">
-        <div className="container mx-auto px-4">
-          <div className="text-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-600 mx-auto mb-4"></div>
-            <p className="text-gray-400">Loading popular items...</p>
+      <section className="relative py-20 lg:py-28 bg-grain" style={{ backgroundColor: "#FFFDF8" }}>
+        <div className="container mx-auto px-6">
+          <div className="flex items-end justify-between mb-12">
+            <div>
+              <div className="h-3 bg-stone-200/60 rounded w-24 mb-4 animate-pulse" />
+              <div className="h-9 bg-stone-200/60 rounded w-48 animate-pulse" />
+            </div>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <SkeletonCard />
+            <SkeletonCard />
+            <SkeletonCard />
           </div>
         </div>
       </section>
@@ -366,13 +359,11 @@ export default function MenuSection() {
 
   if (error) {
     return (
-      <section className="py-16 bg-gray-900">
-        <div className="container mx-auto px-4">
+      <section className="relative py-20 lg:py-28" style={{ backgroundColor: "#FFFDF8" }}>
+        <div className="container mx-auto px-6 relative z-10">
           <div className="text-center">
-            <p className="text-red-400 mb-4">{error}</p>
-            <Button onClick={() => window.location.reload()}>
-              Try Again
-            </Button>
+            <p className="text-red-500 mb-4">{error}</p>
+            <Button onClick={() => window.location.reload()}>Try Again</Button>
           </div>
         </div>
       </section>
@@ -380,49 +371,34 @@ export default function MenuSection() {
   }
 
   return (
-    <section className="py-16 bg-gray-900 border-t border-gray-800">
-      <div className="container mx-auto px-4">
+    <section className="relative py-20 lg:py-28 bg-grain overflow-hidden" style={{ backgroundColor: "#FFFDF8" }}>
+      <div className="container mx-auto px-6">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
           viewport={{ once: true }}
-          className="text-center mb-12"
+          className="flex items-end justify-between flex-wrap gap-6 mb-12"
         >
-          <h2 className="text-4xl lg:text-5xl font-bold text-white mb-4">
-            Popular Items
-          </h2>
-          <p className="text-lg text-gray-400 max-w-2xl mx-auto mb-6">
-            Our most loved dishes - fresh from our kitchen to your table
-          </p>
-          
-          {/* View Full Menu Button */}
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4, delay: 0.3 }}
-            viewport={{ once: true }}
-            className="flex justify-center"
+          <div>
+            <p className="text-xs font-bold tracking-[0.2em] uppercase text-yellow-700 mb-4">From Our Kitchen</p>
+            <h2 className="text-3xl lg:text-5xl font-bold text-stone-800">Popular Items</h2>
+          </div>
+          <a
+            href="/order"
+            className="text-sm font-semibold text-stone-600 hover:text-yellow-700 transition-colors inline-flex items-center gap-1.5 mb-1 shrink-0"
           >
-            <Button
-              asChild
-              size="sm"
-              className="bg-orange-600 hover:bg-orange-700 text-white transition-all duration-200"
-            >
-              <a href="/order">
-                🍽️ View Full Menu
-              </a>
-            </Button>
-          </motion.div>
+            View Full Menu
+            <ArrowRight className="w-4 h-4" />
+          </a>
         </motion.div>
 
-        {/* Popular Items Grid */}
         <motion.div
           variants={container}
           initial="hidden"
           whileInView="show"
           viewport={{ once: true }}
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 relative z-10"
         >
           {menuItems.map((item) => {
             const itemId = item.id
@@ -446,16 +422,11 @@ export default function MenuSection() {
           })}
         </motion.div>
 
-        {/* Empty State */}
         {menuItems.length === 0 && !isLoading && (
           <div className="text-center py-12">
-            <div className="text-gray-600 text-6xl mb-4">🍽️</div>
-            <h3 className="text-xl font-semibold text-white mb-2">
-              No popular items available
-            </h3>
-            <p className="text-gray-400">
-              Check back later for our most loved dishes!
-            </p>
+            <div className="w-16 h-16 bg-stone-100 rounded-full mx-auto mb-4" />
+            <h3 className="text-xl font-semibold text-stone-700 mb-2">No popular items available</h3>
+            <p className="text-stone-500">Check back later for our most loved dishes!</p>
           </div>
         )}
       </div>

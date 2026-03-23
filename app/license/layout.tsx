@@ -1,8 +1,8 @@
 import { Metadata } from "next"
 
 export const metadata: Metadata = {
-  title: "Software License Agreement - Kings Bakery",
-  description: "Software license agreement for Kings Bakery website system.",
+  title: "Software License Agreement - LUXE FOOD",
+  description: "Software license agreement for LUXE FOOD website system.",
   robots: {
     index: false,
     follow: false,

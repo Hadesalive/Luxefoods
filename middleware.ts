@@ -11,7 +11,7 @@ export function middleware(request: NextRequest) {
     
     // Allow access from allowed domains
     const allowedDomains = [
-      'https://thekingsbakerysl.com',
+      'https://luxefood.com',
       'http://localhost:3000',
       'https://localhost:3000'
     ]

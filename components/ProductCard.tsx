@@ -141,7 +141,7 @@ export default function ProductCard({ product }: ProductCardProps) {
             </h3>
           </Link>
           <p className="text-gray-600 dark:text-gray-300 text-sm mb-4 line-clamp-2">
-            {product.description || "Delicious menu item from Kings Bakery"}
+            {product.description || "Delicious menu item from LUXE FOOD"}
           </p>
           
           <div className="flex items-center justify-between mb-4">

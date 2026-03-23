@@ -1,29 +1,37 @@
 import type { Metadata } from "next"
+import Header from "@/components/Header"
+import Footer from "@/components/Footer"
 import ContactPageClient from "./ContactPageClient"
+import { getCMS } from "@/lib/cms"
 
 export const metadata: Metadata = {
-  title: "Contact Kings Bakery - Call 076 533655 | Freetown, Sierra Leone",
+  title: "Contact LUXE FOOD - Call 074 762 243 | Freetown, Sierra Leone",
   description:
-    "Contact Kings Bakery in Freetown, Sierra Leone. Call 076 533655 or 032 020263 for delivery. Located at 40F Sheriff Drive, Regent Road, Lumley. Open daily with fast delivery service.",
+    "Contact LUXE FOOD in Freetown, Sierra Leone. Call 074 762 243 for delivery. The Bites Of Delight - Open daily with fast delivery service.",
   keywords: [
-    "contact Kings Bakery",
-    "bread delivery phone number Freetown",
-    "bakery contact Lumley",
-    "bakery delivery phone Sierra Leone",
-    "Kings Bakery address Freetown",
-    "076 533655",
-    "032 020263",
-    "Kings Bakery phone number",
-    "bakery delivery Freetown",
+    "contact LUXE FOOD",
+    "food delivery phone number Freetown",
+    "LUXE FOOD contact",
+    "food delivery phone Sierra Leone",
+    "074 762 243",
+    "LUXE FOOD phone number",
+    "food delivery Freetown",
   ],
   openGraph: {
-    title: "Contact Kings Bakery - Call 076 533655 | Freetown, Sierra Leone",
+    title: "Contact LUXE FOOD - Call 074 762 243 | Freetown, Sierra Leone",
     description:
-      "Get in touch with Kings Bakery in Freetown, Sierra Leone. Fast delivery in Lumley and surrounding areas. Call now or visit us at 40F Sheriff Drive, Regent Road.",
-    url: "https://thekingsbakerysl.com/contact",
+      "Get in touch with LUXE FOOD in Freetown, Sierra Leone. The Bites Of Delight. Fast delivery service.",
+    url: "https://luxefood.com/contact",
   },
 }
 
-export default function ContactPage() {
-  return <ContactPageClient />
+export default async function ContactPage() {
+  const cms = await getCMS()
+  return (
+    <>
+      <Header />
+      <ContactPageClient cms={cms} />
+      <Footer />
+    </>
+  )
 }

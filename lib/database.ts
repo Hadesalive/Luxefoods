@@ -18,7 +18,7 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
   },
   global: {
     headers: {
-      "x-application-name": "kings-bakery",
+      "x-application-name": "luxe-foods",
     },
   },
 })

@@ -1,229 +1,128 @@
 import Link from "next/link"
 import Image from "next/image"
-import { Phone, Mail, MapPin, Facebook, Clock, Heart, Star } from "lucide-react"
+import { Phone, Mail, MapPin, Facebook, Clock, ArrowUpRight } from "lucide-react"
+import { getCMS } from "@/lib/cms"
 
-export default function Footer() {
+export default async function Footer() {
+  const cms = await getCMS()
+
+  const links = [
+    { href: "/", label: "Home" },
+    { href: "/order", label: "Menu" },
+    { href: "/services", label: "Services" },
+    { href: "/gallery", label: "Gallery" },
+    { href: "/contact", label: "Contact" },
+  ]
+
   return (
-    <footer className="bg-gradient-to-br from-black via-gray-900 to-black dark:from-black dark:via-gray-900 dark:to-black text-white relative overflow-hidden transition-colors duration-300">
-      {/* Background Pattern */}
-      <div className="absolute inset-0 opacity-5">
-        <div className="absolute top-10 left-10 text-6xl">🍕</div>
-        <div className="absolute top-20 right-20 text-4xl">🥟</div>
-        <div className="absolute bottom-20 left-20 text-5xl">🍽️</div>
-        <div className="absolute bottom-10 right-10 text-3xl">⭐</div>
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-8xl opacity-30">
-          🏠
+    <footer className="bg-stone-900 text-white">
+      <div className="container mx-auto px-6">
+        {/* Main Footer */}
+        <div className="py-16 lg:py-20 grid lg:grid-cols-12 gap-12 lg:gap-8">
+          {/* Brand */}
+          <div className="lg:col-span-4">
+            <div className="flex items-center gap-3 mb-5">
+              <div className="w-12 h-12 relative">
+                <Image src="/images/logo.png" alt={`${cms.brand_name} Logo`} fill className="object-contain" />
+              </div>
+              <div>
+                <h3 className="text-lg font-bold text-yellow-400 tracking-wide">{cms.brand_name}</h3>
+                <p className="text-gray-500 text-xs italic">&ldquo;{cms.brand_tagline}&rdquo;</p>
+              </div>
+            </div>
+            <p className="text-gray-400 text-sm leading-relaxed mb-6 max-w-xs">
+              {cms.footer_description}
+            </p>
+            <div className="flex gap-3">
+              <Link
+                href={cms.social_facebook}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-10 h-10 bg-gray-800 hover:bg-blue-600 rounded-xl flex items-center justify-center transition-all duration-300 border border-gray-700 hover:border-blue-600"
+              >
+                <Facebook className="h-4 w-4" />
+              </Link>
+              <Link
+                href={cms.social_instagram}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-10 h-10 bg-gray-800 hover:bg-gradient-to-br hover:from-purple-600 hover:to-pink-600 rounded-xl flex items-center justify-center transition-all duration-300 border border-gray-700 hover:border-purple-600"
+              >
+                <svg className="h-4 w-4 fill-white" viewBox="0 0 24 24">
+                  <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+                </svg>
+              </Link>
+            </div>
+          </div>
+
+          {/* Links */}
+          <div className="lg:col-span-2">
+            <h4 className="text-xs font-semibold text-gray-500 uppercase tracking-widest mb-5">Navigation</h4>
+            <ul className="space-y-3">
+              {links.map((link) => (
+                <li key={link.href}>
+                  <Link
+                    href={link.href}
+                    className="text-gray-400 hover:text-yellow-400 transition-colors text-sm flex items-center gap-1 group"
+                  >
+                    {link.label}
+                    <ArrowUpRight className="w-3 h-3 opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 transition-all" />
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Contact */}
+          <div className="lg:col-span-3">
+            <h4 className="text-xs font-semibold text-gray-500 uppercase tracking-widest mb-5">Contact</h4>
+            <div className="space-y-3">
+              <div className="flex items-center gap-3">
+                <MapPin className="h-4 w-4 text-yellow-400 flex-shrink-0" />
+                <span className="text-gray-400 text-sm">{cms.contact_address}</span>
+              </div>
+              <div className="flex items-center gap-3">
+                <Phone className="h-4 w-4 text-yellow-400 flex-shrink-0" />
+                <Link href={`tel:${cms.contact_phone_intl}`} className="text-gray-400 hover:text-yellow-400 transition-colors text-sm">
+                  {cms.contact_phone}
+                </Link>
+              </div>
+              <div className="flex items-center gap-3">
+                <Mail className="h-4 w-4 text-yellow-400 flex-shrink-0" />
+                <Link href={`mailto:${cms.contact_email}`} className="text-gray-400 hover:text-yellow-400 transition-colors text-sm">
+                  {cms.contact_email}
+                </Link>
+              </div>
+            </div>
+          </div>
+
+          {/* Hours */}
+          <div className="lg:col-span-3">
+            <h4 className="text-xs font-semibold text-gray-500 uppercase tracking-widest mb-5 flex items-center gap-2">
+              <Clock className="h-3.5 w-3.5" />
+              Hours
+            </h4>
+            <div className="space-y-2 text-sm">
+              <div className="flex justify-between">
+                <span className="text-gray-400">{cms.hours_weekday_label}</span>
+                <span className="text-gray-300">{cms.hours_weekday_times}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-gray-400">{cms.hours_weekend_label}</span>
+                <span className="text-gray-300">{cms.hours_weekend_times}</span>
+              </div>
+            </div>
+          </div>
         </div>
-      </div>
 
-      <div className="relative z-10 py-16 lg:py-20">
-        <div className="container mx-auto px-4">
-          {/* Main Footer Content */}
-          <div className="grid lg:grid-cols-4 md:grid-cols-2 gap-8 lg:gap-12 mb-12">
-            {/* Brand Section */}
-            <div className="lg:col-span-1">
-              <div className="flex items-center mb-6">
-                <div className="w-16 h-16 relative mr-4 rounded-full overflow-hidden bg-white p-2 shadow-xl">
-                  <Image src="/images/logo.jpg" alt="Kings Bakery Logo" fill className="object-contain" />
-                </div>
-                <div>
-                  <h3 className="text-xl lg:text-2xl font-bold text-yellow-300 dark:text-yellow-400">
-                    Kings Bakery
-                  </h3>
-                  <p className="text-amber-200/90 dark:text-amber-100/90 text-sm italic">"Restaurant & Fresh Baked Goods"</p>
-                </div>
-              </div>
-
-              <p className="text-amber-200/90 dark:text-amber-100/90 mb-6 leading-relaxed">
-                🍽️ Bringing you the finest local dishes, international cuisine, fresh bread and delicious treats with quality ingredients and traditional recipes. Experience the taste of authentic food with every bite! ✨
-              </p>
-
-              {/* Rating Display */}
-              <div className="flex items-center mb-6 bg-white/10 dark:bg-white/5 backdrop-blur-sm rounded-2xl p-4">
-                <div className="flex items-center mr-4">
-                  {[1, 2, 3, 4, 5].map((star) => (
-                    <Star key={star} className="h-5 w-5 fill-yellow-400 text-yellow-400" />
-                  ))}
-                </div>
-                <div>
-                  <p className="font-bold text-yellow-300 dark:text-yellow-400">4.8/5</p>
-                  <p className="text-xs text-amber-200/90 dark:text-amber-100/90">Customer Rating</p>
-                </div>
-              </div>
-
-              {/* Social Media */}
-              <div className="flex space-x-4">
-                <Link
-                  href="https://www.facebook.com/share/14EFU5rMqBc/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-12 h-12 bg-gradient-to-br from-blue-600 to-blue-700 dark:from-blue-700 dark:to-blue-900 rounded-full flex items-center justify-center hover:scale-110 transition-all duration-300 shadow-lg hover:shadow-xl"
-                >
-                  <Facebook className="h-6 w-6" />
-                </Link>
-                <Link
-                  href="https://www.tiktok.com/@kingsbakery.sl"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-12 h-12 bg-gradient-to-br from-black to-gray-800 dark:from-gray-800 dark:to-black rounded-full flex items-center justify-center hover:scale-110 transition-all duration-300 shadow-lg hover:shadow-xl"
-                >
-                  <svg className="h-6 w-6 fill-white" viewBox="0 0 24 24">
-                    <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/>
-                  </svg>
-                </Link>
-              </div>
-            </div>
-
-            {/* Quick Links */}
-            <div>
-              <h4 className="font-bold text-xl mb-6 text-yellow-300 dark:text-yellow-400 flex items-center">
-                <span className="mr-2">🔗</span> Quick Links
-              </h4>
-              <ul className="space-y-3">
-                {[
-                  { href: "/", label: "🏠 Home", desc: "Back to homepage" },
-                  { href: "#menu", label: "🍽️ Menu", desc: "View our delicious menu" },
-                  { href: "/order", label: "🛒 Order Online", desc: "Place your order now" },
-                  { href: "/contact", label: "📞 Contact", desc: "Get in touch with us" },
-                ].map((link, index) => (
-                  <li key={index}>
-                    <Link
-                      href={link.href}
-                      className="group block p-3 rounded-xl hover:bg-white/10 dark:hover:bg-white/5 transition-all duration-300 backdrop-blur-sm"
-                    >
-                      <div className="font-medium text-white group-hover:text-yellow-300 dark:group-hover:text-yellow-400 transition-colors">
-                        {link.label}
-                      </div>
-                      <div className="text-xs text-amber-200/90 dark:text-amber-100/90 group-hover:text-amber-200 dark:group-hover:text-amber-100">
-                        {link.desc}
-                      </div>
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            {/* Contact Information */}
-            <div>
-              <h4 className="font-bold text-xl mb-6 text-yellow-300 dark:text-yellow-400 flex items-center">
-                <span className="mr-2">📞</span> Contact Us
-              </h4>
-              <div className="space-y-4">
-                <div className="flex items-start p-4 bg-white/10 dark:bg-white/5 backdrop-blur-sm rounded-xl hover:bg-white/15 dark:hover:bg-white/10 transition-all duration-300">
-                  <MapPin className="h-6 w-6 mr-4 flex-shrink-0 mt-1 text-yellow-300 dark:text-yellow-400" />
-                  <div>
-                    <p className="font-medium text-white mb-1">📍 Our Location</p>
-                    <p className="text-amber-200/90 dark:text-amber-100/90 text-sm leading-relaxed">
-                      117 MAIN REGENT ROAD, HILL STATION
-                      <br />
-                      OPPOSITE CITY SUPERMARKET
-                    </p>
-                  </div>
-                </div>
-
-                <div className="flex items-center p-4 bg-white/10 dark:bg-white/5 backdrop-blur-sm rounded-xl hover:bg-white/15 dark:hover:bg-white/10 transition-all duration-300">
-                  <Phone className="h-6 w-6 mr-4 flex-shrink-0 text-yellow-300 dark:text-yellow-400" />
-                  <div>
-                    <p className="font-medium text-white mb-1">📱 Call Us</p>
-                    <p className="text-amber-200/90 dark:text-amber-100/90 text-sm">076 533655</p>
-                  </div>
-                </div>
-
-                <div className="flex items-center p-4 bg-white/10 dark:bg-white/5 backdrop-blur-sm rounded-xl hover:bg-white/15 dark:hover:bg-white/10 transition-all duration-300">
-                  <Mail className="h-6 w-6 mr-4 flex-shrink-0 text-yellow-300 dark:text-yellow-400" />
-                  <div>
-                    <p className="font-medium text-white mb-1">📧 Email</p>
-                    <p className="text-amber-200/90 dark:text-amber-100/90 text-sm">info@thekingsbakerysl.com</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Opening Hours */}
-            <div>
-              <h4 className="font-bold text-xl mb-6 text-yellow-300 dark:text-yellow-400 flex items-center">
-                <Clock className="h-6 w-6 mr-2" />
-                Opening Hours
-              </h4>
-
-              <div className="bg-white/10 dark:bg-white/5 backdrop-blur-sm rounded-xl p-6">
-                <div className="space-y-3">
-                  <div className="flex justify-between items-center py-2 border-b border-white/20">
-                    <span className="text-white font-medium">Monday - Friday</span>
-                    <span className="text-yellow-300 dark:text-yellow-400 font-bold">10:00 AM - 10:00 PM</span>
-                  </div>
-                  <div className="flex justify-between items-center py-2 border-b border-white/20">
-                    <span className="text-white font-medium">Saturday</span>
-                    <span className="text-yellow-300 dark:text-yellow-400 font-bold">11:00 AM - 11:00 PM</span>
-                  </div>
-                  <div className="flex justify-between items-center py-2">
-                    <span className="text-white font-medium">Sunday</span>
-                    <span className="text-yellow-300 dark:text-yellow-400 font-bold">11:00 AM - 11:00 PM</span>
-                  </div>
-                </div>
-
-                <div className="mt-4 p-3 bg-green-500/20 dark:bg-green-500/10 rounded-lg border border-green-400/30 dark:border-green-400/20">
-                  <p className="text-green-300 dark:text-green-400 text-sm font-medium flex items-center">
-                    <span className="w-2 h-2 bg-green-400 dark:bg-green-500 rounded-full mr-2 animate-pulse"></span>
-                    Open Now - Ready to serve you! 🍕
-                  </p>
-                </div>
-              </div>
-
-              {/* Special Notice */}
-              <div className="mt-6 p-4 bg-gradient-to-r from-red-500/20 to-orange-500/20 dark:from-red-500/10 dark:to-orange-500/10 rounded-xl border border-red-400/30 dark:border-red-400/20">
-                <p className="text-red-200 dark:text-red-300 text-sm font-medium flex items-center">
-                  <Heart className="h-4 w-4 mr-2 text-red-400 dark:text-red-500" />
-                  We deliver happiness to your doorstep! 🚚
-                </p>
-              </div>
-            </div>
-          </div>
-
-          {/* Bottom Section */}
-          <div className="border-t border-amber-200/20 dark:border-amber-100/20 pt-8">
-            <div className="flex flex-col md:flex-row justify-between items-center">
-              <div className="text-center md:text-left mb-4 md:mb-0">
-                <p className="text-amber-200/90 dark:text-amber-100/90 text-sm">
-                  &copy; {new Date().getFullYear()} Kings Bakery. All rights reserved.
-                </p>
-                <p className="text-amber-200/70 dark:text-amber-100/70 text-xs mt-1">
-                  Made with <Heart className="h-3 w-3 inline text-red-400 dark:text-red-500" /> for food lovers in
-                  Sierra Leone
-                </p>
-              </div>
-
-              <div className="flex items-center space-x-6 text-sm">
-                <Link
-                  href="#"
-                  className="text-amber-200/90 dark:text-amber-100/90 hover:text-amber-200 dark:hover:text-amber-100 transition-colors"
-                >
-                  Privacy Policy
-                </Link>
-                <Link
-                  href="/terms"
-                  className="text-amber-200/90 dark:text-amber-100/90 hover:text-amber-200 dark:hover:text-amber-100 transition-colors"
-                >
-                  Terms of Service
-                </Link>
-                <Link
-                  href="/license"
-                  className="text-amber-200/90 dark:text-amber-100/90 hover:text-amber-200 dark:hover:text-amber-100 transition-colors"
-                >
-                  Software License
-                </Link>
-                <div className="text-amber-200/70 dark:text-amber-100/70 italic">"Enjoy HomeStyle cooking" ✨</div>
-                {/* Discreet Admin Link - Only visible on hover (desktop) or tap (mobile) */}
-                <Link
-                  href="/login"
-                  className="text-amber-200/30 dark:text-amber-100/30 hover:text-amber-200 dark:hover:text-amber-100 transition-colors text-xs opacity-0 hover:opacity-100 md:opacity-0 md:hover:opacity-100 opacity-20 md:opacity-0 duration-300"
-                  title="Admin Access"
-                >
-                  🔧
-                </Link>
-              </div>
-            </div>
-          </div>
+        {/* Bottom Bar */}
+        <div className="border-t border-gray-800 py-6 flex flex-col sm:flex-row justify-between items-center gap-4">
+          <p className="text-gray-500 text-xs">
+            {cms.footer_copyright}
+          </p>
+          <p className="text-gray-600 text-xs italic">
+            &ldquo;{cms.brand_tagline}&rdquo;
+          </p>
         </div>
       </div>
     </footer>

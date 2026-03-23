@@ -1,73 +1,89 @@
-import { MapPin, Phone, Mail } from "lucide-react"
+import { MapPin, Phone, Mail, Clock } from "lucide-react"
+import Link from "next/link"
+import { getCMS } from "@/lib/cms"
 
-export default function ContactSection() {
+export default async function ContactSection() {
+  const cms = await getCMS()
+
   return (
-    <section className="py-16 bg-gray-900 border-t border-gray-800 transition-colors duration-300">
-      <div className="container mx-auto px-4">
-        <div className="max-w-4xl mx-auto">
-          <div className="text-center mb-12">
-            <h2 className="text-4xl font-bold mb-4 text-white">📍 Find Us 📍</h2>
-            <div className="w-24 h-1 bg-orange-500 mx-auto"></div>
+    <section className="relative py-20 lg:py-28 bg-grain overflow-hidden" style={{ backgroundColor: "#FFFDF8" }}>
+      <div className="container mx-auto px-6">
+        <div className="max-w-5xl mx-auto">
+
+          {/* Section Header */}
+          <div className="grid lg:grid-cols-2 gap-8 items-end mb-14">
+            <div>
+              <p className="text-xs font-bold tracking-[0.2em] uppercase text-yellow-700 mb-4">Contact</p>
+              <h2 className="text-3xl lg:text-4xl font-bold text-stone-800 leading-[1.1]">Find Us</h2>
+            </div>
+            <div>
+              <p className="text-base lg:text-lg text-stone-500 leading-relaxed">
+                Visit us in {cms.contact_address} or get in touch — we&apos;d love to hear from you.
+              </p>
+            </div>
           </div>
 
-          <div className="bg-gray-800 text-white p-8 rounded-lg shadow-lg border border-gray-700 hover:border-gray-600 transition-colors">
-            <div className="flex flex-col md:flex-row gap-8">
-              <div className="md:w-1/2">
-                <h3 className="text-2xl font-bold mb-6 text-white">📞 Contact Information</h3>
+          {/* Content Grid */}
+          <div className="grid md:grid-cols-2 gap-6 lg:gap-8">
 
-                <div className="space-y-6">
-                  <div className="flex items-start">
-                    <MapPin className="h-6 w-6 mr-4 flex-shrink-0 mt-1 text-orange-400" />
-                    <p className="text-lg text-gray-200">
-                      🏠 117 MAIN REGENT ROAD, HILL STATION
-                      <br />
-                      OPPOSITE CITY SUPERMARKET
-                    </p>
+            {/* Contact Info */}
+            <div className="space-y-8">
+              <div className="space-y-4">
+                <Link
+                  href={`https://maps.google.com/?q=${encodeURIComponent(cms.contact_address)}`}
+                  target="_blank"
+                  className="flex items-center gap-3 group"
+                >
+                  <MapPin className="h-4 w-4 text-yellow-600 flex-shrink-0" />
+                  <div>
+                    <p className="text-xs text-stone-400 mb-0.5">Address</p>
+                    <p className="text-stone-800 font-medium text-sm group-hover:text-yellow-700 transition-colors">{cms.contact_address}</p>
                   </div>
+                </Link>
 
-                  <div className="flex items-center">
-                    <Phone className="h-6 w-6 mr-4 flex-shrink-0 text-orange-400" />
-                    <p className="text-lg text-gray-200">📱 076 533655</p>
+                <Link href={`tel:${cms.contact_phone_intl}`} className="flex items-center gap-3 group">
+                  <Phone className="h-4 w-4 text-yellow-600 flex-shrink-0" />
+                  <div>
+                    <p className="text-xs text-stone-400 mb-0.5">Phone</p>
+                    <p className="text-stone-800 font-medium text-sm group-hover:text-yellow-700 transition-colors">{cms.contact_phone}</p>
                   </div>
+                </Link>
 
-                  <div className="flex items-center">
-                    <Mail className="h-6 w-6 mr-4 flex-shrink-0 text-orange-400" />
-                    <p className="text-lg text-gray-200">📧 info@thekingsbakerysl.com</p>
+                <Link href={`mailto:${cms.contact_email}`} className="flex items-center gap-3 group">
+                  <Mail className="h-4 w-4 text-yellow-600 flex-shrink-0" />
+                  <div>
+                    <p className="text-xs text-stone-400 mb-0.5">Email</p>
+                    <p className="text-stone-800 font-medium text-sm group-hover:text-yellow-700 transition-colors">{cms.contact_email}</p>
                   </div>
-                </div>
-
-                <div className="mt-8">
-                  <h4 className="text-xl font-bold mb-4 text-white">🕐 Opening Hours</h4>
-                  <div className="space-y-2">
-                    <div className="flex justify-between text-gray-200">
-                      <span>Monday - Friday</span>
-                      <span className="text-orange-400 font-semibold">10:00 AM - 10:00 PM</span>
-                    </div>
-                    <div className="flex justify-between text-gray-200">
-                      <span>Saturday - Sunday</span>
-                      <span className="text-orange-400 font-semibold">11:00 AM - 11:00 PM</span>
-                    </div>
-                  </div>
-                </div>
+                </Link>
               </div>
 
-              <div className="md:w-1/2">
-                <div className="h-full bg-gray-700 rounded-lg overflow-hidden">
-                  {/* This would be a map in a real implementation */}
-                  <div className="h-full flex items-center justify-center p-8 text-gray-300 text-center">
-                    <p>
-                      Map location would be displayed here.
-                      <br />
-                      117 MAIN REGENT ROAD, HILL STATION
-                    </p>
+              {/* Hours */}
+              <div className="border-t border-stone-100 pt-7">
+                <p className="text-xs font-bold tracking-[0.15em] uppercase text-stone-400 mb-4 flex items-center gap-2">
+                  <Clock className="h-3.5 w-3.5" /> Opening Hours
+                </p>
+                <div className="space-y-2">
+                  <div className="flex justify-between text-sm">
+                    <span className="text-stone-500">{cms.hours_weekday_label}</span>
+                    <span className="text-stone-800 font-medium">{cms.hours_weekday_times}</span>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <span className="text-stone-500">{cms.hours_weekend_label}</span>
+                    <span className="text-stone-800 font-medium">{cms.hours_weekend_times}</span>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
 
-          <div className="text-center mt-8 text-white text-xl italic">
-            "Enjoy HomeStyle cooking"
+            {/* Map Placeholder */}
+            <div className="bg-stone-100 rounded-xl overflow-hidden min-h-[320px] flex items-center justify-center">
+              <div className="text-center p-8">
+                <MapPin className="w-7 h-7 text-stone-400 mx-auto mb-3" />
+                <p className="text-stone-500 text-sm">{cms.contact_address}</p>
+              </div>
+            </div>
+
           </div>
         </div>
       </div>

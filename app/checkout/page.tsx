@@ -2,23 +2,23 @@ import type { Metadata } from "next"
 import CheckoutPageClient from "./CheckoutPageClient"
 
 export const metadata: Metadata = {
-  title: "Checkout - Kings Bakery | Complete Your Order | Freetown, Sierra Leone",
+  title: "Checkout - LUXE FOOD | Complete Your Order | Freetown, Sierra Leone",
   description:
-    "Complete your order at Kings Bakery. Enter delivery details and payment information for fast delivery in Freetown, Sierra Leone. Secure checkout process.",
+    "Complete your order at LUXE FOOD. Enter delivery details and payment information for fast delivery in Freetown, Sierra Leone. Secure checkout process.",
   keywords: [
-    "checkout Kings Bakery",
+    "checkout LUXE FOOD",
     "food delivery checkout",
-    "bakery order completion",
+    "LUXE FOOD order completion",
     "delivery details Freetown",
-    "payment Kings Bakery",
-    "secure checkout bakery",
+    "payment LUXE FOOD",
+    "secure checkout",
     "order completion Freetown",
   ],
   openGraph: {
-    title: "Checkout - Kings Bakery | Complete Your Order | Freetown, Sierra Leone",
+    title: "Checkout - LUXE FOOD | Complete Your Order | Freetown, Sierra Leone",
     description:
-      "Complete your order at Kings Bakery. Enter delivery details and payment information for fast delivery.",
-    url: "https://thekingsbakerysl.com/checkout",
+      "Complete your order at LUXE FOOD. Enter delivery details and payment information for fast delivery.",
+    url: "https://luxefood.com/checkout",
   },
 }
 

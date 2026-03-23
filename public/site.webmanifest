@@ -1,7 +1,7 @@
 {
-  "name": "Kings Bakery - Restaurant & Bakery",
-  "short_name": "Kings Bakery",
-  "description": "Fresh bread, pastries, local dishes, and international cuisine in Freetown, Sierra Leone",
+  "name": "LUXE FOOD - The Bites Of Delight",
+  "short_name": "LUXE FOOD",
+  "description": "Quality meals, catering services, and food delivery in Freetown, Sierra Leone.",
   "icons": [
     {
       "src": "/android-chrome-192x192.png",
@@ -14,8 +14,8 @@
       "type": "image/png"
     }
   ],
-  "theme_color": "#f59e0b",
-  "background_color": "#ffffff",
+  "theme_color": "#eab308",
+  "background_color": "#FFFDF8",
   "display": "standalone",
   "start_url": "/",
   "scope": "/",

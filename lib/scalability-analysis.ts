@@ -1,5 +1,5 @@
 /**
- * Scalability Analysis for Kings Bakery
+ * Scalability Analysis for LUXE FOOD
  * Supporting 5000 users/month on free tiers
  */
 

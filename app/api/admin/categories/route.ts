@@ -1,23 +1,42 @@
-import { NextResponse } from "next/server"
-import { MenuService } from "@/lib/menu-service"
+import { createClient } from '@supabase/supabase-js'
+import { NextRequest, NextResponse } from 'next/server'
 
-export async function GET() {
-  try {
-    const categories = await MenuService.getCategories(false) // Don't use cache for admin
-    return NextResponse.json({ success: true, data: categories })
-  } catch (error) {
-    console.error("Categories API Error:", error)
-    return NextResponse.json({ success: false, error: "Failed to fetch categories" }, { status: 500 })
-  }
+function serviceClient() {
+  return createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!
+  )
 }
 
-export async function POST(request: Request) {
-  try {
-    const body = await request.json()
-    const category = await MenuService.createCategory(body)
-    return NextResponse.json({ success: true, data: category })
-  } catch (error) {
-    console.error("Create Category Error:", error)
-    return NextResponse.json({ success: false, error: "Failed to create category" }, { status: 500 })
-  }
-} 
+export async function GET() {
+  const client = serviceClient()
+  const { data, error } = await client
+    .from('categories')
+    .select('*')
+    .order('sort_order', { ascending: true })
+    .order('name', { ascending: true })
+
+  if (error) return NextResponse.json({ error: error.message }, { status: 500 })
+  return NextResponse.json(data ?? [])
+}
+
+export async function POST(request: NextRequest) {
+  const body = await request.json()
+  const client = serviceClient()
+
+  const { data, error } = await client
+    .from('categories')
+    .insert([{
+      name:       body.name,
+      slug:       body.slug,
+      description: body.description || null,
+      image_url:  body.image_url || null,
+      sort_order: body.sort_order ?? 0,
+      is_active:  body.is_active ?? true,
+    }])
+    .select()
+    .single()
+
+  if (error) return NextResponse.json({ error: error.message }, { status: 500 })
+  return NextResponse.json(data, { status: 201 })
+}

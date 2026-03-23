@@ -1,5 +1,2 @@
-import MenuManagementClient from "./MenuManagementClient"
-
-export default function MenuManagement() {
-  return <MenuManagementClient />
-}
+import MenuClient from "./MenuClient"
+export default function MenuPage() { return <MenuClient /> }

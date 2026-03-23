@@ -1,8 +1,8 @@
 import { Metadata } from "next"
 
 export const metadata: Metadata = {
-  title: "Terms & Conditions - Kings Bakery",
-  description: "Terms and conditions for Kings Bakery website usage and services.",
+  title: "Terms & Conditions - LUXE FOOD",
+  description: "Terms and conditions for LUXE FOOD website usage and services.",
 }
 
 export default function TermsPage() {
@@ -33,7 +33,7 @@ export default function TermsPage() {
                 1. Acceptance of Terms
               </h2>
               <p className="text-gray-700 dark:text-gray-300 mb-4">
-                By accessing and using the Kings Bakery website and services, you accept and agree to be bound by these terms and conditions.
+                By accessing and using the LUXE FOOD website and services, you accept and agree to be bound by these terms and conditions.
               </p>
             </section>
 
@@ -131,7 +131,7 @@ export default function TermsPage() {
                 10. Intellectual Property
               </h2>
               <p className="text-gray-700 dark:text-gray-300 mb-4">
-                All content on this website, including images, text, and design, is the property of Kings Bakery and is protected by copyright laws.
+                All content on this website, including images, text, and design, is the property of LUXE FOOD and is protected by copyright laws.
               </p>
             </section>
 
@@ -140,7 +140,7 @@ export default function TermsPage() {
                 11. Limitation of Liability
               </h2>
               <p className="text-gray-700 dark:text-gray-300 mb-4">
-                Kings Bakery shall not be liable for any indirect, incidental, or consequential damages arising from your use of our website or services.
+                LUXE FOOD shall not be liable for any indirect, incidental, or consequential damages arising from your use of our website or services.
               </p>
             </section>
 
@@ -162,7 +162,7 @@ export default function TermsPage() {
               </p>
               <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
                 <p className="text-gray-700 dark:text-gray-300">
-                  <strong>Email:</strong> info@thekingsbakerysl.com<br />
+                  <strong>Email:</strong> info@luxefood.com<br />
                   <strong>Phone:</strong> 076 533655<br />
                   <strong>Address:</strong> 117 MAIN REGENT ROAD, HILL STATION, OPPOSITE CITY SUPERMARKET
                 </p>

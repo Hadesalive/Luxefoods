@@ -1,98 +1,102 @@
-import { Button } from "@/components/ui/button"
 import { Phone, Clock, MapPin } from "lucide-react"
 import Link from "next/link"
+import { getCMS } from "@/lib/cms"
 
-export default function DeliverySection() {
+const features = [
+  {
+    num: "01",
+    icon: Clock,
+    title: "Fast Delivery",
+    desc: "Quick delivery straight to your door",
+  },
+  {
+    num: "02",
+    icon: MapPin,
+    title: "Wide Coverage",
+    desc: "Delivering throughout Freetown",
+  },
+  {
+    num: "03",
+    icon: Phone,
+    title: "Easy Ordering",
+    desc: "Call us or order online anytime",
+  },
+]
+
+export default async function DeliverySection() {
+  const cms = await getCMS()
+
   return (
     <section
       id="order"
-      className="py-12 lg:py-20 bg-gray-900 border-t border-gray-800 transition-colors duration-300"
+      className="relative py-20 lg:py-32 bg-grain overflow-hidden"
+      style={{ backgroundColor: "#F5ECD7" }}
     >
-      <div className="container mx-auto px-4">
-        <div className="max-w-4xl mx-auto text-center">
-          {/* Delivery Badge */}
-          <div className="inline-block mb-8 lg:mb-12">
-            <div className="bg-orange-600 text-white text-xl lg:text-3xl font-bold px-6 lg:px-8 py-3 lg:py-4 transform -rotate-2 shadow-2xl rounded-lg border-4 border-gray-800">
-              WE DO DELIVERY
+      <div className="container mx-auto px-6">
+        <div className="max-w-5xl mx-auto">
+
+          {/* Section Header */}
+          <div className="grid lg:grid-cols-2 gap-8 lg:gap-16 items-end mb-16 lg:mb-20">
+            <div>
+              <p className="text-xs font-bold tracking-[0.2em] uppercase text-yellow-700 mb-4">
+                Delivery
+              </p>
+              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-stone-800 leading-[1.1]">
+                {cms.delivery_heading}
+              </h2>
             </div>
-          </div>
-
-          <div className="text-center mb-12 lg:mb-16">
-            <h2 className="text-3xl sm:text-4xl lg:text-6xl font-bold mb-4 lg:mb-8 text-white leading-tight">
-              🚚 Hungry? We'll Bring It To You! 🚚
-            </h2>
-
-            <p className="text-lg lg:text-xl mb-8 lg:mb-12 text-gray-400 max-w-3xl mx-auto leading-relaxed">
-              🍽️ Enjoy our delicious homestyle cooking from the comfort of your home. Fast delivery available throughout
-              the Lumley area and beyond. 🏠
-            </p>
-          </div>
-
-          {/* Phone Numbers */}
-          <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8 lg:mb-12">
-            <Link href="tel:076533655">
-              <Button
-                size="lg"
-                className="w-full sm:w-auto bg-orange-600 hover:bg-orange-700 text-white text-base lg:text-lg px-6 lg:px-8 py-3 lg:py-4 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
-              >
-                <Phone className="mr-2 h-5 w-5" />
-                076533655
-              </Button>
-            </Link>
-            <Link href="tel:076533655">
-              <Button
-                size="lg"
-                variant="outline"
-                className="w-full sm:w-auto border-2 border-gray-600 bg-transparent text-white hover:bg-gray-800 hover:border-gray-500 text-base lg:text-lg px-6 lg:px-8 py-3 lg:py-4 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
-              >
-                <Phone className="mr-2 h-5 w-5" />
-                076 533655
-              </Button>
-            </Link>
-          </div>
-
-          {/* Features Grid */}
-          <div className="grid sm:grid-cols-3 gap-6 lg:gap-8 mb-8 lg:mb-12">
-            <div className="bg-gray-800 p-6 lg:p-8 rounded-2xl shadow-lg border border-gray-700 hover:border-orange-500/50 hover:shadow-xl transition-all duration-300">
-              <Clock className="h-8 w-8 lg:h-12 lg:w-12 text-orange-400 mx-auto mb-4" />
-              <h3 className="font-bold text-lg lg:text-xl mb-2 text-white">
-                ⚡ Fast Delivery
-              </h3>
-              <p className="text-gray-300 text-sm lg:text-base">
-                30-45 minutes average delivery time
+            <div className="lg:pb-1">
+              <p className="text-base lg:text-lg text-stone-500 leading-relaxed">
+                {cms.delivery_description}
               </p>
             </div>
-            <div className="bg-gray-800 p-6 lg:p-8 rounded-2xl shadow-lg border border-gray-700 hover:border-orange-500/50 hover:shadow-xl transition-all duration-300">
-              <MapPin className="h-8 w-8 lg:h-12 lg:w-12 text-orange-400 mx-auto mb-4" />
-              <h3 className="font-bold text-lg lg:text-xl mb-2 text-white">
-                🗺️ Wide Coverage
-              </h3>
-              <p className="text-gray-300 text-sm lg:text-base">Delivering throughout Lumley area</p>
-            </div>
-            <div className="bg-gray-800 p-6 lg:p-8 rounded-2xl shadow-lg border border-gray-700 hover:border-orange-500/50 hover:shadow-xl transition-all duration-300">
-              <Phone className="h-8 w-8 lg:h-12 lg:w-12 text-orange-400 mx-auto mb-4" />
-              <h3 className="font-bold text-lg lg:text-xl mb-2 text-white">
-                📱 Easy Ordering
-              </h3>
-              <p className="text-gray-300 text-sm lg:text-base">Call or order online</p>
+          </div>
+
+          {/* Features */}
+          <div className="grid sm:grid-cols-3 gap-5 lg:gap-6 mb-16">
+            {features.map(({ num, icon: Icon, title, desc }) => (
+              <div
+                key={title}
+                className="group relative bg-white p-8 rounded-2xl border border-stone-100 shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden"
+              >
+                <span className="absolute top-5 right-6 text-4xl font-bold text-stone-100 select-none leading-none">
+                  {num}
+                </span>
+                <div className="w-11 h-11 rounded-xl bg-yellow-500/10 flex items-center justify-center mb-5 group-hover:bg-yellow-500/15 transition-colors relative z-10">
+                  <Icon className="h-5 w-5 text-yellow-600" />
+                </div>
+                <h3 className="font-semibold text-lg text-stone-800 mb-2 relative z-10">{title}</h3>
+                <p className="text-stone-500 text-sm leading-relaxed relative z-10">{desc}</p>
+              </div>
+            ))}
+          </div>
+
+          {/* CTA Card */}
+          <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-stone-800 via-stone-900 to-stone-900 p-8 lg:p-14 text-center">
+            <div className="absolute top-0 right-0 w-64 h-64 bg-yellow-500/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
+            <h3 className="text-2xl lg:text-3xl font-bold text-white mb-3 relative z-10">
+              {cms.delivery_cta_heading}
+            </h3>
+            <p className="text-stone-300 mb-8 text-base lg:text-lg max-w-xl mx-auto relative z-10">
+              {cms.delivery_cta_body}
+            </p>
+            <div className="flex flex-col sm:flex-row gap-3 justify-center relative z-10">
+              <Link
+                href="/order"
+                className="inline-flex items-center justify-center gap-2 bg-yellow-500 hover:bg-yellow-400 text-stone-900 px-7 py-3.5 rounded-lg font-semibold transition-colors"
+              >
+                Order Now
+              </Link>
+              <Link
+                href={`tel:${cms.contact_phone_intl}`}
+                className="inline-flex items-center justify-center gap-2 border border-stone-600 hover:border-stone-400 text-stone-300 hover:text-white px-7 py-3.5 rounded-lg font-medium transition-colors"
+              >
+                <Phone className="h-4 w-4" />
+                {cms.contact_phone}
+              </Link>
             </div>
           </div>
 
-          {/* Online Order CTA */}
-          <div className="bg-gray-800 p-6 lg:p-10 rounded-2xl shadow-2xl text-white border border-gray-700 hover:border-orange-500/50 transition-all duration-300">
-            <h3 className="text-2xl lg:text-3xl font-bold mb-4 lg:mb-6 text-white">Order Online for Faster Service</h3>
-            <p className="text-gray-300 mb-6 lg:mb-8 text-base lg:text-lg">
-              Skip the wait and get exclusive deals when you order through our website!
-            </p>
-            <Link href="/order">
-              <Button
-                size="lg"
-                className="bg-orange-600 hover:bg-orange-700 text-white text-lg lg:text-xl px-8 lg:px-12 py-4 lg:py-6 rounded-full shadow-lg hover:shadow-xl hover:shadow-orange-600/20 transition-all duration-300 transform hover:scale-105 font-bold"
-              >
-                ORDER NOW
-              </Button>
-            </Link>
-          </div>
         </div>
       </div>
     </section>

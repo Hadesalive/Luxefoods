@@ -117,7 +117,7 @@ export const supabaseOptimizer = SupabaseOptimizer.getInstance()
 
 // Cache management utilities
 export class CacheManager {
-  private static readonly CACHE_PREFIX = 'kings-bakery-cache'
+  private static readonly CACHE_PREFIX = 'luxe-foods-cache'
   private static readonly DEFAULT_TTL = 15 * 60 * 1000 // 15 minutes
 
   static set(key: string, data: any, ttl: number = this.DEFAULT_TTL) {
