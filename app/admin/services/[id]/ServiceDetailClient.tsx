@@ -96,9 +96,9 @@ export default function ServiceDetailClient({ id }: { id: string }) {
   if (loading) {
     return (
       <div className="p-4 lg:p-8 max-w-3xl mx-auto">
-        <div className="h-8 w-48 bg-stone-100 rounded-lg animate-pulse mb-8" />
+        <div className="h-8 w-48 bg-stone-800 rounded-lg animate-pulse mb-8" />
         <div className="space-y-4">
-          {[...Array(5)].map((_, i) => <div key={i} className="h-16 bg-white rounded-2xl border border-stone-100 animate-pulse" />)}
+          {[...Array(5)].map((_, i) => <div key={i} className="h-16 bg-stone-900 rounded-2xl border border-stone-800 animate-pulse" />)}
         </div>
       </div>
     )
@@ -108,7 +108,7 @@ export default function ServiceDetailClient({ id }: { id: string }) {
     return (
       <div className="p-8 text-center">
         <p className="text-stone-400">Service not found.</p>
-        <Link href="/admin/services" className="text-yellow-600 text-sm mt-2 inline-block">← Back to services</Link>
+        <Link href="/admin/services" className="text-yellow-500 text-sm mt-2 inline-block">← Back to services</Link>
       </div>
     )
   }
@@ -119,16 +119,16 @@ export default function ServiceDetailClient({ id }: { id: string }) {
       {/* Header */}
       <div className="flex items-start justify-between gap-4 mb-8">
         <div>
-          <Link href="/admin/services" className="flex items-center gap-1.5 text-stone-400 hover:text-stone-700 text-sm mb-2 transition-colors">
+          <Link href="/admin/services" className="flex items-center gap-1.5 text-stone-400 hover:text-stone-200 text-sm mb-2 transition-colors">
             <ArrowLeft size={14} /> All services
           </Link>
-          <h1 className="text-xl lg:text-2xl font-bold text-stone-900">{service.title}</h1>
+          <h1 className="text-xl lg:text-2xl font-bold text-white">{service.title}</h1>
           <p className="text-xs text-stone-400 font-mono mt-0.5">/services/{service.slug}</p>
         </div>
         <button
           onClick={handleSave}
           disabled={saving}
-          className="flex items-center gap-2 px-4 py-2.5 bg-yellow-500 hover:bg-yellow-400 disabled:bg-stone-200 text-stone-900 font-semibold rounded-xl text-sm transition-colors flex-shrink-0"
+          className="flex items-center gap-2 px-4 py-2.5 bg-yellow-500 hover:bg-yellow-400 disabled:bg-stone-700 text-stone-900 font-semibold rounded-xl text-sm transition-colors flex-shrink-0"
         >
           <FloppyDisk size={15} weight="bold" />
           {saving ? "Saving…" : "Save"}
@@ -151,38 +151,38 @@ export default function ServiceDetailClient({ id }: { id: string }) {
         <Section title="Copy" hint="Text shown on the detail page">
           <div className="space-y-3">
             <div>
-              <label className="text-xs font-semibold text-stone-500 block mb-1.5">Tagline <span className="text-stone-300 font-normal">(bold subtitle)</span></label>
+              <label className="text-xs font-semibold text-stone-400 block mb-1.5">Tagline <span className="text-stone-500 font-normal">(bold subtitle)</span></label>
               <input
                 value={tagline}
                 onChange={e => setTagline(e.target.value)}
                 placeholder="e.g. Professional catering for corporate events…"
-                className="w-full px-3 py-2.5 border border-stone-200 rounded-xl text-sm outline-none focus:border-stone-400"
+                className="w-full px-3 py-2.5 bg-stone-800 border border-stone-700 rounded-xl text-sm text-white outline-none focus:border-yellow-500 placeholder:text-stone-500"
               />
             </div>
             <div>
-              <label className="text-xs font-semibold text-stone-500 block mb-1.5">Short description <span className="text-stone-300 font-normal">(used on cards & listings)</span></label>
+              <label className="text-xs font-semibold text-stone-400 block mb-1.5">Short description <span className="text-stone-500 font-normal">(used on cards & listings)</span></label>
               <textarea
                 value={shortDesc}
                 onChange={e => setShortDesc(e.target.value)}
                 rows={2}
-                className="w-full px-3 py-2.5 border border-stone-200 rounded-xl text-sm outline-none focus:border-stone-400 resize-none"
+                className="w-full px-3 py-2.5 bg-stone-800 border border-stone-700 rounded-xl text-sm text-white outline-none focus:border-yellow-500 resize-none"
               />
             </div>
             <div>
-              <label className="text-xs font-semibold text-stone-500 block mb-1.5">Full description <span className="text-stone-300 font-normal">(detail page body)</span></label>
+              <label className="text-xs font-semibold text-stone-400 block mb-1.5">Full description <span className="text-stone-500 font-normal">(detail page body)</span></label>
               <textarea
                 value={fullDesc}
                 onChange={e => setFullDesc(e.target.value)}
                 rows={5}
-                className="w-full px-3 py-2.5 border border-stone-200 rounded-xl text-sm outline-none focus:border-stone-400 resize-none"
+                className="w-full px-3 py-2.5 bg-stone-800 border border-stone-700 rounded-xl text-sm text-white outline-none focus:border-yellow-500 resize-none"
               />
             </div>
             <div>
-              <label className="text-xs font-semibold text-stone-500 block mb-1.5">Booking form title <span className="text-stone-300 font-normal">(pre-fills the enquiry form)</span></label>
+              <label className="text-xs font-semibold text-stone-400 block mb-1.5">Booking form title <span className="text-stone-500 font-normal">(pre-fills the enquiry form)</span></label>
               <input
                 value={formTitle}
                 onChange={e => setFormTitle(e.target.value)}
-                className="w-full px-3 py-2.5 border border-stone-200 rounded-xl text-sm outline-none focus:border-stone-400"
+                className="w-full px-3 py-2.5 bg-stone-800 border border-stone-700 rounded-xl text-sm text-white outline-none focus:border-yellow-500"
               />
             </div>
           </div>
@@ -194,30 +194,30 @@ export default function ServiceDetailClient({ id }: { id: string }) {
             {includes.map((item, i) => (
               <div key={i} className="flex items-center gap-2">
                 <div className="flex flex-col gap-0.5">
-                  <button onClick={() => moveInclude(i, "up")} disabled={i === 0} className="p-0.5 text-stone-300 hover:text-stone-600 disabled:opacity-20 transition-colors">
+                  <button onClick={() => moveInclude(i, "up")} disabled={i === 0} className="p-0.5 text-stone-600 hover:text-stone-300 disabled:opacity-20 transition-colors">
                     <ArrowUp size={10} weight="bold" />
                   </button>
-                  <button onClick={() => moveInclude(i, "down")} disabled={i === includes.length - 1} className="p-0.5 text-stone-300 hover:text-stone-600 disabled:opacity-20 transition-colors">
+                  <button onClick={() => moveInclude(i, "down")} disabled={i === includes.length - 1} className="p-0.5 text-stone-600 hover:text-stone-300 disabled:opacity-20 transition-colors">
                     <ArrowDown size={10} weight="bold" />
                   </button>
                 </div>
                 <div className="w-4 h-4 rounded-full bg-yellow-500/20 flex items-center justify-center flex-shrink-0">
-                  <div className="w-1.5 h-1.5 rounded-full bg-yellow-600" />
+                  <div className="w-1.5 h-1.5 rounded-full bg-yellow-500" />
                 </div>
                 <input
                   value={item}
                   onChange={e => updateInclude(i, e.target.value)}
                   placeholder={`Include item ${i + 1}`}
-                  className="flex-1 px-3 py-2 border border-stone-200 rounded-lg text-sm outline-none focus:border-stone-400"
+                  className="flex-1 px-3 py-2 bg-stone-800 border border-stone-700 rounded-lg text-sm text-white outline-none focus:border-yellow-500 placeholder:text-stone-500"
                 />
-                <button onClick={() => removeInclude(i)} className="p-1.5 text-stone-300 hover:text-red-400 hover:bg-red-50 rounded-lg transition-colors flex-shrink-0">
+                <button onClick={() => removeInclude(i)} className="p-1.5 text-stone-600 hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-colors flex-shrink-0">
                   <Trash size={13} />
                 </button>
               </div>
             ))}
             <button
               onClick={addInclude}
-              className="flex items-center gap-1.5 text-xs text-stone-400 hover:text-stone-700 font-semibold mt-1 transition-colors"
+              className="flex items-center gap-1.5 text-xs text-stone-400 hover:text-stone-200 font-semibold mt-1 transition-colors"
             >
               <Plus size={12} weight="bold" /> Add item
             </button>
@@ -242,11 +242,11 @@ export default function ServiceDetailClient({ id }: { id: string }) {
       </div>
 
       {/* Bottom save */}
-      <div className="mt-8 pt-6 border-t border-stone-100 flex justify-end">
+      <div className="mt-8 pt-6 border-t border-stone-800 flex justify-end">
         <button
           onClick={handleSave}
           disabled={saving}
-          className="flex items-center gap-2 px-6 py-3 bg-yellow-500 hover:bg-yellow-400 disabled:bg-stone-200 text-stone-900 font-semibold rounded-xl text-sm transition-colors"
+          className="flex items-center gap-2 px-6 py-3 bg-yellow-500 hover:bg-yellow-400 disabled:bg-stone-700 text-stone-900 font-semibold rounded-xl text-sm transition-colors"
         >
           <FloppyDisk size={15} weight="bold" />
           {saving ? "Saving…" : "Save all changes"}
@@ -259,9 +259,9 @@ export default function ServiceDetailClient({ id }: { id: string }) {
 
 function Section({ title, hint, children }: { title: string; hint?: string; children: React.ReactNode }) {
   return (
-    <div className="bg-white rounded-2xl border border-stone-100 overflow-hidden">
-      <div className="px-5 py-4 border-b border-stone-50">
-        <p className="text-sm font-bold text-stone-900">{title}</p>
+    <div className="bg-stone-900 rounded-2xl border border-stone-800 overflow-hidden">
+      <div className="px-5 py-4 border-b border-stone-800">
+        <p className="text-sm font-bold text-white">{title}</p>
         {hint && <p className="text-xs text-stone-400 mt-0.5">{hint}</p>}
       </div>
       <div className="p-5">{children}</div>

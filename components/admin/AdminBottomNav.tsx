@@ -13,13 +13,17 @@ const nav = [
   { href: "/admin/categories", label: "More",    icon: DotsThree },
 ]
 
-export default function AdminBottomNav() {
+export default function AdminBottomNav({ role }: { role: string }) {
   const pathname = usePathname()
+  const isCashier = role === 'cashier'
+  const items = isCashier
+    ? [{ href: "/admin/pos", label: "POS", icon: ShoppingBag }]
+    : nav
 
   return (
     <nav className="lg:hidden fixed bottom-0 inset-x-0 bg-stone-950 border-t border-stone-800 z-40 safe-area-bottom">
       <div className="flex items-center justify-around h-16 px-2">
-        {nav.map(({ href, label, icon: Icon }) => {
+        {items.map(({ href, label, icon: Icon }) => {
           const active = pathname === href || pathname.startsWith(href + "/")
           return (
             <Link

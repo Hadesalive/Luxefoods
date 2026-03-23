@@ -138,7 +138,7 @@ export default function GalleryClient() {
     <div className="p-4 lg:p-8 max-w-5xl mx-auto">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-xl lg:text-2xl font-bold text-stone-900">Gallery</h1>
+          <h1 className="text-xl lg:text-2xl font-bold text-white">Gallery</h1>
           <p className="text-sm text-stone-400 mt-0.5">{items.length} images</p>
         </div>
         <button onClick={openAdd} className="flex items-center gap-2 px-4 py-2.5 bg-yellow-500 hover:bg-yellow-400 text-stone-900 font-semibold rounded-xl text-sm transition-colors">
@@ -149,24 +149,24 @@ export default function GalleryClient() {
       {/* Category filter */}
       {categories.length > 0 && (
         <div className="flex gap-1.5 mb-5 overflow-x-auto pb-1">
-          <button onClick={() => setCatFilter("all")} className={cn("flex-none px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors", catFilter === "all" ? "bg-stone-900 text-white" : "bg-white border border-stone-200 text-stone-500 hover:bg-stone-50")}>All</button>
+          <button onClick={() => setCatFilter("all")} className={cn("flex-none px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors", catFilter === "all" ? "bg-yellow-500 text-stone-900" : "bg-stone-900 border border-stone-800 text-stone-400 hover:bg-stone-800")}>All</button>
           {categories.map(c => (
-            <button key={c} onClick={() => setCatFilter(c)} className={cn("flex-none px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors capitalize", catFilter === c ? "bg-stone-900 text-white" : "bg-white border border-stone-200 text-stone-500 hover:bg-stone-50")}>{c}</button>
+            <button key={c} onClick={() => setCatFilter(c)} className={cn("flex-none px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors capitalize", catFilter === c ? "bg-yellow-500 text-stone-900" : "bg-stone-900 border border-stone-800 text-stone-400 hover:bg-stone-800")}>{c}</button>
           ))}
         </div>
       )}
 
       {loading ? (
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
-          {[...Array(8)].map((_, i) => <div key={i} className="aspect-square bg-white rounded-2xl border border-stone-100 animate-pulse" />)}
+          {[...Array(8)].map((_, i) => <div key={i} className="aspect-square bg-stone-900 rounded-2xl border border-stone-800 animate-pulse" />)}
         </div>
       ) : filtered.length === 0 ? (
         <div className="text-center py-20 text-stone-400 text-sm">No images yet. Add your first photo.</div>
       ) : (
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
           {filtered.map((item, idx) => (
-            <div key={item.id} className={cn("group relative bg-white rounded-2xl border border-stone-100 overflow-hidden", !item.is_active && "opacity-50")}>
-              <div className="relative aspect-square bg-stone-100">
+            <div key={item.id} className={cn("group relative bg-stone-900 rounded-2xl border border-stone-800 overflow-hidden", !item.is_active && "opacity-50")}>
+              <div className="relative aspect-square bg-stone-800">
                 <Image src={item.image_url} alt={item.title || "Gallery"} fill className="object-cover" sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw" />
               </div>
               {/* Overlay controls */}
@@ -186,20 +186,20 @@ export default function GalleryClient() {
               {/* Bottom bar */}
               <div className="p-2.5 flex items-center justify-between gap-2">
                 <div className="min-w-0">
-                  {item.title && <p className="text-xs font-medium text-stone-800 truncate">{item.title}</p>}
+                  {item.title && <p className="text-xs font-medium text-stone-100 truncate">{item.title}</p>}
                   {item.category && <p className="text-[10px] text-stone-400 capitalize">{item.category}</p>}
                 </div>
                 <div className="flex items-center gap-1 flex-shrink-0">
-                  <button onClick={() => handleToggle(item)} className={cn("transition-colors", item.is_active ? "text-yellow-500" : "text-stone-300")}>
+                  <button onClick={() => handleToggle(item)} className={cn("transition-colors", item.is_active ? "text-yellow-500" : "text-stone-600")}>
                     {item.is_active ? <ToggleRight size={20} weight="fill" /> : <ToggleLeft size={20} weight="regular" />}
                   </button>
                   {deleteConfirm === item.id ? (
                     <div className="flex gap-0.5">
-                      <button onClick={() => handleDelete(item.id)} className="text-[9px] font-semibold text-red-600 hover:underline px-1">Del</button>
-                      <button onClick={() => setDeleteConfirm(null)} className="text-[9px] text-stone-400 hover:underline px-1">No</button>
+                      <button onClick={() => handleDelete(item.id)} className="text-[9px] font-semibold text-red-400 hover:underline px-1">Del</button>
+                      <button onClick={() => setDeleteConfirm(null)} className="text-[9px] text-stone-500 hover:underline px-1">No</button>
                     </div>
                   ) : (
-                    <button onClick={() => setDeleteConfirm(item.id)} className="p-1 hover:bg-red-50 rounded text-stone-300 hover:text-red-500 transition-colors">
+                    <button onClick={() => setDeleteConfirm(item.id)} className="p-1 hover:bg-red-500/10 rounded text-stone-600 hover:text-red-400 transition-colors">
                       <Trash size={12} />
                     </button>
                   )}
@@ -212,11 +212,11 @@ export default function GalleryClient() {
 
       {/* Modal */}
       {modal.open && (
-        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-4 bg-black/40 backdrop-blur-sm">
-          <div className="bg-white rounded-2xl w-full max-w-md shadow-2xl">
-            <div className="flex items-center justify-between p-5 border-b border-stone-100">
-              <h2 className="font-bold text-stone-900">{modal.editing ? "Edit Image" : "Add Image"}</h2>
-              <button onClick={() => setModal({ open: false, editing: null })} className="text-stone-400 hover:text-stone-600 text-xl leading-none">×</button>
+        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+          <div className="bg-stone-900 border border-stone-800 rounded-2xl w-full max-w-md shadow-2xl">
+            <div className="flex items-center justify-between p-5 border-b border-stone-800">
+              <h2 className="font-bold text-white">{modal.editing ? "Edit Image" : "Add Image"}</h2>
+              <button onClick={() => setModal({ open: false, editing: null })} className="text-stone-400 hover:text-stone-200 text-xl leading-none">×</button>
             </div>
             <div className="p-5 space-y-4">
               <ImageUpload
@@ -226,31 +226,31 @@ export default function GalleryClient() {
                 label="Image *"
               />
               <div>
-                <label className="text-xs font-semibold text-stone-600 block mb-1.5">Title</label>
-                <input value={form.title} onChange={e => setForm(f => ({ ...f, title: e.target.value }))} placeholder="Optional caption" className="w-full px-3 py-2.5 border border-stone-200 rounded-xl text-sm outline-none focus:border-stone-400" />
+                <label className="text-xs font-semibold text-stone-300 block mb-1.5">Title</label>
+                <input value={form.title} onChange={e => setForm(f => ({ ...f, title: e.target.value }))} placeholder="Optional caption" className="w-full px-3 py-2.5 bg-stone-800 border border-stone-700 rounded-xl text-sm text-white outline-none focus:border-yellow-500 placeholder:text-stone-500" />
               </div>
               <div>
-                <label className="text-xs font-semibold text-stone-600 block mb-1.5">Category</label>
-                <input value={form.category} onChange={e => setForm(f => ({ ...f, category: e.target.value }))} placeholder="e.g. cakes, events, behind the scenes" className="w-full px-3 py-2.5 border border-stone-200 rounded-xl text-sm outline-none focus:border-stone-400" />
+                <label className="text-xs font-semibold text-stone-300 block mb-1.5">Category</label>
+                <input value={form.category} onChange={e => setForm(f => ({ ...f, category: e.target.value }))} placeholder="e.g. cakes, events, behind the scenes" className="w-full px-3 py-2.5 bg-stone-800 border border-stone-700 rounded-xl text-sm text-white outline-none focus:border-yellow-500 placeholder:text-stone-500" />
               </div>
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="text-xs font-semibold text-stone-600 block mb-1.5">Sort Order</label>
-                  <input type="number" value={form.sort_order} onChange={e => setForm(f => ({ ...f, sort_order: e.target.value }))} className="w-full px-3 py-2.5 border border-stone-200 rounded-xl text-sm outline-none focus:border-stone-400" />
+                  <label className="text-xs font-semibold text-stone-300 block mb-1.5">Sort Order</label>
+                  <input type="number" value={form.sort_order} onChange={e => setForm(f => ({ ...f, sort_order: e.target.value }))} className="w-full px-3 py-2.5 bg-stone-800 border border-stone-700 rounded-xl text-sm text-white outline-none focus:border-yellow-500" />
                 </div>
                 <div className="flex flex-col justify-end pb-1">
                   <label className="flex items-center gap-3 cursor-pointer">
-                    <button onClick={() => setForm(f => ({ ...f, is_active: !f.is_active }))} className={cn("transition-colors", form.is_active ? "text-yellow-500" : "text-stone-300")}>
+                    <button onClick={() => setForm(f => ({ ...f, is_active: !f.is_active }))} className={cn("transition-colors", form.is_active ? "text-yellow-500" : "text-stone-600")}>
                       {form.is_active ? <ToggleRight size={28} weight="fill" /> : <ToggleLeft size={28} weight="regular" />}
                     </button>
-                    <span className="text-sm text-stone-700">Visible</span>
+                    <span className="text-sm text-stone-200">Visible</span>
                   </label>
                 </div>
               </div>
             </div>
             <div className="flex gap-3 p-5 pt-0">
-              <button onClick={() => setModal({ open: false, editing: null })} className="flex-1 py-2.5 border border-stone-200 rounded-xl text-sm font-semibold text-stone-600 hover:bg-stone-50 transition-colors">Cancel</button>
-              <button onClick={handleSave} disabled={saving} className="flex-1 py-2.5 bg-yellow-500 hover:bg-yellow-400 disabled:bg-stone-200 rounded-xl text-sm font-semibold text-stone-900 transition-colors">
+              <button onClick={() => setModal({ open: false, editing: null })} className="flex-1 py-2.5 border border-stone-700 rounded-xl text-sm font-semibold text-stone-300 hover:bg-stone-800 transition-colors">Cancel</button>
+              <button onClick={handleSave} disabled={saving} className="flex-1 py-2.5 bg-yellow-500 hover:bg-yellow-400 disabled:bg-stone-700 rounded-xl text-sm font-semibold text-stone-900 transition-colors">
                 {saving ? "Saving…" : modal.editing ? "Update" : "Add"}
               </button>
             </div>

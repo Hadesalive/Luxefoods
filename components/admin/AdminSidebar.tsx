@@ -2,9 +2,10 @@
 
 import Link from "next/link"
 import Image from "next/image"
-import { usePathname } from "next/navigation"
-import { SquaresFour, ShoppingBag, ClipboardText, ForkKnife, Tag, Article, Briefcase, Images } from "@phosphor-icons/react"
+import { usePathname, useRouter } from "next/navigation"
+import { SquaresFour, ShoppingBag, ClipboardText, ForkKnife, Tag, Article, Briefcase, Images, SignOut } from "@phosphor-icons/react"
 import { cn } from "@/lib/utils"
+import { createSupabaseBrowserClient } from "@/lib/supabase-browser"
 
 const nav = [
   { href: "/admin/dashboard",  label: "Dashboard",  icon: SquaresFour },
@@ -20,8 +21,17 @@ const manage = [
   { href: "/admin/gallery",  label: "Gallery",  icon: Images },
 ]
 
-export default function AdminSidebar() {
+export default function AdminSidebar({ role }: { role: string }) {
   const pathname = usePathname()
+  const router = useRouter()
+  const isCashier = role === 'cashier'
+
+  const handleLogout = async () => {
+    const supabase = createSupabaseBrowserClient()
+    await supabase.auth.signOut()
+    router.push("/admin/login")
+    router.refresh()
+  }
 
   const NavLink = ({ href, label, icon: Icon }: { href: string; label: string; icon: React.ElementType }) => {
     const active = pathname === href || pathname.startsWith(href + "/")
@@ -55,21 +65,34 @@ export default function AdminSidebar() {
         </div>
         <div>
           <p className="text-sm font-bold text-yellow-400 tracking-wider">LUXE FOOD</p>
-          <p className="text-[10px] text-stone-500">Admin Dashboard</p>
+          <p className="text-[10px] text-stone-500 capitalize">{isCashier ? 'Cashier' : 'Admin Dashboard'}</p>
         </div>
       </div>
 
       {/* Nav */}
       <nav className="flex-1 px-3 py-4 space-y-0.5 overflow-y-auto">
-        <p className="text-[9px] font-semibold text-stone-600 uppercase tracking-widest px-3 mb-2">Operations</p>
-        {nav.map(item => <NavLink key={item.href} {...item} />)}
-        <p className="text-[9px] font-semibold text-stone-600 uppercase tracking-widest px-3 mt-4 mb-2 pt-3 border-t border-stone-800">Manage</p>
-        {manage.map(item => <NavLink key={item.href} {...item} />)}
+        {isCashier ? (
+          <NavLink href="/admin/pos" label="POS" icon={ShoppingBag} />
+        ) : (
+          <>
+            <p className="text-[9px] font-semibold text-stone-600 uppercase tracking-widest px-3 mb-2">Operations</p>
+            {nav.map(item => <NavLink key={item.href} {...item} />)}
+            <p className="text-[9px] font-semibold text-stone-600 uppercase tracking-widest px-3 mt-4 mb-2 pt-3 border-t border-stone-800">Manage</p>
+            {manage.map(item => <NavLink key={item.href} {...item} />)}
+          </>
+        )}
       </nav>
 
       {/* Footer */}
-      <div className="px-6 py-4 border-t border-stone-800">
-        <p className="text-[10px] text-stone-600">LUXE FOOD · Admin v2</p>
+      <div className="px-3 py-4 border-t border-stone-800 space-y-1">
+        <button
+          onClick={handleLogout}
+          className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-stone-400 hover:text-red-400 hover:bg-red-500/10 transition-all"
+        >
+          <SignOut size={16} className="flex-shrink-0" />
+          Sign Out
+        </button>
+        <p className="text-[10px] text-stone-700 px-3">LUXE FOOD · Admin v2</p>
       </div>
     </aside>
   )

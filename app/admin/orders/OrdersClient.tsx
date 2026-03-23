@@ -21,12 +21,12 @@ function OrderCard({ order, onStatusChange }: { order: Order; onStatusChange: (i
   const transitions = STATUS_TRANSITIONS[order.status]
 
   return (
-    <div className="bg-white rounded-2xl border border-stone-100 p-4 lg:p-5">
+    <div className="bg-stone-900 rounded-2xl border border-stone-800 p-4 lg:p-5">
       {/* Header row */}
       <div className="flex items-start justify-between gap-3 mb-3">
         <div className="min-w-0">
           <div className="flex items-center gap-2 flex-wrap">
-            <p className="text-sm font-bold text-stone-900 font-mono">{order.order_ref}</p>
+            <p className="text-sm font-bold text-white font-mono">{order.order_ref}</p>
             <span className={cn("inline-flex items-center gap-1 text-[10px] font-semibold px-2 py-0.5 rounded-full", colors.bg, colors.text)}>
               {STATUS_LABELS[order.status]}
             </span>
@@ -45,13 +45,13 @@ function OrderCard({ order, onStatusChange }: { order: Order; onStatusChange: (i
             {timeAgo(order.created_at)}
           </p>
         </div>
-        <p className="text-sm font-bold text-stone-900 flex-shrink-0">NLe {order.total.toFixed(0)}</p>
+        <p className="text-sm font-bold text-white flex-shrink-0">NLe {order.total.toFixed(0)}</p>
       </div>
 
       {/* Customer */}
       {(order.customer_name || order.customer_phone) && (
-        <div className="mb-3 py-2 px-3 bg-stone-50 rounded-xl">
-          {order.customer_name && <p className="text-xs font-medium text-stone-700">{order.customer_name}</p>}
+        <div className="mb-3 py-2 px-3 bg-stone-800 rounded-xl">
+          {order.customer_name && <p className="text-xs font-medium text-stone-200">{order.customer_name}</p>}
           {order.customer_phone && <p className="text-xs text-stone-400">{order.customer_phone}</p>}
           {order.customer_address && <p className="text-xs text-stone-400 mt-0.5">{order.customer_address}</p>}
         </div>
@@ -61,12 +61,12 @@ function OrderCard({ order, onStatusChange }: { order: Order; onStatusChange: (i
       <div className="mb-3 space-y-0.5">
         {(order.items as Array<{name: string; quantity: number; price: number}>).map((item, i) => (
           <div key={i} className="flex items-center justify-between text-xs">
-            <span className="text-stone-600">{item.name} × {item.quantity}</span>
-            <span className="text-stone-500">NLe {(item.price * item.quantity).toFixed(0)}</span>
+            <span className="text-stone-300">{item.name} × {item.quantity}</span>
+            <span className="text-stone-400">NLe {(item.price * item.quantity).toFixed(0)}</span>
           </div>
         ))}
         {order.discount_amount > 0 && (
-          <div className="flex justify-between text-xs text-green-600 pt-0.5">
+          <div className="flex justify-between text-xs text-green-400 pt-0.5">
             <span>Discount</span><span>−NLe {order.discount_amount.toFixed(0)}</span>
           </div>
         )}
@@ -82,7 +82,7 @@ function OrderCard({ order, onStatusChange }: { order: Order; onStatusChange: (i
 
       {/* Status actions */}
       {transitions.length > 0 && (
-        <div className="flex flex-wrap gap-2 pt-2 border-t border-stone-100">
+        <div className="flex flex-wrap gap-2 pt-2 border-t border-stone-800">
           {transitions.map(next => (
             <button
               key={next}
@@ -90,8 +90,8 @@ function OrderCard({ order, onStatusChange }: { order: Order; onStatusChange: (i
               className={cn(
                 "px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors",
                 next === "cancelled"
-                  ? "bg-red-50 text-red-600 hover:bg-red-100"
-                  : "bg-yellow-50 text-stone-800 hover:bg-yellow-100"
+                  ? "bg-red-500/10 text-red-400 hover:bg-red-500/20"
+                  : "bg-yellow-500/10 text-yellow-400 hover:bg-yellow-500/20"
               )}
             >
               → {STATUS_LABELS[next]}
@@ -156,7 +156,7 @@ export default function OrdersClient() {
       {/* Header */}
       <div className="flex items-center justify-between mb-5">
         <div>
-          <h1 className="text-xl lg:text-2xl font-bold text-stone-900 flex items-center gap-2">
+          <h1 className="text-xl lg:text-2xl font-bold text-white flex items-center gap-2">
             Orders
             {pendingCount > 0 && (
               <span className="bg-yellow-500 text-stone-900 text-xs font-bold px-2 py-0.5 rounded-full">{pendingCount}</span>
@@ -169,10 +169,10 @@ export default function OrdersClient() {
             type="date"
             value={selectedDate}
             onChange={e => setSelectedDate(e.target.value)}
-            className="px-3 py-2 bg-white border border-stone-200 rounded-lg text-sm text-stone-600 outline-none"
+            className="px-3 py-2 bg-stone-900 border border-stone-800 rounded-lg text-sm text-stone-300 outline-none focus:border-yellow-500"
           />
-          <button onClick={() => load(true)} className="p-2 bg-white border border-stone-200 rounded-lg hover:bg-stone-50 transition-colors">
-            <ArrowClockwise size={16} className={`text-stone-500 ${loading ? "animate-spin" : ""}`} />
+          <button onClick={() => load(true)} className="p-2 bg-stone-900 border border-stone-800 rounded-lg hover:bg-stone-800 transition-colors">
+            <ArrowClockwise size={16} className={`text-stone-400 ${loading ? "animate-spin" : ""}`} />
           </button>
         </div>
       </div>
@@ -183,7 +183,7 @@ export default function OrdersClient() {
           {SOURCE_FILTERS.map(f => (
             <button key={f} onClick={() => setSourceFilter(f)}
               className={cn("px-3 py-1.5 rounded-lg text-xs font-semibold capitalize transition-colors",
-                sourceFilter === f ? "bg-stone-900 text-white" : "bg-white border border-stone-200 text-stone-500 hover:bg-stone-50"
+                sourceFilter === f ? "bg-yellow-500 text-stone-900" : "bg-stone-900 border border-stone-800 text-stone-400 hover:bg-stone-800"
               )}>
               {f === "all" ? "All Sources" : f}
             </button>
@@ -193,7 +193,7 @@ export default function OrdersClient() {
           {STATUS_FILTERS.map(f => (
             <button key={f} onClick={() => setStatusFilter(f)}
               className={cn("flex-none px-3 py-1.5 rounded-lg text-xs font-semibold capitalize transition-colors whitespace-nowrap",
-                statusFilter === f ? "bg-stone-900 text-white" : "bg-white border border-stone-200 text-stone-500 hover:bg-stone-50"
+                statusFilter === f ? "bg-yellow-500 text-stone-900" : "bg-stone-900 border border-stone-800 text-stone-400 hover:bg-stone-800"
               )}>
               {f === "all" ? "All Statuses" : STATUS_LABELS[f as Order["status"]]}
             </button>
@@ -204,7 +204,7 @@ export default function OrdersClient() {
       {/* Order list */}
       {loading ? (
         <div className="grid sm:grid-cols-2 gap-3">
-          {[...Array(4)].map((_, i) => <div key={i} className="h-40 bg-white rounded-2xl border border-stone-100 animate-pulse" />)}
+          {[...Array(4)].map((_, i) => <div key={i} className="h-40 bg-stone-900 rounded-2xl border border-stone-800 animate-pulse" />)}
         </div>
       ) : filtered.length === 0 ? (
         <div className="text-center py-20">

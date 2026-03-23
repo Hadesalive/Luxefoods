@@ -1,61 +1,60 @@
-import { NextResponse } from 'next/server'
-import type { NextRequest } from 'next/server'
+import { createServerClient } from '@supabase/ssr'
+import { NextResponse, type NextRequest } from 'next/server'
 
-export function middleware(request: NextRequest) {
+export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl
 
-  // Protect license page from direct access
-  if (pathname === '/license') {
-    const referer = request.headers.get('referer')
-    const userAgent = request.headers.get('user-agent')
-    
-    // Allow access from allowed domains
-    const allowedDomains = [
-      'https://luxefood.com',
-      'http://localhost:3000',
-      'https://localhost:3000'
-    ]
-    
-    const isFromAllowedDomain = allowedDomains.some(domain => 
-      referer?.startsWith(domain)
+  // Protect all /admin routes with Supabase session check
+  if (pathname.startsWith('/admin')) {
+    let supabaseResponse = NextResponse.next({ request })
+
+    const supabase = createServerClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+      {
+        cookies: {
+          getAll() {
+            return request.cookies.getAll()
+          },
+          setAll(cookiesToSet) {
+            cookiesToSet.forEach(({ name, value }) => request.cookies.set(name, value))
+            supabaseResponse = NextResponse.next({ request })
+            cookiesToSet.forEach(({ name, value, options }) =>
+              supabaseResponse.cookies.set(name, value, options)
+            )
+          },
+        },
+      }
     )
-    
-    // Check for admin access parameters
-    const url = new URL(request.url)
-    const adminKey = url.searchParams.get('admin')
-    const timestamp = url.searchParams.get('t')
-    
-    // If no referer (direct access) and no admin key, redirect to home
-    if (!referer && !adminKey) {
-      return NextResponse.redirect(new URL('/', request.url))
+
+    const { data: { user } } = await supabase.auth.getUser()
+
+    // Not logged in → send to login page
+    if (!user && pathname !== '/admin/login') {
+      return NextResponse.redirect(new URL('/admin/login', request.url))
     }
-    
-    // If admin key is provided, validate timestamp
-    if (adminKey === 'alpha_dev_2024' && timestamp) {
-      const currentTime = Date.now()
-      const requestTime = parseInt(timestamp, 10)
-      const timeDiff = currentTime - requestTime
-      
-      // If request is older than 5 minutes, redirect
-      if (timeDiff > 300000) {
-        return NextResponse.redirect(new URL('/', request.url))
+
+    if (user) {
+      const role = (user.app_metadata?.role as string) ?? 'cashier'
+
+      // Already logged in → skip login page, redirect based on role
+      if (pathname === '/admin/login') {
+        const dest = role === 'admin' ? '/admin/dashboard' : '/admin/pos'
+        return NextResponse.redirect(new URL(dest, request.url))
+      }
+
+      // Cashier can only access /admin/pos
+      if (role === 'cashier' && pathname !== '/admin/pos') {
+        return NextResponse.redirect(new URL('/admin/pos', request.url))
       }
     }
+
+    return supabaseResponse
   }
 
-  // Continue with normal request processing
   return NextResponse.next()
 }
 
 export const config = {
-  matcher: [
-    /*
-     * Match all request paths except for the ones starting with:
-     * - api (API routes)
-     * - _next/static (static files)
-     * - _next/image (image optimization files)
-     * - favicon.ico (favicon file)
-     */
-    '/((?!api|_next/static|_next/image|favicon.ico).*)',
-  ],
-} 
+  matcher: ['/admin/:path*'],
+}

@@ -36,7 +36,7 @@ const ICON_MAP: Record<string, React.ComponentType<{ size?: number; weight?: "re
 function ServiceIcon({ name, size = 20 }: { name: string | null; size?: number }) {
   if (!name) return <Briefcase size={size} weight="duotone" className="text-stone-400" />
   const Icon = ICON_MAP[name]
-  if (Icon) return <Icon size={size} weight="duotone" className="text-yellow-600" />
+  if (Icon) return <Icon size={size} weight="duotone" className="text-yellow-500" />
   // fallback for unknown names
   return <Briefcase size={size} weight="duotone" className="text-stone-400" />
 }
@@ -165,7 +165,7 @@ export default function ServicesClient() {
       {/* Header */}
       <div className="flex items-center justify-between mb-8">
         <div>
-          <h1 className="text-xl lg:text-2xl font-bold text-stone-900">Services</h1>
+          <h1 className="text-xl lg:text-2xl font-bold text-white">Services</h1>
           <p className="text-sm text-stone-400 mt-0.5">{services.length} services · first 3 are featured on the homepage</p>
         </div>
         <button onClick={openAdd} className="flex items-center gap-2 px-4 py-2.5 bg-yellow-500 hover:bg-yellow-400 text-stone-900 font-semibold rounded-xl text-sm transition-colors">
@@ -175,7 +175,7 @@ export default function ServicesClient() {
 
       {loading ? (
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {[...Array(6)].map((_, i) => <div key={i} className="h-52 bg-white rounded-2xl border border-stone-100 animate-pulse" />)}
+          {[...Array(6)].map((_, i) => <div key={i} className="h-52 bg-stone-900 rounded-2xl border border-stone-800 animate-pulse" />)}
         </div>
       ) : sorted.length === 0 ? (
         <div className="text-center py-24 text-stone-400 text-sm">No services yet. Add your first service.</div>
@@ -230,37 +230,37 @@ export default function ServicesClient() {
 
       {/* Modal */}
       {modal.open && (
-        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-4 bg-black/40 backdrop-blur-sm">
-          <div className="bg-white rounded-2xl w-full max-w-lg shadow-2xl max-h-[90vh] overflow-y-auto">
-            <div className="flex items-center justify-between p-5 border-b border-stone-100">
-              <h2 className="font-bold text-stone-900">{modal.editing ? "Edit Service" : "Add Service"}</h2>
-              <button onClick={() => setModal({ open: false, editing: null })} className="text-stone-400 hover:text-stone-600 text-xl leading-none">×</button>
+        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+          <div className="bg-stone-900 border border-stone-800 rounded-2xl w-full max-w-lg shadow-2xl max-h-[90vh] overflow-y-auto">
+            <div className="flex items-center justify-between p-5 border-b border-stone-800">
+              <h2 className="font-bold text-white">{modal.editing ? "Edit Service" : "Add Service"}</h2>
+              <button onClick={() => setModal({ open: false, editing: null })} className="text-stone-400 hover:text-stone-200 text-xl leading-none">×</button>
             </div>
             <div className="p-5 space-y-4">
 
               {/* Image preview */}
               {form.image_url && (
-                <div className="relative w-full aspect-[3/2] rounded-xl overflow-hidden bg-stone-100">
+                <div className="relative w-full aspect-[3/2] rounded-xl overflow-hidden bg-stone-800">
                   <Image src={form.image_url} alt="Preview" fill className="object-cover" onError={() => {}} />
                 </div>
               )}
 
               <div className="grid grid-cols-2 gap-3">
                 <div className="col-span-2">
-                  <label className="text-xs font-semibold text-stone-600 block mb-1.5">Title *</label>
+                  <label className="text-xs font-semibold text-stone-300 block mb-1.5">Title *</label>
                   <input
                     value={form.title}
                     onChange={e => setForm(f => ({ ...f, title: e.target.value, slug: modal.editing ? f.slug : slugify(e.target.value) }))}
-                    className="w-full px-3 py-2.5 border border-stone-200 rounded-xl text-sm outline-none focus:border-stone-400"
+                    className="w-full px-3 py-2.5 bg-stone-800 border border-stone-700 rounded-xl text-sm text-white outline-none focus:border-yellow-500"
                   />
                 </div>
                 <div className="col-span-2">
-                  <label className="text-xs font-semibold text-stone-600 block mb-1.5">Slug *</label>
-                  <input value={form.slug} onChange={e => setForm(f => ({ ...f, slug: slugify(e.target.value) }))} className="w-full px-3 py-2.5 border border-stone-200 rounded-xl text-sm font-mono outline-none focus:border-stone-400" />
+                  <label className="text-xs font-semibold text-stone-300 block mb-1.5">Slug *</label>
+                  <input value={form.slug} onChange={e => setForm(f => ({ ...f, slug: slugify(e.target.value) }))} className="w-full px-3 py-2.5 bg-stone-800 border border-stone-700 rounded-xl text-sm font-mono text-white outline-none focus:border-yellow-500" />
                 </div>
                 <div className="col-span-2">
-                  <label className="text-xs font-semibold text-stone-600 block mb-1.5">Description</label>
-                  <textarea value={form.description} onChange={e => setForm(f => ({ ...f, description: e.target.value }))} rows={2} className="w-full px-3 py-2.5 border border-stone-200 rounded-xl text-sm outline-none focus:border-stone-400 resize-none" />
+                  <label className="text-xs font-semibold text-stone-300 block mb-1.5">Description</label>
+                  <textarea value={form.description} onChange={e => setForm(f => ({ ...f, description: e.target.value }))} rows={2} className="w-full px-3 py-2.5 bg-stone-800 border border-stone-700 rounded-xl text-sm text-white outline-none focus:border-yellow-500 resize-none" />
                 </div>
                 <div className="col-span-2">
                   <ImageUpload
@@ -272,30 +272,30 @@ export default function ServicesClient() {
                   />
                 </div>
                 <div>
-                  <label className="text-xs font-semibold text-stone-600 block mb-1.5">Icon name</label>
+                  <label className="text-xs font-semibold text-stone-300 block mb-1.5">Icon name</label>
                   <div className="flex items-center gap-2">
-                    <div className="w-10 h-10 rounded-lg bg-yellow-50 flex items-center justify-center flex-shrink-0">
+                    <div className="w-10 h-10 rounded-lg bg-yellow-500/10 flex items-center justify-center flex-shrink-0">
                       <ServiceIcon name={form.icon || null} size={18} />
                     </div>
-                    <input value={form.icon} onChange={e => setForm(f => ({ ...f, icon: e.target.value }))} placeholder="e.g. Heart" className="flex-1 px-3 py-2.5 border border-stone-200 rounded-xl text-sm font-mono outline-none focus:border-stone-400" />
+                    <input value={form.icon} onChange={e => setForm(f => ({ ...f, icon: e.target.value }))} placeholder="e.g. Heart" className="flex-1 px-3 py-2.5 bg-stone-800 border border-stone-700 rounded-xl text-sm font-mono text-white outline-none focus:border-yellow-500 placeholder:text-stone-500" />
                   </div>
                   <p className="text-[10px] text-stone-400 mt-1">Phosphor icon name: Buildings, Heart, Gift, Cake, Trophy, Smiley, HandWaving, Fire, SquaresFour</p>
                 </div>
                 <div>
-                  <label className="text-xs font-semibold text-stone-600 block mb-1.5">Sort Order</label>
-                  <input type="number" value={form.sort_order} onChange={e => setForm(f => ({ ...f, sort_order: e.target.value }))} className="w-full px-3 py-2.5 border border-stone-200 rounded-xl text-sm outline-none focus:border-stone-400" />
+                  <label className="text-xs font-semibold text-stone-300 block mb-1.5">Sort Order</label>
+                  <input type="number" value={form.sort_order} onChange={e => setForm(f => ({ ...f, sort_order: e.target.value }))} className="w-full px-3 py-2.5 bg-stone-800 border border-stone-700 rounded-xl text-sm text-white outline-none focus:border-yellow-500" />
                 </div>
                 <div className="col-span-2 flex items-center gap-3 pt-1">
-                  <button onClick={() => setForm(f => ({ ...f, is_active: !f.is_active }))} className={cn("transition-colors", form.is_active ? "text-yellow-500" : "text-stone-300")}>
+                  <button onClick={() => setForm(f => ({ ...f, is_active: !f.is_active }))} className={cn("transition-colors", form.is_active ? "text-yellow-500" : "text-stone-600")}>
                     {form.is_active ? <ToggleRight size={28} weight="fill" /> : <ToggleLeft size={28} weight="regular" />}
                   </button>
-                  <span className="text-sm text-stone-700">Active — visible on the website</span>
+                  <span className="text-sm text-stone-200">Active — visible on the website</span>
                 </div>
               </div>
             </div>
             <div className="flex gap-3 p-5 pt-0">
-              <button onClick={() => setModal({ open: false, editing: null })} className="flex-1 py-2.5 border border-stone-200 rounded-xl text-sm font-semibold text-stone-600 hover:bg-stone-50 transition-colors">Cancel</button>
-              <button onClick={handleSave} disabled={saving} className="flex-1 py-2.5 bg-yellow-500 hover:bg-yellow-400 disabled:bg-stone-200 rounded-xl text-sm font-semibold text-stone-900 transition-colors">
+              <button onClick={() => setModal({ open: false, editing: null })} className="flex-1 py-2.5 border border-stone-700 rounded-xl text-sm font-semibold text-stone-300 hover:bg-stone-800 transition-colors">Cancel</button>
+              <button onClick={handleSave} disabled={saving} className="flex-1 py-2.5 bg-yellow-500 hover:bg-yellow-400 disabled:bg-stone-700 rounded-xl text-sm font-semibold text-stone-900 transition-colors">
                 {saving ? "Saving…" : modal.editing ? "Update" : "Create"}
               </button>
             </div>
@@ -326,12 +326,12 @@ function ServiceCard({
 }) {
   return (
     <div className={cn(
-      "group relative bg-white rounded-2xl border overflow-hidden transition-all",
-      svc.is_active ? "border-stone-100" : "border-stone-100 opacity-50",
-      featured && "shadow-sm"
+      "group relative bg-stone-900 rounded-2xl border overflow-hidden transition-all",
+      svc.is_active ? "border-stone-800" : "border-stone-800 opacity-50",
+      featured && "shadow-sm shadow-black/40"
     )}>
       {/* Image or icon hero */}
-      <div className="relative aspect-[4/3] bg-stone-50 overflow-hidden">
+      <div className="relative aspect-[4/3] bg-stone-800 overflow-hidden">
         {svc.image_url ? (
           <Image src={svc.image_url} alt={svc.title} fill className="object-cover transition-transform duration-500 group-hover:scale-105" sizes="33vw" />
         ) : (
@@ -360,14 +360,14 @@ function ServiceCard({
               <ArrowDown size={11} weight="bold" />
             </button>
           </div>
-          <span className="text-[10px] font-bold bg-white/90 text-stone-600 px-2 py-0.5 rounded-lg shadow-sm tabular-nums">
+          <span className="text-[10px] font-bold bg-white/90 text-stone-700 px-2 py-0.5 rounded-lg shadow-sm tabular-nums">
             #{svc.sort_order}
           </span>
         </div>
 
         {/* Active badge */}
         {!svc.is_active && (
-          <div className="absolute bottom-2 left-2 text-[9px] font-bold bg-stone-900/70 text-white px-2 py-0.5 rounded-full uppercase tracking-wide">
+          <div className="absolute bottom-2 left-2 text-[9px] font-bold bg-stone-950/80 text-stone-300 px-2 py-0.5 rounded-full uppercase tracking-wide">
             Hidden
           </div>
         )}
@@ -376,24 +376,24 @@ function ServiceCard({
       {/* Body */}
       <div className="p-4">
         <div className="flex items-start justify-between gap-2 mb-1">
-          <h3 className="font-bold text-stone-900 text-sm leading-snug">{svc.title}</h3>
+          <h3 className="font-bold text-white text-sm leading-snug">{svc.title}</h3>
           <div className="flex items-center gap-0.5 flex-shrink-0 -mt-0.5">
             <button
               onClick={() => onToggle(svc)}
-              className={cn("p-1 rounded transition-colors", svc.is_active ? "text-yellow-500 hover:text-yellow-600" : "text-stone-300 hover:text-stone-400")}
+              className={cn("p-1 rounded transition-colors", svc.is_active ? "text-yellow-500 hover:text-yellow-400" : "text-stone-600 hover:text-stone-400")}
             >
               {svc.is_active ? <ToggleRight size={20} weight="fill" /> : <ToggleLeft size={20} weight="regular" />}
             </button>
-            <button onClick={() => onEdit(svc)} className="p-1 rounded text-stone-300 hover:text-stone-700 hover:bg-stone-100 transition-colors">
+            <button onClick={() => onEdit(svc)} className="p-1 rounded text-stone-500 hover:text-stone-200 hover:bg-stone-700 transition-colors">
               <PencilSimple size={13} weight="bold" />
             </button>
             {deleteConfirm === svc.id ? (
               <div className="flex items-center gap-1 ml-1">
-                <button onClick={() => onDeleteConfirm(svc.id)} className="text-[10px] font-semibold text-red-600 hover:underline">Del</button>
-                <button onClick={onDeleteCancel} className="text-[10px] text-stone-400 hover:underline">No</button>
+                <button onClick={() => onDeleteConfirm(svc.id)} className="text-[10px] font-semibold text-red-400 hover:underline">Del</button>
+                <button onClick={onDeleteCancel} className="text-[10px] text-stone-500 hover:underline">No</button>
               </div>
             ) : (
-              <button onClick={() => onDelete(svc.id)} className="p-1 rounded text-stone-200 hover:text-red-500 hover:bg-red-50 transition-colors">
+              <button onClick={() => onDelete(svc.id)} className="p-1 rounded text-stone-600 hover:text-red-400 hover:bg-red-500/10 transition-colors">
                 <Trash size={13} />
               </button>
             )}
@@ -403,10 +403,10 @@ function ServiceCard({
           <p className="text-xs text-stone-400 line-clamp-2 leading-relaxed">{svc.description}</p>
         )}
         <div className="flex items-center justify-between mt-2">
-          <p className="text-[10px] text-stone-300 font-mono">{svc.slug}</p>
+          <p className="text-[10px] text-stone-500 font-mono">{svc.slug}</p>
           <Link
             href={`/admin/services/${svc.id}`}
-            className="flex items-center gap-1 text-[10px] font-semibold text-yellow-600 hover:text-yellow-700 transition-colors"
+            className="flex items-center gap-1 text-[10px] font-semibold text-yellow-500 hover:text-yellow-400 transition-colors"
           >
             Edit details <ArrowSquareOut size={10} weight="bold" />
           </Link>

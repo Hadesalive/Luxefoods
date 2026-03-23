@@ -46,9 +46,9 @@ function RevenueChart({ data }: { data: { hour: string; revenue: number }[] }) {
               onMouseLeave={() => setHovered(null)}
             >
               {isHovered && d.revenue > 0 && (
-                <div className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 bg-stone-900 text-white text-[10px] font-semibold px-2 py-1 rounded-lg whitespace-nowrap z-10 pointer-events-none">
+                <div className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 bg-stone-800 text-white text-[10px] font-semibold px-2 py-1 rounded-lg whitespace-nowrap z-10 pointer-events-none">
                   NLe {d.revenue.toFixed(0)}
-                  <div className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-stone-900" />
+                  <div className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-stone-800" />
                 </div>
               )}
               <div
@@ -57,7 +57,7 @@ function RevenueChart({ data }: { data: { hour: string; revenue: number }[] }) {
                   height: pct > 0 ? `${Math.max(pct, 4)}%` : "2px",
                   background: d.revenue > 0
                     ? isHovered ? "#ca8a04" : "#eab308"
-                    : "#e7e5e4",
+                    : "#44403c",
                 }}
               />
             </div>
@@ -69,7 +69,7 @@ function RevenueChart({ data }: { data: { hour: string; revenue: number }[] }) {
         {data.map((d, i) => (
           <div key={d.hour} className="flex-1 text-center">
             {i % 3 === 0 && (
-              <span className="text-[9px] text-stone-400">{d.hour}</span>
+              <span className="text-[9px] text-stone-500">{d.hour}</span>
             )}
           </div>
         ))}
@@ -114,15 +114,15 @@ export default function DashboardClient() {
       {/* Header */}
       <div className="flex items-center justify-between mb-6 lg:mb-8">
         <div>
-          <h1 className="text-xl lg:text-2xl font-bold text-stone-900">Dashboard</h1>
-          <p className="text-sm text-stone-500 mt-0.5">
+          <h1 className="text-xl lg:text-2xl font-bold text-white">Dashboard</h1>
+          <p className="text-sm text-stone-400 mt-0.5">
             {new Date().toLocaleDateString("en-GB", { weekday: "long", day: "numeric", month: "long" })}
           </p>
         </div>
         <button
           onClick={load}
           disabled={loading}
-          className="flex items-center gap-2 px-3 py-2 bg-white border border-stone-200 rounded-lg text-sm text-stone-600 hover:bg-stone-50 transition-colors disabled:opacity-50"
+          className="flex items-center gap-2 px-3 py-2 bg-stone-900 border border-stone-800 rounded-lg text-sm text-stone-300 hover:bg-stone-800 transition-colors disabled:opacity-50"
         >
           <ArrowClockwise size={14} className={loading ? "animate-spin" : ""} />
           <span className="hidden sm:inline">Refresh</span>
@@ -132,15 +132,15 @@ export default function DashboardClient() {
       {/* Stat cards */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-4 mb-6 lg:mb-8">
         {statCards.map(({ label, value, icon: Icon, color }) => (
-          <div key={label} className="bg-white rounded-2xl border border-stone-100 p-4 lg:p-5">
+          <div key={label} className="bg-stone-900 rounded-2xl border border-stone-800 p-4 lg:p-5">
             <div className="flex items-start justify-between mb-3">
-              <p className="text-xs text-stone-500 font-medium leading-tight">{label}</p>
+              <p className="text-xs text-stone-400 font-medium leading-tight">{label}</p>
               <Icon size={16} weight="duotone" className={`${color} flex-shrink-0`} />
             </div>
             {loading ? (
-              <div className="h-7 bg-stone-100 rounded animate-pulse w-3/4" />
+              <div className="h-7 bg-stone-800 rounded animate-pulse w-3/4" />
             ) : (
-              <p className="text-xl lg:text-2xl font-bold text-stone-900">{value}</p>
+              <p className="text-xl lg:text-2xl font-bold text-white">{value}</p>
             )}
           </div>
         ))}
@@ -148,37 +148,37 @@ export default function DashboardClient() {
 
       {/* Source breakdown */}
       <div className="grid grid-cols-2 gap-3 mb-6 lg:mb-8">
-        <div className="bg-white rounded-2xl border border-stone-100 p-4">
-          <p className="text-xs text-stone-500 mb-1">Online Orders</p>
-          <p className="text-2xl font-bold text-stone-900">{loading ? "—" : stats.onlineOrders}</p>
+        <div className="bg-stone-900 rounded-2xl border border-stone-800 p-4">
+          <p className="text-xs text-stone-400 mb-1">Online Orders</p>
+          <p className="text-2xl font-bold text-white">{loading ? "—" : stats.onlineOrders}</p>
         </div>
-        <div className="bg-white rounded-2xl border border-stone-100 p-4">
-          <p className="text-xs text-stone-500 mb-1">POS Orders</p>
-          <p className="text-2xl font-bold text-stone-900">{loading ? "—" : stats.posOrders}</p>
+        <div className="bg-stone-900 rounded-2xl border border-stone-800 p-4">
+          <p className="text-xs text-stone-400 mb-1">POS Orders</p>
+          <p className="text-2xl font-bold text-white">{loading ? "—" : stats.posOrders}</p>
         </div>
       </div>
 
       <div className="grid lg:grid-cols-5 gap-4 lg:gap-6">
         {/* Revenue chart */}
-        <div className="lg:col-span-3 bg-white rounded-2xl border border-stone-100 p-4 lg:p-6">
+        <div className="lg:col-span-3 bg-stone-900 rounded-2xl border border-stone-800 p-4 lg:p-6">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-sm font-semibold text-stone-900">Revenue by Hour</h2>
+            <h2 className="text-sm font-semibold text-white">Revenue by Hour</h2>
             <p className="text-[10px] text-stone-400">Today · NLe {stats.revenue.toFixed(0)}</p>
           </div>
           {loading ? (
-            <div className="h-48 bg-stone-50 rounded-xl animate-pulse" />
+            <div className="h-48 bg-stone-800 rounded-xl animate-pulse" />
           ) : (
             <RevenueChart data={chart} />
           )}
         </div>
 
         {/* Recent orders */}
-        <div className="lg:col-span-2 bg-white rounded-2xl border border-stone-100 p-4 lg:p-6">
-          <h2 className="text-sm font-semibold text-stone-900 mb-4">Recent Orders</h2>
+        <div className="lg:col-span-2 bg-stone-900 rounded-2xl border border-stone-800 p-4 lg:p-6">
+          <h2 className="text-sm font-semibold text-white mb-4">Recent Orders</h2>
           {loading ? (
             <div className="space-y-3">
               {[...Array(5)].map((_, i) => (
-                <div key={i} className="h-12 bg-stone-50 rounded-lg animate-pulse" />
+                <div key={i} className="h-12 bg-stone-800 rounded-lg animate-pulse" />
               ))}
             </div>
           ) : recent.length === 0 ? (
@@ -188,16 +188,16 @@ export default function DashboardClient() {
               {recent.map(o => {
                 const c = STATUS_COLORS[o.status]
                 return (
-                  <div key={o.id} className="flex items-center justify-between gap-2 py-2 border-b border-stone-50 last:border-0">
+                  <div key={o.id} className="flex items-center justify-between gap-2 py-2 border-b border-stone-800 last:border-0">
                     <div className="min-w-0">
-                      <p className="text-xs font-semibold text-stone-800 truncate">{o.order_ref}</p>
+                      <p className="text-xs font-semibold text-stone-100 truncate">{o.order_ref}</p>
                       <p className="text-[10px] text-stone-400">{o.customer_name || "Walk-in"} · {formatTime(o.created_at)}</p>
                     </div>
                     <div className="flex items-center gap-2 flex-shrink-0">
                       <span className={`text-[10px] px-2 py-0.5 rounded-full font-medium ${c.bg} ${c.text}`}>
                         {STATUS_LABELS[o.status]}
                       </span>
-                      <span className="text-xs font-bold text-stone-900">NLe {o.total.toFixed(0)}</span>
+                      <span className="text-xs font-bold text-white">NLe {o.total.toFixed(0)}</span>
                     </div>
                   </div>
                 )
