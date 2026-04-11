@@ -56,7 +56,7 @@ export default function LicensePage() {
     e.preventDefault()
     
     // Simple access code validation
-    if (accessCode === "kings_license_2024" || accessCode === "alpha_dev_2024") {
+    if (accessCode === "luxe_license_2024" || accessCode === "alpha_dev_2024") {
       setIsAuthenticated(true)
       setError("")
     } else {

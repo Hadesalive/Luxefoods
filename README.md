@@ -1,6 +1,6 @@
-# 🍞 Kings Bakery - Restaurant & Bakery Website
+# 🍽️ Luxe Food - Restaurant Website
 
-A modern, responsive restaurant and bakery website built with Next.js 15, TypeScript, and Tailwind CSS. Features online ordering, admin dashboard, and beautiful UI/UX design.
+A modern, responsive restaurant website built with Next.js 15, TypeScript, and Tailwind CSS. Features online ordering, admin dashboard, and beautiful UI/UX design.
 
 ## 🌟 Features
 
@@ -73,7 +73,7 @@ A modern, responsive restaurant and bakery website built with Next.js 15, TypeSc
 ### 1. Clone the Repository
 ```bash
 git clone <repository-url>
-cd kings-bakery
+cd luxe-food
 ```
 
 ### 2. Install Dependencies
@@ -91,7 +91,7 @@ Create a `.env.local` file in the root directory:
 ```env
 
 # App Configuration
-NEXT_PUBLIC_APP_URL=https://thekingsbakerysl.com
+NEXT_PUBLIC_APP_URL=https://luxefood.com
 ```
 
 ### 4. Database Setup
@@ -124,8 +124,8 @@ The admin panel can be accessed through multiple discreet methods:
 - Instantly redirects to admin login
 
 #### 3. **URL Parameter** (Most Discreet)
-- Add `?access=kb_admin_2024` to any page URL
-- Example: `https://thekingsbakerysl.com?access=kb_admin_2024`
+- Add `?access=lf_admin_2024` to any page URL
+- Example: `https://luxefood.com?access=lf_admin_2024`
 - Grants admin access for the session
 
 ### 📱 Mobile Admin Access Methods
@@ -146,7 +146,7 @@ The admin panel can be accessed through multiple discreet methods:
 - Still discreet but accessible
 
 #### 4. **URL Parameter** (Same as Desktop)
-- Add `?access=kb_admin_2024` to any page URL
+- Add `?access=lf_admin_2024` to any page URL
 - Works identically on mobile and desktop
 
 
@@ -158,7 +158,7 @@ The admin panel can be accessed through multiple discreet methods:
 ## 📁 Project Structure
 
 ```
-kings-bakery/
+luxe-food/
 ├── app/                    # Next.js App Router pages
 │   ├── admin/             # Admin dashboard pages
 │   ├── api/               # API routes
@@ -286,5 +286,5 @@ For support or questions:
 
 ---
 
-**Built with ❤️ from Alpha Amadu Bah for Kings Bakery Restaurant**
+**Built with ❤️ from Alpha Amadu Bah for Luxe Food Restaurant**
 

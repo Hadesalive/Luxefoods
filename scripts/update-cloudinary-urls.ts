@@ -37,7 +37,7 @@ const supabase = createClient(supabaseUrl, supabaseAnonKey)
 const URL_MAPPING: Record<string, string> = {
   // Example:
   // 'https://nuvzsi8ijyo2dw8a.public.blob.vercel-storage.com/menu-item-1754162188921-9nmq8e1rrk.jpg': 
-  //   'https://res.cloudinary.com/your-cloud-name/image/upload/v1234567890/kings-bakery/menu-items/menu-item-1754162188921-9nmq8e1rrk.jpg',
+  //   'https://res.cloudinary.com/your-cloud-name/image/upload/v1234567890/luxe-food/menu-items/menu-item-1754162188921-9nmq8e1rrk.jpg',
 }
 
 /**

@@ -67,7 +67,7 @@ export default function PrivacyPage() {
                 <p className="text-gray-700 dark:text-gray-300">
                   <strong>Company:</strong> LUXE FOOD<br />
                   <strong>Website:</strong> https://luxefood.com<br />
-                  <strong>Contact:</strong> 076533655<br />
+                  <strong>Contact:</strong> 076825325<br />
                   <strong>Location:</strong> Freetown, Sierra Leone<br />
                   <strong>Effective Date:</strong> {new Date(LAST_UPDATED).toLocaleDateString()}
                 </p>
@@ -230,7 +230,7 @@ export default function PrivacyPage() {
               <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
                 <p className="text-gray-700 dark:text-gray-300">
                   <strong>LUXE FOOD</strong><br />
-                  <strong>Phone:</strong> 076533655<br />
+                  <strong>Phone:</strong> 076825325<br />
                   <strong>Address:</strong> Freetown, Sierra Leone<br />
                   <strong>Website:</strong> https://luxefood.com<br />
                   <strong>Developer Contact:</strong> Alpha Amadu Bah (074762243)

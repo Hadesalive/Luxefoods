@@ -134,7 +134,7 @@ async function downloadImageWithAuth(url: string): Promise<Buffer> {
 async function uploadBufferToCloudinary(
   buffer: Buffer,
   filename: string,
-  folder: string = 'kings-bakery'
+  folder: string = 'luxe-food'
 ): Promise<string> {
   return new Promise((resolve, reject) => {
     const uploadStream = cloudinary.uploader.upload_stream(
@@ -168,7 +168,7 @@ async function uploadBufferToCloudinary(
 async function uploadToCloudinaryFromUrl(
   sourceUrl: string,
   filename: string,
-  folder: string = 'kings-bakery'
+  folder: string = 'luxe-food'
 ): Promise<string> {
   try {
     // Try Cloudinary's URL fetch first (most efficient)
@@ -289,7 +289,7 @@ async function migrateMenuItems(): Promise<MigrationResult> {
       const newUrl = await uploadToCloudinaryFromUrl(
         item.image_url!,
         `menu-items/${filename}`,
-        'kings-bakery/menu-items'
+        'luxe-food/menu-items'
       )
       console.log(`   ✅ New URL: ${newUrl}`)
 
@@ -371,7 +371,7 @@ async function migrateCategories(): Promise<MigrationResult> {
       const newUrl = await uploadToCloudinaryFromUrl(
         category.image_url!,
         `categories/${filename}`,
-        'kings-bakery/categories'
+        'luxe-food/categories'
       )
       console.log(`   ✅ New URL: ${newUrl}`)
 

@@ -89,7 +89,10 @@ export default function CartPageClient() {
 
                           <div className="flex items-center justify-between sm:justify-end gap-4">
                             <div className="font-bold text-xl text-yellow-600">
-                              NLe{item.price.toFixed(2)}
+                              NLe{(item.price * (item.quantity || 1)).toFixed(2)}
+                              {(item.quantity || 1) > 1 && (
+                                <span className="text-sm font-normal text-stone-400 ml-1">×{item.quantity}</span>
+                              )}
                             </div>
                             <Button
                               variant="destructive"
@@ -152,7 +155,7 @@ export default function CartPageClient() {
                 <div className="mt-6 p-4 rounded-2xl border border-stone-200" style={{ backgroundColor: "#F5ECD7" }}>
                   <h3 className="font-bold text-stone-800 mb-2">Need Help?</h3>
                   <p className="text-stone-600 text-sm mb-2">Call us for assistance with your order:</p>
-                  <p className="font-bold text-yellow-700">+23232020263 / +23276533655</p>
+                  <p className="font-bold text-yellow-700">+232 076 825 325</p>
                 </div>
               </motion.div>
             </div>

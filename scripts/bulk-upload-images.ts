@@ -66,7 +66,7 @@ interface ImageMapping {
  */
 async function uploadLocalFileToCloudinary(
   filePath: string,
-  folder: string = 'kings-bakery/menu-items',
+  folder: string = 'luxe-food/menu-items',
   publicId?: string
 ): Promise<string> {
   return new Promise((resolve, reject) => {
@@ -98,7 +98,7 @@ async function uploadLocalFileToCloudinary(
  */
 async function uploadUrlToCloudinary(
   imageUrl: string,
-  folder: string = 'kings-bakery/menu-items',
+  folder: string = 'luxe-food/menu-items',
   publicId?: string
 ): Promise<string> {
   return new Promise((resolve, reject) => {
@@ -238,7 +238,7 @@ async function processMappingFile(filePath: string) {
         }
 
         const publicId = `menu-items/${mapping.itemId}`
-        cloudinaryUrl = await uploadLocalFileToCloudinary(fullPath, 'kings-bakery/menu-items', publicId)
+        cloudinaryUrl = await uploadLocalFileToCloudinary(fullPath, 'luxe-food/menu-items', publicId)
         console.log(`   ✅ Uploaded: ${cloudinaryUrl}`)
       } else {
         console.log(`   ⚠️  No valid source found`)
@@ -322,7 +322,7 @@ async function uploadFromFolder(folderPath: string) {
       console.log(`\n🔄 Uploading: ${file} → ${matchedItem.itemName}`)
       
       const publicId = `menu-items/${matchedItem.itemId}`
-      const cloudinaryUrl = await uploadLocalFileToCloudinary(filePath, 'kings-bakery/menu-items', publicId)
+      const cloudinaryUrl = await uploadLocalFileToCloudinary(filePath, 'luxe-food/menu-items', publicId)
       
       console.log(`   ✅ Uploaded: ${cloudinaryUrl}`)
 

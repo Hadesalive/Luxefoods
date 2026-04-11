@@ -60,8 +60,8 @@ const DEFAULTS: CMSData = {
     "To provide our community with quality meals, local dishes, and international cuisine, delivered with care to your doorstep. We believe everyone deserves exceptional food made with the finest ingredients.",
   about_story:
     "LUXE FOOD started with a simple dream: to bring the best of local and international cuisine to the people of Freetown. We've become a beloved part of the community, serving quality meals, delicious local dishes, and offering professional catering services for events of all sizes. Our commitment to quality and customer satisfaction has made us a trusted name in food delivery and catering across Freetown, Sierra Leone.",
-  contact_phone: "074 762 243",
-  contact_phone_intl: "23274762243",
+  contact_phone: "076 825 325",
+  contact_phone_intl: "23276825325",
   contact_email: "info@luxefood.com",
   contact_address: "Freetown, Sierra Leone",
   hours_weekday_label: "Monday – Friday",

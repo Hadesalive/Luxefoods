@@ -49,7 +49,7 @@ export async function POST(request: NextRequest) {
 
     // Restaurant WhatsApp number (Sierra Leone format)
     // Make sure to use the international format without any spaces or special characters
-    const restaurantNumber = "23276533655" // +232 76 533655
+    const restaurantNumber = "23276825325" // +232 076 825 325
 
     // Create WhatsApp URL with proper encoding
     // Using encodeURIComponent to ensure special characters are properly encoded

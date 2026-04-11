@@ -301,7 +301,7 @@ export default function MenuSection() {
         const option = item.options?.find(opt => opt.option_name === optionName)
         if (option) customPrice += option.price_adjustment || 0
       })
-      return customPrice
+      return basePrice + customPrice
     }
     return basePrice
   }
