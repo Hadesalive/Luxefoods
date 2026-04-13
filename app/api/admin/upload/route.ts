@@ -10,6 +10,13 @@ function db() {
   )
 }
 
+async function ensureBucket(supabase: ReturnType<typeof createClient>) {
+  const { data: buckets } = await supabase.storage.listBuckets()
+  if (!buckets?.find(b => b.name === BUCKET)) {
+    await supabase.storage.createBucket(BUCKET, { public: true })
+  }
+}
+
 export async function POST(request: Request) {
   const formData = await request.formData()
   const file = formData.get("file") as File | null
@@ -28,12 +35,15 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "File too large (max 5 MB)" }, { status: 400 })
   }
 
+  const supabase = db()
+  await ensureBucket(supabase)
+
   const ext = file.name.split(".").pop()?.toLowerCase() ?? "jpg"
   const name = `${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`
   const path = `uploads/${name}`
 
   const arrayBuffer = await file.arrayBuffer()
-  const { error } = await db().storage.from(BUCKET).upload(path, arrayBuffer, {
+  const { error } = await supabase.storage.from(BUCKET).upload(path, arrayBuffer, {
     contentType: file.type,
     upsert: false,
   })
@@ -42,6 +52,6 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: error.message }, { status: 500 })
   }
 
-  const { data } = db().storage.from(BUCKET).getPublicUrl(path)
+  const { data } = supabase.storage.from(BUCKET).getPublicUrl(path)
   return NextResponse.json({ url: data.publicUrl })
 }

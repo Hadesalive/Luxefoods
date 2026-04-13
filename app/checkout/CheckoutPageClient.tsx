@@ -574,8 +574,8 @@ export default function CheckoutPageClient() {
 
                       <div className="mt-4 p-3 bg-white/60 rounded-lg border border-stone-200">
                         <p className="text-sm text-stone-700">
-                          <strong>Instructions:</strong> Please send payment to Orange Money number:{" "}
-                          <strong>+076825325</strong>
+                          <strong>Instructions:</strong> Please send payment to Orange Money merchant code:{" "}
+                          <strong>252987</strong>
                           {" "}and enter the transaction ID above.
                         </p>
                       </div>
