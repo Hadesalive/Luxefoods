@@ -3,7 +3,7 @@
 import { useEffect } from "react"
 import { usePathname } from "next/navigation"
 
-const WHATSAPP_NUMBER = "23233484356"
+const WHATSAPP_NUMBER = "23276825325"
 const WHATSAPP_MESSAGE = "Hi LUXE FOOD! I'd like to place an order."
 
 export default function ScrollToTop() {

@@ -163,7 +163,7 @@ export default function TermsPage() {
               <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
                 <p className="text-gray-700 dark:text-gray-300">
                   <strong>Email:</strong> info@luxefood.com<br />
-                  <strong>Phone:</strong> 076 533655<br />
+                  <strong>Phone:</strong> 076 825 325 / 074 762 243<br />
                   <strong>Address:</strong> 117 MAIN REGENT ROAD, HILL STATION, OPPOSITE CITY SUPERMARKET
                 </p>
               </div>

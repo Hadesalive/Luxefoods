@@ -10,7 +10,7 @@ import { CalendarDots, UsersThree, ChatCircleDots } from "@phosphor-icons/react"
 import { WhatsappIcon } from "@/components/WhatsappIcon"
 import { motion } from "framer-motion"
 
-const WHATSAPP_NUMBER = "23233484356"
+const DEFAULT_WHATSAPP_NUMBER = "23276825325"
 
 const serviceOptions = [
   "Workshops & Events Catering",
@@ -24,7 +24,7 @@ const serviceOptions = [
   "Surprise Trays",
 ]
 
-export default function ServicesInquiryForm() {
+export default function ServicesInquiryForm({ whatsappNumber = DEFAULT_WHATSAPP_NUMBER }: { whatsappNumber?: string }) {
   const searchParams = useSearchParams()
   const sectionRef = useRef<HTMLElement>(null)
 
@@ -69,7 +69,7 @@ export default function ServicesInquiryForm() {
       .filter(Boolean)
       .join("\n")
 
-    return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(lines)}`
+    return `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(lines)}`
   }
 
   const handleSubmit = (e: React.FormEvent) => {

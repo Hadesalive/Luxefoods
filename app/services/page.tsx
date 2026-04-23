@@ -69,7 +69,7 @@ export default async function ServicesPage() {
         <ServicesSection heading={cms.services_heading} description={cms.services_description} services={services} />
         <SectionDivider topColor="#FFFDF8" bottomColor="#F5ECD7" variant="slant" goldLine />
         <Suspense>
-          <ServicesInquiryForm />
+          <ServicesInquiryForm whatsappNumber={cms.contact_phone_intl} />
         </Suspense>
         <SectionDivider topColor="#F5ECD7" bottomColor="#1C1917" variant="curve" goldLine />
       </main>
