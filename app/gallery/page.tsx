@@ -4,6 +4,7 @@ import Link from "next/link"
 import { ArrowRight } from "lucide-react"
 import Header from "@/components/Header"
 import Footer from "@/components/Footer"
+import GalleryGrid from "@/components/GalleryGrid"
 import { createClient } from "@supabase/supabase-js"
 
 export const metadata: Metadata = {
@@ -103,40 +104,13 @@ export default async function GalleryPage() {
         </div>
       </section>
 
-      {/* Masonry gallery */}
+      {/* Masonry gallery with lightbox */}
       <section
         className="py-14 lg:py-20"
         style={{ backgroundColor: "#FFFDF8" }}
       >
         <div className="max-w-6xl mx-auto px-4 sm:px-6">
-          <div className="columns-2 sm:columns-3 gap-3 sm:gap-4">
-            {items.map((item, i) => (
-              <div
-                key={item.id}
-                className="group relative overflow-hidden rounded-xl mb-3 sm:mb-4 break-inside-avoid"
-              >
-                <div className="relative aspect-[4/3]">
-                  <Image
-                    src={item.image_url}
-                    alt={item.title ?? "LUXE FOOD gallery"}
-                    fill
-                    sizes="(max-width: 640px) 50vw, 33vw"
-                    className="object-cover transition-transform duration-700 group-hover:scale-105"
-                    loading={i < 6 ? "eager" : "lazy"}
-                  />
-                </div>
-                {/* hover overlay */}
-                <div className="absolute inset-0 bg-stone-950/0 group-hover:bg-stone-950/50 transition-colors duration-300" />
-                {item.title && (
-                  <div className="absolute bottom-0 left-0 right-0 p-3 sm:p-4 translate-y-1 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300">
-                    <span className="text-white text-[10px] sm:text-xs font-bold uppercase tracking-[0.15em]">
-                      {item.title}
-                    </span>
-                  </div>
-                )}
-              </div>
-            ))}
-          </div>
+          <GalleryGrid items={items} />
         </div>
       </section>
 

@@ -201,7 +201,7 @@ export default function CheckoutPageClient() {
                 <div className="p-4 rounded-xl border border-stone-200" style={{ backgroundColor: "#F5ECD7" }}>
                   <h3 className="font-semibold text-stone-800 mb-2">Need Help?</h3>
                   <p className="text-sm text-stone-600">
-                    Call us: <strong>077 254220 / 076 369828</strong>
+                    Call us: <strong>076 825 325 / 074 762 243</strong>
                   </p>
                 </div>
               </div>
@@ -239,7 +239,7 @@ export default function CheckoutPageClient() {
                   <p className="text-sm text-stone-600 mb-3">
                     You can still place your order by calling us directly:
                   </p>
-                  <p className="font-bold text-stone-800">077 254220 / 076 369828</p>
+                  <p className="font-bold text-stone-800">076 825 325 / 074 762 243</p>
                 </div>
 
                 <div className="bg-stone-50 p-4 rounded-xl border border-stone-100">
@@ -247,7 +247,7 @@ export default function CheckoutPageClient() {
                   <p className="text-sm text-stone-600 mb-3">
                     Send us a WhatsApp message with your order details.
                   </p>
-                  <a href="https://wa.me/23277254220" target="_blank" rel="noopener noreferrer">
+                  <a href="https://wa.me/23276825325" target="_blank" rel="noopener noreferrer">
                     <Button className="w-full bg-green-600 hover:bg-green-700 text-white rounded-2xl">
                       <WhatsappIcon className="h-5 w-5 mr-2" /> WhatsApp Us
                     </Button>
@@ -624,11 +624,16 @@ export default function CheckoutPageClient() {
                           className="flex justify-between items-start py-2 border-b border-stone-100 last:border-b-0"
                         >
                           <div className="flex-1 pr-2">
-                            <span className="font-medium text-sm text-stone-800">{item.name}</span>
+                            <span className="font-medium text-sm text-stone-800">
+                              {(item.quantity ?? 1) > 1 && (
+                                <span className="text-yellow-600 font-bold">{item.quantity}× </span>
+                              )}
+                              {item.name}
+                            </span>
                             <p className="text-xs text-stone-500">{item.type}</p>
                           </div>
                           <span className="font-semibold text-sm text-stone-800">
-                            NLe{item.price.toFixed(2)}
+                            NLe{(item.price * (item.quantity ?? 1)).toFixed(2)}
                           </span>
                         </div>
                       ))}
@@ -659,7 +664,7 @@ export default function CheckoutPageClient() {
               <div className="mt-6 p-4 rounded-2xl border border-stone-200" style={{ backgroundColor: "#F5ECD7" }}>
                 <h3 className="font-bold text-stone-800 mb-2">Restaurant Contact</h3>
                 <p className="text-stone-600 text-sm">For any questions about your order:</p>
-                <p className="font-bold text-stone-800 mt-1">+232 076 825 325</p>
+                <p className="font-bold text-stone-800 mt-1">076 825 325 / 074 762 243</p>
               </div>
             </div>
           </div>

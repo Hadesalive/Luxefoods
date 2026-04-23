@@ -8,9 +8,10 @@ import Footer from "@/components/Footer"
 import SocialMediaIntegration from "@/components/SocialMediaIntegration"
 import SectionDivider from "@/components/SectionDivider"
 import { getCMS } from "@/lib/cms"
+import { getPublicServices } from "@/lib/services-data"
 
 export default async function Home() {
-  const cms = await getCMS()
+  const [cms, services] = await Promise.all([getCMS(), getPublicServices()])
 
   return (
     <div className="min-h-screen">
@@ -22,7 +23,7 @@ export default async function Home() {
         <SectionDivider topColor="#FFFDF8" bottomColor="#F5ECD7" variant="curve" />
         <DeliverySection />
         <SectionDivider topColor="#F5ECD7" bottomColor="#FFFDF8" variant="slant" goldLine />
-        <ServicesSection heading={cms.services_heading} description={cms.services_description} />
+        <ServicesSection heading={cms.services_heading} description={cms.services_description} services={services} />
         <SectionDivider topColor="#FFFDF8" bottomColor="#F5ECD7" variant="wave" />
         <SocialMediaIntegration />
         <SectionDivider topColor="#F5ECD7" bottomColor="#FFFDF8" variant="curve" />

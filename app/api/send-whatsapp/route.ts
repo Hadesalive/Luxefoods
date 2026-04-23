@@ -3,6 +3,7 @@ import { type NextRequest, NextResponse } from "next/server"
 interface OrderItem {
   name: string
   price: number
+  quantity?: number
 }
 
 export async function POST(request: NextRequest) {
@@ -31,7 +32,10 @@ export async function POST(request: NextRequest) {
     // Order items
     message += "\n🛒 *Order Items:*\n"
     orderData.items.forEach((item: OrderItem, index: number) => {
-      message += `${index + 1}. ${item.name} - NLe${item.price.toFixed(2)}\n`
+      const qty = item.quantity || 1
+      const lineTotal = item.price * qty
+      const qtyStr = qty > 1 ? `${qty}× ` : ""
+      message += `${index + 1}. ${qtyStr}${item.name} - NLe${lineTotal.toFixed(2)}\n`
     })
 
     // Total
@@ -76,7 +80,7 @@ export async function POST(request: NextRequest) {
           payment_method:  orderData.paymentMethod === 'orange-money' ? 'orange_money' : (orderData.paymentMethod || 'cash'),
           discount_amount: 0,
           items: (orderData.items || []).map((item: OrderItem, idx: number) => ({
-            id: String(idx), name: item.name, price: item.price, quantity: 1,
+            id: String(idx), name: item.name, price: item.price, quantity: item.quantity || 1,
           })),
           subtotal: orderData.total,
           total:    orderData.total,

@@ -7,6 +7,7 @@ import ServicesSection from "@/components/ServicesSection"
 import ServicesInquiryForm from "@/components/ServicesInquiryForm"
 import SectionDivider from "@/components/SectionDivider"
 import { getCMS } from "@/lib/cms"
+import { getPublicServices } from "@/lib/services-data"
 
 export const metadata: Metadata = {
   title: "Our Services - LUXE FOOD | Catering & Events | Freetown, Sierra Leone",
@@ -30,7 +31,7 @@ export const metadata: Metadata = {
 }
 
 export default async function ServicesPage() {
-  const cms = await getCMS()
+  const [cms, services] = await Promise.all([getCMS(), getPublicServices()])
 
   return (
     <div className="min-h-screen">
@@ -65,7 +66,7 @@ export default async function ServicesPage() {
         </section>
 
         <SectionDivider topColor="#1C1917" bottomColor="#FFFDF8" variant="wave" goldLine />
-        <ServicesSection heading={cms.services_heading} description={cms.services_description} />
+        <ServicesSection heading={cms.services_heading} description={cms.services_description} services={services} />
         <SectionDivider topColor="#FFFDF8" bottomColor="#F5ECD7" variant="slant" goldLine />
         <Suspense>
           <ServicesInquiryForm />

@@ -155,7 +155,7 @@ export default function CartPageClient() {
                 <div className="mt-6 p-4 rounded-2xl border border-stone-200" style={{ backgroundColor: "#F5ECD7" }}>
                   <h3 className="font-bold text-stone-800 mb-2">Need Help?</h3>
                   <p className="text-stone-600 text-sm mb-2">Call us for assistance with your order:</p>
-                  <p className="font-bold text-yellow-700">+232 076 825 325</p>
+                  <p className="font-bold text-yellow-700">076 825 325 / 074 762 243</p>
                 </div>
               </motion.div>
             </div>

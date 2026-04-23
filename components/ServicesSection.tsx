@@ -15,16 +15,28 @@ import {
 import Image from "next/image"
 import Link from "next/link"
 import { motion } from "framer-motion"
+import type { ServiceData } from "@/lib/services-data"
 
-interface Service {
-  icon: React.ComponentType<{ className?: string }>
+type IconComponent = React.ComponentType<{ className?: string }>
+
+const ICON_MAP: Record<string, IconComponent> = {
+  Buildings, Heart, Gift, Cake, Trophy, Smiley, HandWaving, Fire, SquaresFour,
+}
+
+function getIcon(name: string | null | undefined): IconComponent {
+  if (name && ICON_MAP[name]) return ICON_MAP[name]
+  return SquaresFour
+}
+
+interface ServiceItem {
+  icon: IconComponent
   title: string
   desc: string
   image: string
   slug: string
 }
 
-const services: Service[] = [
+const FALLBACK_SERVICES: ServiceItem[] = [
   {
     icon: Buildings,
     title: "Workshops & Events",
@@ -90,10 +102,17 @@ const services: Service[] = [
   },
 ]
 
-const featured = services.slice(0, 3)
-const secondary = services.slice(3)
+function dbServicesToItems(dbServices: ServiceData[]): ServiceItem[] {
+  return dbServices.map((svc) => ({
+    icon: getIcon(svc.icon),
+    title: svc.title,
+    desc: svc.description ?? "",
+    image: svc.image_url ?? "",
+    slug: svc.slug,
+  }))
+}
 
-function FeaturedCard({ service, index }: { service: Service; index: number }) {
+function FeaturedCard({ service, index }: { service: ServiceItem; index: number }) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 24 }}
@@ -104,15 +123,21 @@ function FeaturedCard({ service, index }: { service: Service; index: number }) {
     >
       <Link href={`/services/${service.slug}`} className="flex flex-col h-full">
         {/* Image */}
-        <div className="relative aspect-[3/4] overflow-hidden rounded-xl mb-4">
-          <Image
-            src={service.image}
-            alt={service.title}
-            fill
-            sizes="(max-width: 768px) 100vw, 33vw"
-            className="object-cover transition-transform duration-700 group-hover:scale-105"
-            loading="lazy"
-          />
+        <div className="relative aspect-[3/4] overflow-hidden rounded-xl mb-4 bg-stone-100">
+          {service.image ? (
+            <Image
+              src={service.image}
+              alt={service.title}
+              fill
+              sizes="(max-width: 768px) 100vw, 33vw"
+              className="object-cover transition-transform duration-700 group-hover:scale-105"
+              loading="lazy"
+            />
+          ) : (
+            <div className="absolute inset-0 flex items-center justify-center">
+              <service.icon className="h-12 w-12 text-stone-300" />
+            </div>
+          )}
           <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-black/30 to-transparent" />
         </div>
 
@@ -128,10 +153,10 @@ function FeaturedCard({ service, index }: { service: Service; index: number }) {
   )
 }
 
-function SecondaryItem({ service, index }: { service: Service; index: number }) {
+function SecondaryItem({ service, index, total }: { service: ServiceItem; index: number; total: number }) {
   const { icon: Icon, title, desc, slug } = service
   const isLeftCol = index % 2 === 0
-  const isLastRow = index >= secondary.length - 2
+  const isLastRow = index >= total - 2
 
   return (
     <motion.div
@@ -166,10 +191,16 @@ function SecondaryItem({ service, index }: { service: Service; index: number }) 
 export default function ServicesSection({
   heading = "Catering for every occasion.",
   description = "From weddings to birthdays, we bring exceptional food and service to your most important moments.",
+  services: dbServices,
 }: {
   heading?: string
   description?: string
+  services?: ServiceData[]
 }) {
+  const all = dbServices?.length ? dbServicesToItems(dbServices) : FALLBACK_SERVICES
+  const featured = all.slice(0, 3)
+  const secondary = all.slice(3)
+
   return (
     <section
       className="relative py-20 lg:py-32 bg-grain overflow-hidden"
@@ -204,18 +235,20 @@ export default function ServicesSection({
           {/* Featured 3 — portrait cards */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 lg:gap-8 mb-10">
             {featured.map((service, i) => (
-              <FeaturedCard key={service.title} service={service} index={i} />
+              <FeaturedCard key={service.slug} service={service} index={i} />
             ))}
           </div>
 
-          {/* Secondary 6 — text list with dividers */}
-          <div className="border border-stone-200 rounded-2xl overflow-hidden mb-16">
-            <div className="grid grid-cols-1 sm:grid-cols-2">
-              {secondary.map((service, i) => (
-                <SecondaryItem key={service.title} service={service} index={i} />
-              ))}
+          {/* Secondary — text list with dividers */}
+          {secondary.length > 0 && (
+            <div className="border border-stone-200 rounded-2xl overflow-hidden mb-16">
+              <div className="grid grid-cols-1 sm:grid-cols-2">
+                {secondary.map((service, i) => (
+                  <SecondaryItem key={service.slug} service={service} index={i} total={secondary.length} />
+                ))}
+              </div>
             </div>
-          </div>
+          )}
 
           {/* CTA */}
           <motion.div
